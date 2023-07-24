@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Mukta:wght@200&family=Roboto&display=swap');
+
+
+*{
+    box-sizing: border-box;
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.container{
+    display: flex;
+    height: 80vh;
+    gap: 10px;
+    width: 80%;
+}
+
+.panel{
+    height: 80vh;
+    border-radius: 50px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    cursor: pointer;
+    flex: 0.5;
+    transition: flex 0.7s ease-in;
+}
+
+.panel h3{
+    font-size: 24px;
+    position: relative;
+    top: 650px;
+    margin: 0;
+    opacity: 0;
+}
+
+
+.active{
+    flex: 5;
+}
+.active h3{
+    opacity: 1;
+}

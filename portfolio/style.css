@@ -1,0 +1,222 @@
+body {
+    background-color: #9DB2BF;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 30px;
+    padding: 20px;
+    background-color: #27374D;
+    padding-left: 100px;
+}
+
+.header button {
+    color: rgba(255, 255, 255, 0.822);
+}
+
+button {
+    background-color: transparent;
+    border: 0px solid;
+    font-size: 20px;
+}
+
+.first {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    padding: 100px;
+    background-color: #9DB2BF;
+}
+
+.first h1 {
+    display: flex;
+    height: 100%;
+    align-items: end;
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.about-me {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-rows: 1fr 2fr;
+    padding: 100px;
+    background-color: #DDE6ED;
+
+}
+
+.about-me>.row-span>img {
+    height: 300px;
+    border-radius: 50%;
+    border: 1px solid;
+    margin-left: 100px;
+}
+
+.row-span {
+    grid-row: span 2;
+    display: flex;
+    justify-content: center;
+}
+
+h2 {
+    font-size: 50px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.experience {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    text-transform: capitalize;
+    font-size: 18px;
+    gap: 30px;
+    background-color: #9DB2BF;
+    padding: 100px;
+    padding-bottom: 50px;
+}
+
+.experience>.row-span>img {
+    height: 300px;
+    margin-left: 100px;
+}
+
+
+.selected-works {
+    padding: 100px;
+    background-color: #DDE6ED;
+}
+
+.grid {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+address {
+    margin-bottom: 0px;
+}
+
+h3 {
+    font-size: 35px;
+}
+
+p,
+li {
+    font-size: 20px;
+}
+
+
+.contact-me {
+    background-color: #9DB2BF;
+}
+
+footer {
+    background-color: #27374D;
+    color: white;
+    padding: 40px;
+}
+
+a {
+    color: inherit;
+}
+
+.card {
+    width: 30rem;
+}
+
+@media (max-width:1640px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-3 {
+        margin-top: 50px;
+    }
+}
+
+@media (max-width:1148px) {
+    .grid {
+        display: block;
+    }
+
+    .first img {
+        height: 400px;
+    }
+
+    .experience>.row-span {
+        display: flex;
+        align-items: center;
+    }
+
+    .experience>.row-span>img {
+        height: 200px;
+    }
+}
+
+@media (max-width:1000px) {
+
+    .experience {
+        grid-template-columns: 1fr;
+        gap: 10px;
+
+    }
+
+    .experience>.row-span {
+        order: -1;
+        display: flex;
+        justify-content: end;
+        margin-right: 150px;
+        margin-bottom: 50px;
+    }
+
+    .about-me {
+        grid-template-columns: 1fr;
+    }
+
+    .about-me>.row-span {
+        order: -1;
+        display: flex;
+        justify-content: center;
+        margin-right: 100px;
+        margin-bottom: 50px;
+    }
+}
+
+
+@media (max-width:777px) {
+
+    body {
+        width: 100vh;
+    }
+
+    .first {
+        grid-template-columns: 1fr;
+    }
+
+    .first>.row-span {
+        order: -1;
+        display: flex;
+        justify-content: start;
+        margin-bottom: 50px;
+    }
+
+    .card {
+        width: 25rem;
+    }
+}
+
+@media (max-width:600px) {
+    p {
+        font-size: 24px;
+    }
+
+    li {
+        font-size: 24px;
+    }
+
+    table {
+        font-size: 20px;
+    }
+}

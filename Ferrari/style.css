@@ -1,0 +1,14 @@
+p {
+    font-size: 17px;
+}
+
+h3 {
+    color: white;
+    text-transform: uppercase;
+}
+
+.icon-square {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+}
