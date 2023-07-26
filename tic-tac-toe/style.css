@@ -1,0 +1,51 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #461959;
+    color: #AED8CC;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(3,10vh);
+    border: 1px solid;
+}
+
+.cells{
+    border: 4px solid #75C2F6;
+    height: 10vh;
+    width: 10vh;
+    cursor: pointer;
+    font-size: 7vh;
+    text-align: center;
+    font-family: 'Edu SA Beginner', cursive;
+    background-color: #CD6688;
+    color: #331D2C;
+}
+
+
+button{
+    background-color: #9BE8D8;
+    border: 0px;
+    padding: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 1s ease;
+}
+
+
+button:hover{
+    background-color: #78C1F3;
+    -webkit-transform: translateY(-2px);
+    transform: translateY(-2px);
+}
+
+button:active{
+    transition: 0s;
+    opacity: 0.5;
+}
