@@ -22,8 +22,6 @@ body{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 300px;
-    border: 0px;
-    cursor: pointer;
 }
 
 .click{
@@ -40,4 +38,3 @@ body{
     color: red;
     border: 1px solid;
 }
-
