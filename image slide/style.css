@@ -1,0 +1,43 @@
+body{
+    height: 100vh;
+    
+}
+
+.image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("assets/1.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 400px; 
+    height: 100%;
+    position: relative;
+    transition: 1s ease-out;
+}
+
+
+.button{
+    position: absolute;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 300px;
+    border: 0px;
+    cursor: pointer;
+}
+
+.click{
+    cursor: pointer;
+    border: 0px;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: transparent;
+    color: white;
+    transition: 0.3s;
+}
+
+.click:hover{
+    color: red;
+    border: 1px solid;
+}
+
