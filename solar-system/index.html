@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bootstrap Site</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header
+        class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
+      >
+        <a
+          href="/"
+          class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+        >
+          <svg class="bi me-2" width="40" height="32">
+            <use xlink:href="#bootstrap"></use>
+          </svg>
+          <span class="fs-4">Solar System</span>
+        </a>
+
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a href="#" class="nav-link active bg-warning" aria-current="page"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link link-warning">Life Beyond Earth</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link link-warning">Exploring Mars</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link link-warning">Gas Giants</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link link-warning">Contact Me</a>
+          </li>
+        </ul>
+      </header>
+
+      <div class="px-4 pt-5 my-5 text-center">
+        <div class="overflow-hidden" style="max-height: 30vh">
+          <div class="container px-5">
+            <img
+              src="./assets/solar-system.jpg"
+              class="img-fluid border rounded-3 shadow-lg mb-4"
+              alt="solar-system"
+              height="500"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <h1 class="display-4 fw-bold text-body-emphasis">
+          What is the Solar System
+        </h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4 small">
+            Have you ever looked up at the night sky and wondered about the vast
+            expanse that surrounds our little blue planet? What lies beyond the
+            shimmering stars and distant constellations? How did our solar
+            system come into existence, and what forces shape its celestial
+            dance? From the scorching embrace of the Sun to the icy realms of
+            Pluto and beyond, the solar system beckons with mysteries waiting to
+            be unraveled. How do planets form, and why are they so diverse in
+            size and composition? Could there be other Earth-like worlds
+            orbiting distant stars? Join us on a journey through the enigmatic
+            realm of the solar system as we delve into its captivating wonders
+            and seek answers to the cosmic questions that have captivated
+            humanity for centuries.
+          </p>
+        </div>
+      </div>
+
+      <div class="container px-4 py-5" id="custom-cards">
+        <h2 class="pb-2 border-bottom">Mysteries of Space</h2>
+
+        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+          <div class="col">
+            <div
+              class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg card-style"
+              style="background-image: url('assets/card6.jpg')"
+            >
+              <div
+                class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+              >
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold capitalize">
+                  Life Beyond Earth: Possibilities and Search
+                </h3>
+                <ul class="d-flex list-unstyled mt-auto">
+                  <li class="me-auto">
+                    <img
+                      src="assets/icons8-brain-96.png"
+                      alt="Brain"
+                      width="32"
+                      height="32"
+                      class="rounded-circle border border-white bg-white"
+                    />
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <button type="button" class="btn btn-info text-white">
+                      Learn More
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div
+              class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg card-style"
+              style="background-image: url('assets/card5.jpg')"
+            >
+              <div
+                class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+              >
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
+                  Exploring Mars: Rovers and Missions
+                </h3>
+                <ul class="d-flex list-unstyled mt-auto">
+                  <li class="me-auto">
+                    <img
+                      src="assets/icons8-brain-96.png"
+                      alt="Brain"
+                      width="32"
+                      height="32"
+                      class="rounded-circle border border-white bg-white"
+                    />
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <button type="button" class="btn btn-info text-white">
+                      Learn More
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div
+              class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+              style="background-image: url('assets/card4.jpg')"
+            >
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
+                  Gas Giants: Jupiter, Saturn, Uranus, Neptune
+                </h3>
+                <ul class="d-flex list-unstyled mt-auto">
+                  <li class="me-auto">
+                    <img
+                      src="assets/icons8-brain-96.png"
+                      alt="Brain"
+                      width="32"
+                      height="32"
+                      class="rounded-circle border border-white bg-white"
+                    />
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <button type="button" class="btn btn-info text-white">
+                      Learn More
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="album py-5">
+        <h2 class="pb-2 border-bottom">Planets of Solar System</h2>
+        <div class="container py-5">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/mercury.jpg" alt="mercury" />
+
+                <div class="card-body">
+                  <h3>Mercury</h3>
+                  <p class="card-text">
+                    Mercury—the smallest planet in our solar system and closest
+                    to the Sun—is only slightly larger than Earth's Moon.
+                    Mercury is the fastest planet, zipping around the Sun every
+                    88 Earth days.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/mercury/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/venus.jpg" alt="venus" />
+                <div class="card-body">
+                  <h3>Venus</h3>
+                  <p class="card-text">
+                    Venus spins slowly in the opposite direction from most
+                    planets. A thick atmosphere traps heat in a runaway
+                    greenhouse effect, making it the hottest planet in our solar
+                    system.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/venus/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/earth.jpg" alt="earth" />
+                <div class="card-body">
+                  <h3>Earth</h3>
+                  <p class="card-text">
+                    Earth—our home planet—is the only place we know of so far
+                    that’s inhabited by living things. It's also the only planet
+                    in our solar system with liquid water on the surface.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/earth/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/mars.jpg" alt="mars" />
+                <div class="card-body">
+                  <h3>Mars</h3>
+                  <p class="card-text">
+                    Mars is a dusty, cold, desert world with a very thin
+                    atmosphere. There is strong evidence Mars was – billions of
+                    years ago – wetter and warmer, with a thicker atmosphere.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/mars/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/jupiter.jpg" alt="jupiter" />
+                <div class="card-body">
+                  <h3>Jupiter</h3>
+                  <p class="card-text">
+                    Jupiter is more than twice as massive than the other planets
+                    of our solar system combined. The giant planet's Great Red
+                    spot is a centuries-old storm bigger than Earth.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/jupiter/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/saturn.jpg" alt="Saturn" />
+                <div class="card-body">
+                  <h3>Saturn</h3>
+                  <p class="card-text">
+                    Adorned with a dazzling, complex system of icy rings, Saturn
+                    is unique in our solar system. The other giant planets have
+                    rings, but none are as spectacular as Saturn's.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/saturn/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/uranus.jpg" alt="uranus" />
+                <div class="card-body">
+                  <h3>Uranus</h3>
+                  <p class="card-text">
+                    Uranus, the seventh planet from the Sun, stands out with its
+                    distinct traits. Its axial tilt is unique, causing it to
+                    roll along its orbit. This icy giant exhibits a striking
+                    blue-green hue due to methane in its atmosphere.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/uranus/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow-sm">
+                <img src="assets/Neptune.jpg" alt="neptune" />
+                <div class="card-body">
+                  <h3>Neptune</h3>
+                  <p class="card-text">
+                    Neptune—the eighth and most distant major planet orbiting
+                    our Sun—is dark, cold and whipped by supersonic winds. It
+                    was the first planet located through mathematical
+                    calculations.
+                  </p>
+
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="https://solarsystem.nasa.gov/planets/neptune/overview/"
+                      class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      >View</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
