@@ -1,0 +1,228 @@
+body {
+    background-image: linear-gradient(0deg,
+            hsl(352deg 58% 49%) 0%,
+            hsl(333deg 86% 39%) 8%,
+            hsl(318deg 100% 31%) 15%,
+            hsl(295deg 87% 27%) 23%,
+            hsl(253deg 63% 34%) 31%,
+            hsl(270deg 68% 33%) 38%,
+            hsl(305deg 100% 26%) 46%,
+            hsl(323deg 100% 33%) 54%,
+            hsl(339deg 74% 43%) 62%,
+            hsl(346deg 66% 46%) 69%,
+            hsl(327deg 100% 35%) 77%,
+            hsl(312deg 100% 29%) 85%,
+            hsl(284deg 75% 30%) 92%,
+            hsl(225deg 100% 29%) 100%);
+    color: wheat;
+}
+
+.container {
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-rows: 0.1fr;
+}
+
+h1 {
+    font-family: "Caveat", cursive;
+    font-size: 50px;
+    margin-right: 90px;
+}
+
+button {
+    text-transform: uppercase;
+    border: 0px;
+    background-color: transparent;
+    font-family: 'Mukta', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: wheat;
+
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    grid-column: span 2;
+
+    border-radius: 20px;
+}
+
+.main-photo {
+    grid-column: span 2;
+    margin-top: 10px;
+    margin-bottom: 100px;
+}
+
+.second-div {
+
+    grid-column: span 2;
+    margin-bottom: 100px;
+}
+
+.third-div {
+
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.3fr;
+    gap: 20px;
+}
+
+ul {
+    list-style: none;
+}
+
+.social-medias {
+    display: flex;
+
+}
+
+.social-medias img {
+    height: 30px;
+    object-fit: cover;
+}
+
+.main-photo {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.main-photo>img {
+    border-radius: 100px;
+    height: 700px;
+    box-shadow: 0px 0px 30px 10px;
+    color: black;
+}
+
+.main-photo .center {
+    height: 1000px;
+}
+
+.second-title {
+    margin-left: 127px;
+    font-size: 20px;
+    width: fit-content;
+    grid-column: span 3;
+}
+
+.video-group {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    gap: 20px;
+}
+
+.video img {
+    width: 600px;
+}
+
+.video p {
+    display: flex;
+    font-size: 30px;
+    justify-content: center;
+}
+
+.albums {
+    display: grid;
+    justify-content: center;
+}
+
+.albums img {
+    height: 400px;
+}
+
+.albums p {
+    font-size: 20px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.footer {
+
+    grid-column: span 2;
+    justify-content: center;
+    display: grid;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+
+.footer label {
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.footer input {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.footer button {
+    font-size: 24px;
+    display: flex;
+    margin-left: 80px;
+    color: white;
+}
+
+@media (max-width:1600px) {
+    .main-photo>img {
+        height: 400px;
+    }
+
+    .main-photo .center {
+        height: 700px;
+    }
+
+    h1 {
+        margin-right: 0px;
+    }
+}
+
+@media (max-width:1236px) {
+    .second-title {
+        display: flex;
+        margin-left: 0px;
+        grid-column: span 2;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .third-div {
+
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 20px;
+    }
+
+}
+
+@media (max-width:1048px) {
+    .main-photo .left {
+        height: 0px;
+    }
+
+    .main-photo .right {
+        height: 0px;
+    }
+}
+
+
+@media (max-width:850px) {
+    .second-title {
+        grid-column: span 3;
+    }
+
+    .third-div {
+        display: block;
+    }
+
+}
