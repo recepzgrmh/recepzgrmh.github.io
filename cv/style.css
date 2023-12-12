@@ -88,7 +88,7 @@ a {
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1100px) {
     .container {
         grid-template-columns: 1fr;
         max-width: 100%;
