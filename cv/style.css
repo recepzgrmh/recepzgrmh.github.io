@@ -6,8 +6,8 @@ body {
 
 .container {
     display: grid;
-    width: 794px;
-    height: 1123px;
+    max-width: 794px;
+    width: 100%;
     margin: 0 auto;
     border: 5px dotted white;
     grid-template-columns: 1fr 1fr;
@@ -85,4 +85,12 @@ a {
     padding-top: 0.4rem;
     padding-bottom: 1rem;
     padding-right: 5rem;
+}
+
+
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
 }
