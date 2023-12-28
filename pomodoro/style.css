@@ -1,0 +1,144 @@
+:root {
+    --lightred: #C15C5C;
+    --red: #BA4949;
+    --darkred: #A44E4E;
+    --white: #FFFFFF;
+
+    --lightturquoise: #4C9196;
+    --turquoise: #38858A;
+    --darkturquoise: #417B80;
+
+    --lightblue: #4D7FA2;
+    --blue: #397097;
+    --darkblue: #426C8A;
+}
+
+
+* {
+    font-family: 'Single Day', cursive;
+    font-size: 1.3rem;
+    background-color: var(--red);
+    color: var(--white);
+    cursor: default;
+}
+
+header {
+    text-align: center;
+
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+main {
+
+    display: flex;
+    justify-content: center;
+    font-weight: 600;
+    align-items: center;
+}
+
+.main-section {
+    padding: 1rem 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--lightred);
+    border-radius: 1rem;
+}
+
+#time {
+    font-size: 7.5rem;
+    margin: 1.45rem;
+    font-family: 'Archivo Black', sans-serif;
+}
+
+.button-list {
+    background-color: var(--lightred);
+}
+
+.button-list button {
+    border: 0;
+    padding: 0 1.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    background-color: var(--lightred);
+}
+
+.button-list .active {
+    background-color: var(--darkred);
+}
+
+.light {
+    background-color: var(--lightred);
+    transition: background-color 0.1s ease;
+}
+
+.start-button {
+    cursor: pointer;
+    padding: 1rem 3rem;
+    background-color: var(--white);
+    color: var(--red);
+    border: 0;
+    border-radius: 1rem;
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+@media screen and (max-width: 768px) {
+
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main-section {
+        padding: 1rem;
+    }
+
+    #time {
+        font-size: 4rem;
+        margin: 1rem;
+    }
+
+    .button-list button {
+        padding: 0.6rem;
+        font-size: 1rem;
+    }
+
+    .start-button {
+        padding: 0.8rem 2rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .main-section {
+        padding: 0.5rem;
+    }
+
+    #time {
+        font-size: 3rem;
+        margin: 0.5rem;
+    }
+
+    .button-list button {
+        padding: 0.3rem;
+    }
+
+    .start-button {
+        padding: 0.6rem 1.5rem;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    * {
+        font-size: 1.1rem;
+    }
+}
