@@ -2,71 +2,108 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Projects</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <div class="container">
-    <div class="white">
-      <h1>My Projects</h1>
+<body class="bg-gray-900 text-gray-100">
 
-      <p><a href="favorite-singer/index.html">My Favorite Project</a></p>
+  <!-- Ana Başlık -->
+  <header class="text-center py-10">
+    <h1 class="text-4xl font-bold text-pink-400">My Projects</h1>
+    <button id="favorite-btn"
+      class="mt-2 text-lg text-pink-300 hover:text-pink-500 transition border border-pink-500 px-4 py-1 rounded-lg hover:bg-pink-500 hover:text-gray-900">
+      My Favorite Project
+    </button>
+  </header>
+
+  <!-- İçerik -->
+  <main class="max-w-5xl mx-auto grid sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
+
+    <!-- Copy Paste Projects -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl">
+      <h2 class="text-xl font-bold text-pink-400 mb-4 border-b border-pink-500 pb-2">Copy Paste Projects</h2>
+      <ul class="space-y-2">
+        <li><a href="tindog/index.html" class="text-gray-300 hover:text-pink-400 transition">Tindog Project</a></li>
+        <li><a href="drum/index.html" class="text-gray-300 hover:text-pink-400 transition">Drum</a></li>
+        <li><a href="expanding cards/index.html" class="text-gray-300 hover:text-pink-400 transition">Expanding
+            Cards</a></li>
+        <li><a href="Progress Steps/index.html" class="text-gray-300 hover:text-pink-400 transition">Progress Steps</a>
+        </li>
+      </ul>
     </div>
 
-    <div class="purble">
-      <u>
-        <h3>Copy Paste Projects</h3>
-      </u>
-
-      <p><a href="tindog/index.html"  >Tindog Project</a></p>
-      <p><a href="drum/index.html"  >Drum</a></p>
-      <p><a href="expanding cards/index.html"  >Expanding Cards</a></p>
-      <p><a href="Progress Steps/index.html"  >Progress Steps</a></p>
+    <!-- HTML/CSS Projects -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl">
+      <h2 class="text-xl font-bold text-pink-400 mb-4 border-b border-pink-500 pb-2">HTML / CSS</h2>
+      <ul class="space-y-2">
+        <li><a href="portfolio/index.html" class="text-gray-300 hover:text-pink-400 transition">Portfolio</a></li>
+        <li><a href="cv/index.html" class="text-gray-300 hover:text-pink-400 transition">CV</a></li>
+        <li><a href="Dilan-polat/index.html" class="text-gray-300 hover:text-pink-400 transition">Dilan-Polat</a></li>
+        <li><a href="Ferrari/index.html" class="text-gray-300 hover:text-pink-400 transition">Ferrari</a></li>
+        <li><a href="Shopping-website/index.html" class="text-gray-300 hover:text-pink-400 transition">Shopping
+            Website</a></li>
+        <li><a href="samsung/index.html" class="text-gray-300 hover:text-pink-400 transition">Samsung</a></li>
+        <li><a href="solar-system/index.html" class="text-gray-300 hover:text-pink-400 transition">Solar System</a></li>
+      </ul>
     </div>
 
-    <div class="purble">
-      <u>
-        <h3>HTML / CSS</h3>
-      </u>
-
-      <p><a href="portfolio/index.html"  >Portfolio</a></p>
-      <p><a href="cv/index.html"  >CV</a></p>
-      <p><a href="Dilan-polat/index.html"  >Dilan-polat</a></p>
-      <p><a href="Ferrari/index.html"  >Ferrari</a></p>
-      <p><a href="Shopping-website/index.html"  >Shopping Website</a></p>
-      <p><a href="samsung/index.html"  >Samsung</a></p>
-      <p><a href="solar-system/index.html"  >Solar System</a></p>
+    <!-- JavaScript Projects -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl">
+      <h2 class="text-xl font-bold text-pink-400 mb-4 border-b border-pink-500 pb-2">JAVASCRIPT</h2>
+      <ul class="space-y-2">
+        <li><a href="pomodoro/index.html" class="text-gray-300 hover:text-pink-400 transition">Pomodoro</a></li>
+        <li><a href="Background-color/index.html" class="text-gray-300 hover:text-pink-400 transition">Background
+            Color</a></li>
+        <li><a href="clock/index.html" class="text-gray-300 hover:text-pink-400 transition">Clock</a></li>
+        <li><a href="dicee/index.html" class="text-gray-300 hover:text-pink-400 transition">Dicee Game</a></li>
+        <li><a href="car/index.html" class="text-gray-300 hover:text-pink-400 transition">Car - Expanding Cards</a></li>
+        <li><a href="image slide/index.html" class="text-gray-300 hover:text-pink-400 transition">Image Slide</a></li>
+        <li><a href="Predict-number/index.html" class="text-gray-300 hover:text-pink-400 transition">Predict Number</a>
+        </li>
+        <li><a href="to-do/index.html" class="text-gray-300 hover:text-pink-400 transition">To-Do List</a></li>
+        <li><a href="Random-number/index.html" class="text-gray-300 hover:text-pink-400 transition">Random Number</a>
+        </li>
+        <li><a href="tic-tac-toe/index.html" class="text-gray-300 hover:text-pink-400 transition">Tic Tac Toe</a></li>
+        <li><a href="troll/index.html" class="text-gray-300 hover:text-pink-400 transition">Troll Sounds</a></li>
+      </ul>
     </div>
 
-    <div class="purble">
-      <u>
-        <h3>JAVASCRIPT</h3>
-      </u>
+  </main>
 
-      <p><a href="pomodoro/index.html">Pomodoro</a></p>
-      <p><a href="Background-color/index.html">Background Color</a></p>
-      <p><a href="clock/index.html">Clock</a></p>
-      <p><a href="dicee/index.html">Dicee Game</a></p>
-      <p><a href="car/index.html">Car - Expanding Cards</a></p>
-      <p><a href="image slide/index.html">Image Slide</a></p>
-      <p><a href="Predict-number/index.html">Predict Number</a></p>
-      <p><a href="to-do/index.html">To-Do List</a></p>
-      <p><a href="Random-number/index.html">Random Number</a></p>
-      <p><a href="tic-tac-toe/index.html">Tic Tac Toe</a></p>
-      <p><a href="troll/index.html">Troll Sounds</a></p>
+  <!-- Footer -->
+  <footer class="text-center py-6 mt-10">
+    <p class="text-gray-400">- Recep Özgür MH -</p>
+  </footer>
 
+  <!-- Modal (Favori Proje) -->
+  <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96 text-center">
+      <h2 class="text-2xl font-bold text-pink-400 mb-4">Favorite Project</h2>
+      <p class="text-gray-300">My favorite project is <strong>Pomodoro</strong>. It helps me focus on my tasks
+        efficiently.</p>
+      <button id="close-modal"
+        class="mt-4 px-4 py-2 bg-pink-500 text-gray-900 font-bold rounded-lg hover:bg-pink-400 transition">Close</button>
     </div>
-
-    <div class="white">
-      <h4>- Recep Özgür MIH -</h4>
-    </div>
-
   </div>
 
-  <script src="script.js"></script>
+  <!-- JavaScript -->
+  <script>
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('close-modal');
+
+    favoriteBtn.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+  </script>
+
 </body>
 
 </html>
