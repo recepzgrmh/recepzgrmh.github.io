@@ -1,5 +1,3 @@
-*.html linguist-vendored=true
-*.css  linguist-vendored=true
-packages/** linguist-vendored=true
-web/**      linguist-vendored=true
-public/**   linguist-vendored=true
+
+**/*.html linguist-vendored=true
+**/*.css  linguist-vendored=true
