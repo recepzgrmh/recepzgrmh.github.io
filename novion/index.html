@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novion Technology Solutions</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#005BFF", secondary: "#00FFE0" },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        :root {
+            --gradient-start: #1C1E6A;
+            --gradient-mid: #005BFF;
+            --gradient-end: #00C7E6;
+            --accent: #00FFE0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(0, 255, 224, 0.5);
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .timeline-item::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: -12px;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: rgba(0, 91, 255, 0.7);
+        }
+
+        .input-field {
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+            box-shadow: 0 1px 0 var(--accent);
+        }
+
+        .input-field:focus+label {
+            color: var(--accent);
+            transform: translateY(-20px) scale(0.8);
+        }
+
+        .input-field:not(:placeholder-shown)+label {
+            transform: translateY(-20px) scale(0.8);
+        }
+
+        .input-label {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .custom-switch {
+            width: 50px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .custom-switch.active {
+            background: var(--accent);
+        }
+
+        .custom-switch::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s;
+        }
+
+        .custom-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        .expertise-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .expertise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .testimonial-slider {
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .testimonial-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .testimonial-slide {
+            scroll-snap-align: center;
+        }
+
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-menu {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="glass-nav fixed top-0 left-0 w-full z-50 py-4">
+        <div class="container mx-auto px-6 flex items-center justify-between">
+            <a href="#" class="text-2xl font-['Pacifico'] text-primary">Novion</a>
+
+            <div class="desktop-menu hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-gray-800 hover:text-primary transition">About</a>
+                <a href="#vision" class="text-gray-800 hover:text-primary transition">Vision</a>
+                <a href="#expertise" class="text-gray-800 hover:text-primary transition">Expertise</a>
+                <a href="#projects" class="text-gray-800 hover:text-primary transition">Projects</a>
+                <a href="#testimonials" class="text-gray-800 hover:text-primary transition">Testimonials</a>
+                <a href="#contact" class="text-gray-800 hover:text-primary transition">Contact</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">EN</span>
+                    <div id="language-switch" class="custom-switch">
+                        <span class="sr-only">Switch Language</span>
+                    </div>
+                    <span class="text-sm text-gray-600">TR</span>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-sun-line"></i>
+                        </div>
+                    </span>
+                    <div id="theme-switch" class="custom-switch">
+                        <span class="sr-only">Switch Theme</span>
+                    </div>
+                    <span class="text-sm text-gray-600">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-moon-line"></i>
+                        </div>
+                    </span>
+                </div>
+
+                <button class="mobile-menu-button w-10 h-10 flex items-center justify-center">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="ri-menu-line text-xl"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="container mx-auto px-6 py-20">
+            <button id="close-menu" class="absolute top-6 right-6 w-10 h-10 flex items-center justify-center">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="ri-close-line text-2xl"></i>
+                </div>
+            </button>
+
+            <div class="flex flex-col space-y-6 text-xl">
+                <a href="#about" class="text-gray-800 hover:text-primary transition py-2">About</a>
+                <a href="#vision" class="text-gray-800 hover:text-primary transition py-2">Vision</a>
+                <a href="#expertise" class="text-gray-800 hover:text-primary transition py-2">Expertise</a>
+                <a href="#projects" class="text-gray-800 hover:text-primary transition py-2">Projects</a>
+                <a href="#testimonials" class="text-gray-800 hover:text-primary transition py-2">Testimonials</a>
+                <a href="#contact" class="text-gray-800 hover:text-primary transition py-2">Contact</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center overflow-hidden"
+        style="background-image: url('https://readdy.ai/api/search-image?query=futuristic%20digital%20landscape%20with%20abstract%20circuitry%2C%20digital%20waves%2C%20and%20glowing%20polygon%20mesh%20in%20blue%20and%20teal%20colors.%20The%20left%20side%20should%20be%20darker%20and%20more%20empty%20to%20allow%20for%20text%20overlay%2C%20while%20the%20right%20side%20should%20have%20more%20detailed%20tech%20elements.%20The%20transition%20between%20left%20and%20right%20must%20be%20natural%20and%20gradual.&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#1C1E6A]/80 via-[#005BFF]/50 to-transparent"></div>
+
+        <div class="container mx-auto px-6 py-20 relative z-10 w-full">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight reveal">
+                    Innovate Beyond Limits
+                </h1>
+                <h2 class="text-2xl md:text-3xl font-medium text-white/90 mb-6 reveal" style="animation-delay: 0.2s">
+                    Where Vision Meets Technology
+                </h2>
+                <p class="text-lg text-white/80 mb-8 max-w-xl reveal" style="animation-delay: 0.3s">
+                    Transforming businesses through cutting-edge AI, mobile, and web
+                    solutions from İzmir to the world.
+                </p>
+                <div class="reveal" style="animation-delay: 0.4s">
+                    <a href="#contact"
+                        class="inline-flex items-center px-6 py-3 bg-secondary text-gray-900 font-medium rounded-button hover:bg-opacity-90 transition neon-glow whitespace-nowrap">
+                        <span class="mr-2">Get in Touch</span>
+                        <span class="ml-2 text-sm">| Bize Ulaşın</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 text-center reveal">
+                About Novion
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">
+                        Boutique Technology Consultancy
+                    </h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        Founded in 2020 in the vibrant tech hub of İzmir, Novion
+                        Technology Solutions has rapidly established itself as a premier
+                        boutique consultancy specializing in cutting-edge technology
+                        solutions.
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        We bring together a diverse team of experts with deep industry
+                        knowledge and technical expertise to deliver transformative
+                        digital experiences that drive business growth and innovation.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Our approach combines strategic thinking with technical
+                        excellence, ensuring that every solution we create not only meets
+                        current needs but is built to evolve with your business.
+                    </p>
+                </div>
+
+                <div class="reveal" style="animation-delay: 0.2s">
+                    <div class="rounded-2xl overflow-hidden shadow-xl">
+                        <img src="https://readdy.ai/api/search-image?query=3D%20visualization%20of%20a%20futuristic%20dashboard%20with%20holographic%20displays%20showing%20data%20analytics%20and%20AI%20processing.%20The%20image%20should%20have%20a%20blue%20gradient%20background%20with%20glowing%20elements%20and%20should%20look%20like%20a%20high-tech%20interface%20that%20a%20technology%20consultancy%20might%20create.%20Include%20abstract%20digital%20elements%20and%20data%20visualization%20components.&width=600&height=400&seq=dashboard1&orientation=landscape"
+                            alt="Novion Dashboard" class="w-full h-auto object-cover" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.3s">
+                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-8 h-8 flex items-center justify-center text-primary">
+                            <i class="ri-award-line text-2xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        Quality Excellence
+                    </h4>
+                    <p class="text-gray-700">
+                        We hold ourselves to the highest standards in every project,
+                        ensuring meticulous attention to detail and exceptional results
+                        that exceed expectations.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.4s">
+                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-8 h-8 flex items-center justify-center text-primary">
+                            <i class="ri-shield-check-line text-2xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        Security First
+                    </h4>
+                    <p class="text-gray-700">
+                        We implement robust security measures throughout our development
+                        process, protecting your data and systems with industry-leading
+                        practices.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.5s">
+                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-8 h-8 flex items-center justify-center text-primary">
+                            <i class="ri-recycle-line text-2xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        Sustainability
+                    </h4>
+                    <p class="text-gray-700">
+                        We design solutions with longevity in mind, creating scalable,
+                        maintainable systems that grow with your business while minimizing
+                        environmental impact.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission Section -->
+    <section id="vision" class="py-20 relative overflow-hidden"
+        style="background-image: url('https://readdy.ai/api/search-image?query=abstract%20digital%20waves%20pattern%20with%20a%20gradient%20overlay%20from%20dark%20blue%20to%20light%20blue%2C%20with%20subtle%20polygon%20mesh%20elements.%20The%20image%20should%20have%20a%20modern%20tech%20feel%20with%20flowing%20lines%20representing%20digital%20transformation%20and%20innovation.%20The%20background%20should%20be%20subtle%20enough%20to%20allow%20text%20to%20be%20readable%20over%20it.&width=1920&height=800&seq=vision1&orientation=landscape'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#1C1E6A]/90 to-[#005BFF]/80"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-8">
+                    Vision & Mission
+                </h2>
+                <div class="p-8 glass-card rounded-2xl">
+                    <blockquote class="text-xl md:text-2xl italic text-white mb-4">
+                        "Hedefimiz — İzmir'den başlayıp Türkiye'nin her köşesinde iş
+                        değeri yaratan öncü çözümler sunmak."
+                    </blockquote>
+                    <p class="text-white/80">
+                        Our goal is to deliver pioneering solutions that create business
+                        value across Turkey, starting from İzmir.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto relative pl-8 border-l border-secondary">
+                <div class="timeline-item relative pl-8 pb-12 reveal">
+                    <h4 class="text-xl font-bold text-white mb-2">2020</h4>
+                    <h5 class="text-lg font-semibold text-secondary mb-3">
+                        Foundation
+                    </h5>
+                    <p class="text-white/80">
+                        Established in İzmir with a team of 5 passionate technologists
+                        focused on web development and mobile applications.
+                    </p>
+                </div>
+
+                <div class="timeline-item relative pl-8 pb-12 reveal" style="animation-delay: 0.2s">
+                    <h4 class="text-xl font-bold text-white mb-2">2021</h4>
+                    <h5 class="text-lg font-semibold text-secondary mb-3">
+                        AI Integration
+                    </h5>
+                    <p class="text-white/80">
+                        Expanded our expertise into artificial intelligence solutions,
+                        launching our first AI-powered analytics platform.
+                    </p>
+                </div>
+
+                <div class="timeline-item relative pl-8 pb-12 reveal" style="animation-delay: 0.3s">
+                    <h4 class="text-xl font-bold text-white mb-2">2023</h4>
+                    <h5 class="text-lg font-semibold text-secondary mb-3">
+                        National Expansion
+                    </h5>
+                    <p class="text-white/80">
+                        Opened a second office in Istanbul and grew to a team of 25
+                        specialists serving clients throughout Turkey.
+                    </p>
+                </div>
+
+                <div class="timeline-item relative pl-8 reveal" style="animation-delay: 0.4s">
+                    <h4 class="text-xl font-bold text-white mb-2">2025</h4>
+                    <h5 class="text-lg font-semibold text-secondary mb-3">
+                        International Reach
+                    </h5>
+                    <p class="text-white/80">
+                        Expanding our services to international markets while maintaining
+                        our commitment to innovation and quality.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section id="expertise" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 text-center reveal">
+                Our Expertise
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card">
+                    <div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-10 h-10 flex items-center justify-center text-primary">
+                            <i class="ri-brain-line text-3xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        AI Projects
+                    </h4>
+                    <p class="text-gray-700 mb-6">
+                        Custom AI solutions that transform raw data into actionable
+                        insights, from predictive analytics to natural language
+                        processing.
+                    </p>
+                    <div class="flex">
+                        <span class="text-sm font-medium text-primary flex items-center">
+                            Learn more
+                            <div class="w-5 h-5 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.2s">
+                    <div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-10 h-10 flex items-center justify-center text-primary">
+                            <i class="ri-smartphone-line text-3xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        X-Platform Mobile
+                    </h4>
+                    <p class="text-gray-700 mb-6">
+                        Seamless cross-platform mobile applications that deliver
+                        consistent experiences across iOS and Android with a single
+                        codebase.
+                    </p>
+                    <div class="flex">
+                        <span class="text-sm font-medium text-primary flex items-center">
+                            Learn more
+                            <div class="w-5 h-5 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.3s">
+                    <div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-10 h-10 flex items-center justify-center text-primary">
+                            <i class="ri-code-box-line text-3xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        Web Platforms
+                    </h4>
+                    <p class="text-gray-700 mb-6">
+                        Scalable, responsive web applications built with modern frameworks
+                        that provide exceptional user experiences across all devices.
+                    </p>
+                    <div class="flex">
+                        <span class="text-sm font-medium text-primary flex items-center">
+                            Learn more
+                            <div class="w-5 h-5 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 shadow-lg reveal expertise-card" style="animation-delay: 0.4s">
+                    <div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full mb-6">
+                        <div class="w-10 h-10 flex items-center justify-center text-primary">
+                            <i class="ri-message-3-line text-3xl"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+                        Chat-bots & Cloud
+                    </h4>
+                    <p class="text-gray-700 mb-6">
+                        Intelligent conversational interfaces powered by advanced NLP and
+                        deployed on scalable cloud infrastructure for 24/7 availability.
+                    </p>
+                    <div class="flex">
+                        <span class="text-sm font-medium text-primary flex items-center">
+                            Learn more
+                            <div class="w-5 h-5 flex items-center justify-center ml-1">
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 text-center reveal">
+                Featured Projects
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[300px] relative cursor-pointer"
+                    style="animation-delay: 0.1s">
+                    <img src="https://readdy.ai/api/search-image?query=modern%20fintech%20mobile%20app%20interface%20with%20clean%20design%2C%20showing%20financial%20dashboard%20with%20charts%20and%20statistics.%20The%20image%20should%20have%20a%20professional%20look%20with%20blue%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=600&seq=project1&orientation=portrait"
+                        alt="FinTech App" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">TurkPay FinTech</h4>
+                        <p class="text-white/90 mb-4">
+                            Mobile payment platform with AI fraud detection
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">AI</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Mobile</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">FinTech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[400px] relative cursor-pointer"
+                    style="animation-delay: 0.2s">
+                    <img src="https://readdy.ai/api/search-image?query=e-commerce%20website%20interface%20showing%20product%20listings%20with%20a%20modern%2C%20clean%20design.%20The%20interface%20should%20have%20search%20functionality%2C%20product%20cards%2C%20and%20navigation%20elements.%20Use%20a%20blue%20and%20white%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=800&seq=project2&orientation=portrait"
+                        alt="E-Commerce Platform" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">AnadoluMarket</h4>
+                        <p class="text-white/90 mb-4">
+                            Nationwide e-commerce platform with personalized recommendations
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Web</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">AI</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">E-Commerce</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[300px] relative cursor-pointer"
+                    style="animation-delay: 0.3s">
+                    <img src="https://readdy.ai/api/search-image?query=chatbot%20interface%20with%20conversation%20bubbles%20and%20AI%20assistant%20responding%20to%20user%20queries.%20The%20design%20should%20be%20modern%20and%20clean%20with%20a%20blue%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=600&seq=project3&orientation=portrait"
+                        alt="AI Chatbot" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">TurkAssist</h4>
+                        <p class="text-white/90 mb-4">
+                            Multilingual customer service chatbot for tourism industry
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Chatbot</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">NLP</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Cloud</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[350px] relative cursor-pointer"
+                    style="animation-delay: 0.4s">
+                    <img src="https://readdy.ai/api/search-image?query=healthcare%20app%20interface%20showing%20patient%20monitoring%20dashboard%20with%20vital%20signs%2C%20medication%20tracking%2C%20and%20appointment%20scheduling.%20The%20design%20should%20be%20clean%20and%20professional%20with%20a%20blue%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=700&seq=project4&orientation=portrait"
+                        alt="Healthcare Platform" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">MediTrack</h4>
+                        <p class="text-white/90 mb-4">
+                            Healthcare monitoring system with predictive analytics
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Healthcare</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">IoT</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">AI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[400px] relative cursor-pointer"
+                    style="animation-delay: 0.5s">
+                    <img src="https://readdy.ai/api/search-image?query=smart%20city%20dashboard%20showing%20urban%20data%20visualization%20with%20maps%2C%20traffic%20patterns%2C%20energy%20usage%2C%20and%20public%20services%20monitoring.%20The%20interface%20should%20be%20modern%20with%20a%20blue%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=800&seq=project5&orientation=portrait"
+                        alt="Smart City Platform" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">
+                            İzmir Smart City
+                        </h4>
+                        <p class="text-white/90 mb-4">
+                            Urban management platform with real-time analytics
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">IoT</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Big Data</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Web</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal project-card rounded-xl overflow-hidden shadow-lg h-[350px] relative cursor-pointer"
+                    style="animation-delay: 0.6s">
+                    <img src="https://readdy.ai/api/search-image?query=logistics%20and%20supply%20chain%20management%20dashboard%20showing%20shipment%20tracking%2C%20inventory%20management%2C%20and%20delivery%20optimization.%20The%20interface%20should%20be%20clean%20and%20professional%20with%20a%20blue%20color%20scheme%20matching%20the%20websites%20gradient.&width=600&height=700&seq=project6&orientation=portrait"
+                        alt="Logistics Platform" class="w-full h-full object-cover" />
+                    <div class="project-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">LogisTurk</h4>
+                        <p class="text-white/90 mb-4">
+                            Supply chain optimization platform with predictive routing
+                        </p>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Logistics</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">AI</span>
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs text-white">Web</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 reveal" style="animation-delay: 0.7s">
+                <a href="#"
+                    class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-button hover:bg-opacity-90 transition whitespace-nowrap">
+                    <span>View All Projects</span>
+                    <div class="w-5 h-5 flex items-center justify-center ml-2">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50" id="modal-overlay"></div>
+        <div class="relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <button id="close-modal"
+                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-700">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="ri-close-line text-2xl"></i>
+                </div>
+            </button>
+
+            <div class="p-6 md:p-8">
+                <div class="mb-6">
+                    <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-2">
+                        Project Title
+                    </h3>
+                    <p id="modal-description" class="text-gray-700">
+                        Project description loading...
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <img id="modal-image" src="" alt="Project Screenshot" class="w-full h-auto rounded-xl" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex items-center mb-2">
+                            <div class="w-6 h-6 flex items-center justify-center text-green-500 mr-2">
+                                <i class="ri-speed-up-line"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900">Performance</h4>
+                        </div>
+                        <p id="modal-performance" class="text-gray-700">Loading...</p>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex items-center mb-2">
+                            <div class="w-6 h-6 flex items-center justify-center text-blue-500 mr-2">
+                                <i class="ri-user-smile-line"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900">User Experience</h4>
+                        </div>
+                        <p id="modal-ux" class="text-gray-700">Loading...</p>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex items-center mb-2">
+                            <div class="w-6 h-6 flex items-center justify-center text-red-500 mr-2">
+                                <i class="ri-money-dollar-circle-line"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900">Cost Efficiency</h4>
+                        </div>
+                        <p id="modal-cost" class="text-gray-700">Loading...</p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-3">
+                        Technology Stack
+                    </h4>
+                    <div id="modal-tech" class="flex flex-wrap gap-2">
+                        <!-- Tech stack tags will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <a id="modal-cta" href="#contact"
+                        class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-button hover:bg-opacity-90 transition whitespace-nowrap">
+                        <span>Discuss Similar Project</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 text-center reveal">
+                Testimonials & Partners
+            </h2>
+
+            <div class="relative mb-16">
+                <div class="testimonial-slider flex overflow-x-auto pb-8 -mx-4 px-4">
+                    <div class="testimonial-slide flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4">
+                        <div class="glass-card rounded-2xl p-8 shadow-lg h-full">
+                            <div class="flex items-center mb-6">
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                            </div>
+                            <blockquote class="text-gray-700 mb-6 italic">
+                                "Novion transformed our customer service with their AI chatbot
+                                solution. The implementation was smooth, and the results have
+                                exceeded our expectations with a 40% reduction in response
+                                time."
+                            </blockquote>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                                    <div class="w-6 h-6 flex items-center justify-center text-gray-500">
+                                        <i class="ri-user-line"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-gray-900">Mehmet Yılmaz</h5>
+                                    <p class="text-sm text-gray-600">CTO, TurkTravel Group</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-slide flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4">
+                        <div class="glass-card rounded-2xl p-8 shadow-lg h-full">
+                            <div class="flex items-center mb-6">
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                            </div>
+                            <blockquote class="text-gray-700 mb-6 italic">
+                                "Working with Novion on our mobile payment platform was a
+                                game-changer. Their expertise in both AI and mobile
+                                development delivered a secure, user-friendly solution that
+                                our customers love."
+                            </blockquote>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                                    <div class="w-6 h-6 flex items-center justify-center text-gray-500">
+                                        <i class="ri-user-line"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-gray-900">Ayşe Kaya</h5>
+                                    <p class="text-sm text-gray-600">
+                                        Product Director, TurkPay
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-slide flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4">
+                        <div class="glass-card rounded-2xl p-8 shadow-lg h-full">
+                            <div class="flex items-center mb-6">
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-secondary mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <div class="w-5 h-5 flex items-center justify-center text-gray-300 mr-1">
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                            </div>
+                            <blockquote class="text-gray-700 mb-6 italic">
+                                "The smart city platform Novion developed for İzmir has
+                                revolutionized our urban management. Real-time data analytics
+                                has improved our decision-making and resource allocation
+                                significantly."
+                            </blockquote>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                                    <div class="w-6 h-6 flex items-center justify-center text-gray-500">
+                                        <i class="ri-user-line"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-gray-900">Emre Demir</h5>
+                                    <p class="text-sm text-gray-600">
+                                        Urban Planning Director, İzmir Municipality
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 hidden md:block">
+                    <button id="prev-testimonial"
+                        class="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-700 hover:text-primary transition">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 hidden md:block">
+                    <button id="next-testimonial"
+                        class="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-700 hover:text-primary transition">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="flex justify-center space-x-2 mt-6 md:hidden">
+                    <button class="w-3 h-3 rounded-full bg-primary"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-900 mb-8 text-center reveal">
+                Trusted By
+            </h3>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+                <div class="flex justify-center reveal" style="animation-delay: 0.1s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-bank-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">TurkBank</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center reveal" style="animation-delay: 0.2s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-hospital-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">MediTurk</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center reveal" style="animation-delay: 0.3s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-shopping-bag-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">AnadoluMarket</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center reveal" style="animation-delay: 0.4s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-government-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">İzmir Municipality</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center reveal" style="animation-delay: 0.5s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-plane-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">TurkTravel</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center reveal" style="animation-delay: 0.6s">
+                    <div class="partner-logo flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-gray-500 mr-2">
+                            <i class="ri-truck-fill text-2xl"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">LogisTurk</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-16 text-center reveal">
+                Get in Touch
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <div class="rounded-2xl overflow-hidden shadow-lg h-[400px] relative">
+                        <div style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;"
+                            class="absolute inset-0"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 bg-primary rounded-full flex items-center justify-center animate-pulse">
+                                <div class="w-8 h-8 flex items-center justify-center text-white">
+                                    <i class="ri-map-pin-line text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-start">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-4 mt-1">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary">
+                                    <i class="ri-map-pin-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Address</h4>
+                                <p class="text-gray-700">
+                                    Alsancak Technology Park, Floor 5<br />35220 İzmir, Turkey
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-4 mt-1">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary">
+                                    <i class="ri-mail-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Email</h4>
+                                <p class="text-gray-700">info@noviontech.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-4 mt-1">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary">
+                                    <i class="ri-phone-line"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Phone</h4>
+                                <p class="text-gray-700">+90 232 555 1234</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <h4 class="font-semibold text-gray-900 mb-3">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#"
+                                    class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-primary hover:text-white transition">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-linkedin-fill"></i>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-primary hover:text-white transition">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-twitter-x-fill"></i>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-primary hover:text-white transition">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-instagram-fill"></i>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-primary hover:text-white transition">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-github-fill"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal" style="animation-delay: 0.3s">
+                    <form class="glass-card rounded-2xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">
+                            Send Us a Message
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="relative">
+                                <input type="text" id="name"
+                                    class="input-field w-full px-0 py-2 text-gray-800 focus:outline-none"
+                                    placeholder=" " />
+                                <label for="name" class="input-label text-gray-600">Full Name</label>
+                            </div>
+
+                            <div class="relative">
+                                <input type="email" id="email"
+                                    class="input-field w-full px-0 py-2 text-gray-800 focus:outline-none"
+                                    placeholder=" " />
+                                <label for="email" class="input-label text-gray-600">Email Address</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="relative">
+                                <input type="text" id="subject"
+                                    class="input-field w-full px-0 py-2 text-gray-800 focus:outline-none"
+                                    placeholder=" " />
+                                <label for="subject" class="input-label text-gray-600">Subject</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="relative">
+                                <textarea id="message" rows="4"
+                                    class="input-field w-full px-0 py-2 text-gray-800 focus:outline-none resize-none"
+                                    placeholder=" "></textarea>
+                                <label for="message" class="input-label text-gray-600">Your Message</label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center mb-6">
+                            <div class="relative inline-block w-10 mr-2 align-middle">
+                                <input type="checkbox" id="privacy" class="opacity-0 absolute h-5 w-5" />
+                                <div
+                                    class="bg-gray-200 rounded-md w-5 h-5 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-primary">
+                                    <svg class="fill-current hidden w-3 h-3 text-primary pointer-events-none"
+                                        viewBox="0 0 20 20">
+                                        <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <label for="privacy" class="text-sm text-gray-700">I agree to the
+                                <a href="#" class="text-primary">Privacy Policy</a></label>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-primary text-white font-medium rounded-button hover:bg-opacity-90 transition whitespace-nowrap">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="#" class="text-2xl font-['Pacifico'] text-white">Novion</a>
+                </div>
+
+                <div class="text-sm text-gray-400">
+                    &copy; 2025 Novion Technology Solutions. All rights reserved.
+                </div>
+
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script id="scroll-reveal">
+        document.addEventListener("DOMContentLoaded", function () {
+            const revealElements = document.querySelectorAll(".reveal");
+
+            function checkReveal() {
+                const windowHeight = window.innerHeight;
+                const revealPoint = 150;
+
+                revealElements.forEach((element) => {
+                    const elementTop = element.getBoundingClientRect().top;
+
+                    if (elementTop < windowHeight - revealPoint) {
+                        element.classList.add("active");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", checkReveal);
+            window.addEventListener("resize", checkReveal);
+
+            // Initial check
+            checkReveal();
+        });
+    </script>
+
+    <script id="mobile-menu-toggle">
+        document.addEventListener("DOMContentLoaded", function () {
+            const mobileMenuButton = document.querySelector(".mobile-menu-button");
+            const closeMenuButton = document.getElementById("close-menu");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+
+            mobileMenuButton.addEventListener("click", function () {
+                mobileMenu.classList.remove("translate-x-full");
+            });
+
+            closeMenuButton.addEventListener("click", function () {
+                mobileMenu.classList.add("translate-x-full");
+            });
+
+            mobileMenuLinks.forEach((link) => {
+                link.addEventListener("click", function () {
+                    mobileMenu.classList.add("translate-x-full");
+                });
+            });
+        });
+    </script>
+
+    <script id="custom-switches">
+        document.addEventListener("DOMContentLoaded", function () {
+            const languageSwitch = document.getElementById("language-switch");
+            const themeSwitch = document.getElementById("theme-switch");
+
+            languageSwitch.addEventListener("click", function () {
+                this.classList.toggle("active");
+            });
+
+            themeSwitch.addEventListener("click", function () {
+                this.classList.toggle("active");
+                document.body.classList.toggle("dark-mode");
+            });
+
+            // Custom checkbox
+            const checkbox = document.getElementById("privacy");
+            const checkboxContainer = checkbox.nextElementSibling;
+            const checkmark = checkboxContainer.querySelector("svg");
+
+            checkbox.addEventListener("change", function () {
+                if (this.checked) {
+                    checkmark.classList.remove("hidden");
+                } else {
+                    checkmark.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+
+    <script id="testimonial-slider">
+        document.addEventListener("DOMContentLoaded", function () {
+            const slider = document.querySelector(".testimonial-slider");
+            const slides = document.querySelectorAll(".testimonial-slide");
+            const prevButton = document.getElementById("prev-testimonial");
+            const nextButton = document.getElementById("next-testimonial");
+
+            if (!slider || !prevButton || !nextButton) return;
+
+            let currentIndex = 0;
+            const slideWidth =
+                slides[0].offsetWidth +
+                parseInt(window.getComputedStyle(slides[0]).marginRight) +
+                parseInt(window.getComputedStyle(slides[0]).marginLeft);
+
+            function goToSlide(index) {
+                if (index < 0) index = 0;
+                if (index > slides.length - 1) index = slides.length - 1;
+
+                currentIndex = index;
+                slider.scrollTo({
+                    left: slideWidth * currentIndex,
+                    behavior: "smooth",
+                });
+            }
+
+            prevButton.addEventListener("click", () => goToSlide(currentIndex - 1));
+            nextButton.addEventListener("click", () => goToSlide(currentIndex + 1));
+        });
+    </script>
+
+    <script id="project-modal">
+        document.addEventListener("DOMContentLoaded", function () {
+            const projectCards = document.querySelectorAll(".project-card");
+            const modal = document.getElementById("project-modal");
+            const modalOverlay = document.getElementById("modal-overlay");
+            const closeModal = document.getElementById("close-modal");
+            const modalTitle = document.getElementById("modal-title");
+            const modalDescription = document.getElementById("modal-description");
+            const modalImage = document.getElementById("modal-image");
+            const modalPerformance = document.getElementById("modal-performance");
+            const modalUX = document.getElementById("modal-ux");
+            const modalCost = document.getElementById("modal-cost");
+            const modalTech = document.getElementById("modal-tech");
+
+            // Project data
+            const projectData = [
+                {
+                    title: "TurkPay FinTech",
+                    description:
+                        "A comprehensive mobile payment platform with advanced AI-powered fraud detection, serving over 500,000 users across Turkey. The platform processes more than 2 million transactions monthly with 99.99% uptime.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=fintech%20mobile%20app%20interface%20showing%20payment%20processing%2C%20transaction%20history%2C%20and%20security%20features%20with%20a%20clean%2C%20modern%20design%20in%20blue%20color%20scheme.%20The%20interface%20should%20show%20multiple%20screens%20of%20a%20financial%20application%20with%20professional%20appearance.&width=1200&height=800&seq=project1detail&orientation=landscape",
+                    performance:
+                        "45% faster transaction processing compared to previous system",
+                    ux: "Customer satisfaction increased by 38% after launch",
+                    cost: "Operational costs reduced by 27% through automation",
+                    tech: [
+                        "React Native",
+                        "TensorFlow",
+                        "Node.js",
+                        "MongoDB",
+                        "AWS",
+                        "Firebase",
+                    ],
+                },
+                {
+                    title: "AnadoluMarket",
+                    description:
+                        "A nationwide e-commerce platform featuring AI-driven personalized product recommendations. The system handles over 10,000 daily orders and integrates with multiple logistics providers for seamless delivery.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=e-commerce%20website%20dashboard%20showing%20product%20management%2C%20order%20processing%2C%20and%20customer%20analytics%20with%20a%20professional%20interface.%20The%20design%20should%20be%20clean%20with%20blue%20accents%20matching%20the%20website%20color%20scheme.&width=1200&height=800&seq=project2detail&orientation=landscape",
+                    performance: "Page load time reduced by 65% after optimization",
+                    ux: "Cart abandonment rate decreased by 31%",
+                    cost: "Marketing efficiency improved by 42% through AI targeting",
+                    tech: ["React", "Python", "Django", "PostgreSQL", "Elasticsearch", "GCP"],
+                },
+                {
+                    title: "TurkAssist",
+                    description:
+                        "A multilingual customer service chatbot for the tourism industry that handles inquiries in 8 languages. The system uses advanced NLP to understand context and provide accurate responses to common questions.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=chatbot%20dashboard%20showing%20conversation%20analytics%2C%20language%20processing%20metrics%2C%20and%20user%20interaction%20statistics.%20The%20interface%20should%20be%20modern%20with%20a%20blue%20color%20scheme%20matching%20the%20website%20gradient.&width=1200&height=800&seq=project3detail&orientation=landscape",
+                    performance: "Automated response to 78% of customer inquiries",
+                    ux: "Average response time reduced from 15 minutes to 8 seconds",
+                    cost: "Customer service staffing costs reduced by 35%",
+                    tech: ["Python", "TensorFlow", "BERT", "Flask", "Redis", "Azure"],
+                },
+                {
+                    title: "MediTrack",
+                    description:
+                        "A comprehensive healthcare monitoring system with predictive analytics for early disease detection. The platform connects patients with healthcare providers and provides real-time health insights.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=healthcare%20dashboard%20showing%20patient%20monitoring%2C%20vital%20signs%20tracking%2C%20and%20medical%20analytics%20with%20a%20professional%20medical%20interface.%20The%20design%20should%20use%20a%20blue%20color%20scheme%20matching%20the%20website%20gradient.&width=1200&height=800&seq=project4detail&orientation=landscape",
+                    performance:
+                        "Early detection rate improved by 42% for chronic conditions",
+                    ux: "Patient engagement increased by 56% after implementation",
+                    cost: "Preventative care savings estimated at 3.2M TRY annually",
+                    tech: ["Flutter", "Python", "FastAPI", "InfluxDB", "TensorFlow", "AWS"],
+                },
+                {
+                    title: "İzmir Smart City",
+                    description:
+                        "An urban management platform with real-time analytics for traffic, energy usage, and public services. The system helps city officials make data-driven decisions for resource allocation and urban planning.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=smart%20city%20dashboard%20showing%20urban%20data%20visualization%20with%20maps%2C%20traffic%20patterns%2C%20energy%20usage%20metrics%2C%20and%20public%20service%20monitoring.%20The%20interface%20should%20be%20modern%20with%20a%20blue%20color%20scheme%20matching%20the%20website%20gradient.&width=1200&height=800&seq=project5detail&orientation=landscape",
+                    performance: "Traffic congestion reduced by 23% in pilot areas",
+                    ux: "Public service response time improved by 34%",
+                    cost: "Energy consumption optimized, saving 18% in municipal costs",
+                    tech: ["React", "Node.js", "Python", "PostgreSQL", "Kafka", "TensorFlow"],
+                },
+                {
+                    title: "LogisTurk",
+                    description:
+                        "A supply chain optimization platform with predictive routing that serves major logistics companies across Turkey. The system optimizes delivery routes and manages inventory across multiple warehouses.",
+                    image:
+                        "https://readdy.ai/api/search-image?query=logistics%20dashboard%20showing%20supply%20chain%20visualization%2C%20route%20optimization%2C%20inventory%20management%2C%20and%20delivery%20tracking.%20The%20interface%20should%20be%20professional%20with%20a%20blue%20color%20scheme%20matching%20the%20website%20gradient.&width=1200&height=800&seq=project6detail&orientation=landscape",
+                    performance: "Delivery time reduced by 28% through route optimization",
+                    ux: "Order tracking accuracy improved to 99.7%",
+                    cost: "Fuel costs reduced by 22% through efficient routing",
+                    tech: [
+                        "Angular",
+                        "Java",
+                        "Spring Boot",
+                        "MySQL",
+                        "RabbitMQ",
+                        "Google Maps API",
+                    ],
+                },
+            ];
+
+            function openModal(index) {
+                const project = projectData[index];
+
+                modalTitle.textContent = project.title;
+                modalDescription.textContent = project.description;
+                modalImage.src = project.image;
+                modalImage.alt = project.title;
+                modalPerformance.textContent = project.performance;
+                modalUX.textContent = project.ux;
+                modalCost.textContent = project.cost;
+
+                // Clear and add tech tags
+                modalTech.innerHTML = "";
+                project.tech.forEach((tech) => {
+                    const tag = document.createElement("span");
+                    tag.className =
+                        "px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700";
+                    tag.textContent = tech;
+                    modalTech.appendChild(tag);
+                });
+
+                modal.classList.add("active");
+            }
+
+            function closeModalHandler() {
+                modal.classList.remove("active");
+            }
+
+            projectCards.forEach((card, index) => {
+                card.addEventListener("click", () => openModal(index));
+            });
+
+            closeModal.addEventListener("click", closeModalHandler);
+            modalOverlay.addEventListener("click", closeModalHandler);
+        });
+    </script>
+</body>
+
+</html>
