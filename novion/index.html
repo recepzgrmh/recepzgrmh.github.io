@@ -232,14 +232,22 @@
             visibility: visible;
         }
 
-        @media (max-width: 768px) {
-            .desktop-menu {
-                display: none;
+        /* Varsayılan (mobil) durum: görünür olsun */
+        .mobile-menu-button {
+            display: block;
+            /* ihtiyaca göre inline-block / flex vb. de olabilir */
+        }
+
+        /* 769 px ve üzerindeki ekranlarda gizle */
+        @media (min-width: 769px) {
+            .mobile-menu-button {
+                display: none !important;
             }
         }
 
-        @media (min-width: 769px) {
-            .mobile-menu-button {
+        /* Mobilde desktop menüyü gizlemeye devam edebilirsiniz */
+        @media (max-width: 768px) {
+            .desktop-menu {
                 display: none;
             }
         }
@@ -286,7 +294,7 @@
                     </span>
                 </div>
 
-                <button class="mobile-menu-button w-10 h-10 flex items-center justify-center">
+                <button class="mobile-menu-button w-10 h-10 flex items-center justify-center ">
                     <div class="w-6 h-6 flex items-center justify-center">
                         <i class="ri-menu-line text-xl"></i>
                     </div>
@@ -1236,27 +1244,21 @@
     </script>
 
     <script id="mobile-menu-toggle">
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", () => {
             const mobileMenuButton = document.querySelector(".mobile-menu-button");
-            const closeMenuButton = document.getElementById("close-menu");
             const mobileMenu = document.getElementById("mobile-menu");
+            const closeMenuButton = document.getElementById("close-menu"); // hâlâ dursun
             const mobileMenuLinks = mobileMenu.querySelectorAll("a");
 
-            mobileMenuButton.addEventListener("click", function () {
-                mobileMenu.classList.remove("translate-x-full");
-            });
+            // 1‒ basıldığında translate-x-full sınıfını VARSA siler, YOKSA ekler
+            const toggleMenu = () => mobileMenu.classList.toggle("translate-x-full");
 
-            closeMenuButton.addEventListener("click", function () {
-                mobileMenu.classList.add("translate-x-full");
-            });
-
-            mobileMenuLinks.forEach((link) => {
-                link.addEventListener("click", function () {
-                    mobileMenu.classList.add("translate-x-full");
-                });
-            });
+            mobileMenuButton.addEventListener("click", toggleMenu);   // aç-kapa
+            closeMenuButton?.addEventListener("click", toggleMenu);    // X ikonun da aynı
+            mobileMenuLinks.forEach(link => link.addEventListener("click", toggleMenu));
         });
     </script>
+
 
     <script id="custom-switches">
         document.addEventListener("DOMContentLoaded", function () {
