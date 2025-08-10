@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP4'ten GIF'e Dönüştürücü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- gif.js kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .loader {
+            border-top-color: #3498db;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8 space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-gray-800">MP4'ten GIF'e Dönüştürücü</h1>
+            <p class="text-gray-500 mt-2">Videolarınızı kolayca hareketli GIF'lere dönüştürün.</p>
+        </div>
+
+        <!-- Adım 1: Video Seçimi -->
+        <div class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center">
+            <label for="video-input" class="cursor-pointer w-full flex flex-col items-center">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="mt-2 text-sm font-medium text-gray-600">Video Dosyası Seçin</span>
+                <span id="file-name" class="text-xs text-gray-500 mt-1">Henüz dosya seçilmedi</span>
+            </label>
+            <input type="file" id="video-input" class="hidden" accept="video/*">
+        </div>
+
+        <!-- Video Önizleme -->
+        <video id="video-preview" class="w-full rounded-lg hidden" controls></video>
+
+        <!-- Ayarlar -->
+        <div id="settings" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label for="fps" class="block text-sm font-medium text-gray-700">FPS</label>
+                <input type="number" id="fps" value="10" min="1" max="30"
+                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="quality" class="block text-sm font-medium text-gray-700">Kalite (1-20)</label>
+                <input type="number" id="quality" value="10" min="1" max="20"
+                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="scale" class="block text-sm font-medium text-gray-700">Ölçek (%)</label>
+                <input type="number" id="scale" value="50" min="10" max="100" step="10"
+                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+        </div>
+
+        <!-- Dönüştürme Butonu -->
+        <button id="convert-btn"
+            class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            disabled>
+            GIF'e Dönüştür
+        </button>
+
+        <!-- İşlem Durumu -->
+        <div id="status" class="hidden flex flex-col items-center justify-center text-center p-4">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+            <p class="text-gray-600 font-medium">Dönüştürülüyor...</p>
+            <p id="progress" class="text-sm text-gray-500 mt-2">Lütfen bekleyin...</p>
+            <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
+                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Sonuç -->
+        <div id="result" class="hidden text-center space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">Dönüştürme Başarılı!</h2>
+            <img id="gif-output" class="w-full max-w-md mx-auto rounded-lg border-2 border-gray-200"
+                alt="Oluşturulan GIF">
+            <div class="flex gap-4 justify-center">
+                <a id="download-btn" href="#" download="converted.gif"
+                    class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                    GIF'i İndir
+                </a>
+                <button id="new-conversion-btn"
+                    class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    Yeni Dönüşüm
+                </button>
+            </div>
+        </div>
+
+        <!-- Gizli elementler -->
+        <canvas id="canvas" class="hidden"></canvas>
+    </div>
+
+    <script>
+        // DOM elementlerini seçme
+        const videoInput = document.getElementById('video-input');
+        const fileNameDisplay = document.getElementById('file-name');
+        const videoPreview = document.getElementById('video-preview');
+        const convertBtn = document.getElementById('convert-btn');
+        const settingsDiv = document.getElementById('settings');
+        const statusDiv = document.getElementById('status');
+        const progressText = document.getElementById('progress');
+        const progressBar = document.getElementById('progress-bar');
+        const resultDiv = document.getElementById('result');
+        const gifOutput = document.getElementById('gif-output');
+        const downloadBtn = document.getElementById('download-btn');
+        const newConversionBtn = document.getElementById('new-conversion-btn');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const fpsInput = document.getElementById('fps');
+        const qualityInput = document.getElementById('quality');
+        const scaleInput = document.getElementById('scale');
+
+        let videoFile;
+        let isConverting = false;
+
+        // Video dosyası seçildiğinde çalışacak fonksiyon
+        videoInput.addEventListener('change', (event) => {
+            videoFile = event.target.files[0];
+            if (videoFile) {
+                const videoURL = URL.createObjectURL(videoFile);
+                videoPreview.src = videoURL;
+                videoPreview.classList.remove('hidden');
+                settingsDiv.classList.remove('hidden');
+                fileNameDisplay.textContent = videoFile.name;
+                convertBtn.disabled = false;
+                resultDiv.classList.add('hidden');
+                statusDiv.classList.add('hidden');
+            }
+        });
+
+        // Yeni dönüşüm butonu
+        newConversionBtn.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // Formu sıfırlama fonksiyonu
+        function resetForm() {
+            videoInput.value = '';
+            if (gifOutput.src) {
+                URL.revokeObjectURL(gifOutput.src); // Önceki GIF için oluşturulan URL'yi temizle
+            }
+            videoFile = null;
+            fileNameDisplay.textContent = 'Henüz dosya seçilmedi';
+            videoPreview.classList.add('hidden');
+            videoPreview.src = '';
+            settingsDiv.classList.add('hidden');
+            convertBtn.disabled = true;
+            resultDiv.classList.add('hidden');
+            statusDiv.classList.add('hidden');
+            isConverting = false;
+        }
+
+        // Dönüştürme butonuna tıklandığında çalışacak fonksiyon
+        convertBtn.addEventListener('click', async () => {
+            if (!videoFile || isConverting) {
+                alert('Lütfen önce bir video dosyası seçin.');
+                return;
+            }
+
+            isConverting = true;
+
+            // Arayüzü güncelle
+            convertBtn.disabled = true;
+            statusDiv.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Video yükleniyor...';
+
+            try {
+                await processVideoToGif();
+            } catch (error) {
+                console.error('Dönüştürme hatası:', error);
+                alert('Dönüştürme sırasında bir hata oluştu: ' + error.message);
+                resetForm(); // Hata durumunda formu sıfırla
+            }
+        });
+
+        async function processVideoToGif() {
+            const video = document.createElement('video');
+            const videoURL = URL.createObjectURL(videoFile);
+            video.src = videoURL;
+            video.preload = 'metadata';
+            video.muted = true;
+
+            return new Promise((resolve, reject) => {
+                video.addEventListener('loadedmetadata', async () => {
+                    try {
+                        const duration = video.duration;
+                        const fps = parseInt(fpsInput.value) || 10;
+                        const quality = parseInt(qualityInput.value) || 10;
+                        const scale = parseInt(scaleInput.value) || 50;
+
+                        const originalWidth = video.videoWidth;
+                        const originalHeight = video.videoHeight;
+                        const width = Math.floor(originalWidth * scale / 100);
+                        const height = Math.floor(originalHeight * scale / 100);
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const frameDelay = 1000 / fps;
+                        const totalFrames = Math.min(Math.floor(duration * fps), 300); // Max 300 frame
+
+                        if (totalFrames <= 0) {
+                            return reject(new Error('Video süresi çok kısa veya FPS değeri geçersiz.'));
+                        }
+
+                        progressText.textContent = `0 / ${totalFrames} kare işleniyor...`;
+
+                        const gif = new GIF({
+                            workers: 2,
+                            quality: quality,
+                            width: width,
+                            height: height,
+                            workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+                        });
+
+                        gif.on('progress', (p) => {
+                            const percentage = Math.round(p * 100);
+                            progressText.textContent = `GIF oluşturuluyor... %${percentage}`;
+                            progressBar.style.width = percentage + '%';
+                        });
+
+                        gif.on('finished', (blob) => {
+                            const gifUrl = URL.createObjectURL(blob);
+                            gifOutput.src = gifUrl;
+                            downloadBtn.href = gifUrl;
+                            downloadBtn.download = `converted_${Date.now()}.gif`;
+
+                            statusDiv.classList.add('hidden');
+                            resultDiv.classList.remove('hidden');
+                            convertBtn.disabled = false;
+                            isConverting = false;
+
+                            URL.revokeObjectURL(videoURL);
+                            resolve();
+                        });
+
+                        let currentFrame = 0;
+                        const frameInterval = duration / totalFrames;
+
+                        // --- DÜZELTİLMİŞ KARE YAKALAMA MANTIĞI ---
+                        // 'onseeked' olayını bir kere tanımlıyoruz.
+                        // Bu fonksiyon, bir kareye atlama işlemi bittiğinde tetiklenir.
+                        video.onseeked = () => {
+                            // 1. Kareyi canvas'a çiz
+                            ctx.drawImage(video, 0, 0, width, height);
+                            // 2. Canvas'taki görüntüyü GIF'e ekle
+                            gif.addFrame(canvas, { copy: true, delay: frameDelay });
+
+                            currentFrame++;
+                            const progressPercentage = Math.round((currentFrame / totalFrames) * 100);
+                            progressBar.style.width = progressPercentage + '%';
+                            progressText.textContent = `${currentFrame} / ${totalFrames} kare işleniyor...`;
+
+                            // 3. Hala işlenecek kare varsa bir sonrakine atla
+                            if (currentFrame < totalFrames) {
+                                video.currentTime += frameInterval;
+                            } else {
+                                // 4. Tüm kareler bittiyse GIF'i oluştur (render)
+                                progressBar.style.width = '100%';
+                                progressText.textContent = 'Kareler tamamlandı, GIF oluşturuluyor...';
+                                gif.render();
+                            }
+                        };
+
+                        // İşlemi başlatmak için ilk kareye atla (currentTime = 0)
+                        // Bu, 'onseeked' olayını ilk kez tetikleyecektir.
+                        video.currentTime = 0.01; // 0'a atamak bazen sorun çıkarabilir, küçük bir değerle başla
+
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+
+                video.addEventListener('error', (e) => {
+                    reject(new Error('Video dosyası yüklenemedi veya bozuk.'));
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
