@@ -4,317 +4,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP4'ten GIF'e Dönüştürücü</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- gif.js kütüphanesi -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>BBT İzmir - IT Buluşması</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;600&display=swap"
+        rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* --- Temel Sayfa Ayarları --- */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #02000a;
+            overflow: hidden;
         }
 
-        .loader {
-            border-top-color: #3498db;
-            -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
+        /* --- Ana Afiş Konteyneri --- */
+        .poster-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1 / 1.414;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(10, 4, 26, 0.8) 0%, rgba(10, 4, 26, 0.95) 70%, #02000a 100%);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 80px rgba(138, 43, 226, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
+        /* --- YENİ: Dijital Yağmur Canvas'ı --- */
+        #binary-rain-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.3;
+        }
 
+        /* --- Metin İçerik Alanı --- */
+        .content {
+            z-index: 3;
+            /* Metinlerin her şeyin üzerinde kalmasını sağlar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Logonun ve metinlerin ortalanması için eklendi */
+            gap: 1rem;
+            background: rgba(5, 2, 16, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 191, 255, 0.1);
+        }
+
+        /* --- YENİ: Logo Stili --- */
+        .logo {
+            max-width: 150px;
+            /* Logonun maksimum genişliği */
+            width: 60%;
+            /* Esnek genişlik */
+            height: auto;
+            /* Oranı koru */
+
+            /* Logo ile başlık arasına boşluk ekler */
+            opacity: 0.9;
+            filter: invert(1) brightness(20);
+        }
+
+        /* --- Topluluk ve Etkinlik Adı --- */
+        .community-name,
+        .event-title {
+            font-family: 'Orbitron', sans-serif;
+            /* Daha teknolojik bir font */
+            text-transform: uppercase;
+        }
+
+        .community-name {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .event-title {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            background: linear-gradient(45deg, #c38fff, #58aaff, #00BFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
+            animation: glow 4s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
             100% {
-                -webkit-transform: rotate(360deg);
+                text-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
+            }
+
+            50% {
+                text-shadow: 0 0 25px rgba(195, 143, 255, 0.8);
             }
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
+        /* --- Ayırıcı Çizgi --- */
+        .separator {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+            border: none;
+            border-radius: 5px;
+            margin: 0.5rem auto;
+        }
+
+        /* --- Detay Bilgileri ve Emojiler --- */
+        .details p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            font-weight: 300;
+            margin: 0.4rem 0;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .details .emoji {
+            font-size: 1.2em;
+            color: #00BFFF;
+            opacity: 0.8;
+        }
+
+        /* --- YENİ: Hareketli Devre Yolları --- */
+        .circuit-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            mix-blend-mode: screen;
+            opacity: 0.3;
+        }
+
+        .circuit-bg svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .circuit-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 15s linear infinite;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* --- Mobil Cihazlar için Ayarlamalar --- */
+        @media (max-width: 480px) {
+            .poster-container {
+                padding: 20px;
+                aspect-ratio: 9 / 16;
             }
 
-            100% {
-                transform: rotate(360deg);
+            .content {
+                padding: 1.5rem;
+                gap: 0.5rem;
             }
         }
     </style>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8 space-y-6">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold text-gray-800">MP4'ten GIF'e Dönüştürücü</h1>
-            <p class="text-gray-500 mt-2">Videolarınızı kolayca hareketli GIF'lere dönüştürün.</p>
+<body>
+
+
+    <div class="poster-container">
+        <!-- 1. Katman: Dijital Yağmur -->
+        <canvas id="binary-rain-canvas"></canvas>
+
+        <!-- 2. Katman: Hareketli Devre Yolları -->
+        <div class="circuit-bg">
+            <svg viewBox="0 0 200 282">
+                <path class="circuit-path" stroke="#00BFFF" stroke-width="0.5" fill="none"
+                    d="M 10 10 H 50 V 50 H 10 Z M 50 20 H 80 V 80 H 20 V 50 M 150 10 H 190 V 50 H 120 V 20 M 10 272 H 50 V 232 H 10 Z M 190 272 H 150 V 232 H 190 Z M 100 141 m -20 0 a 20 20 0 1 0 40 0 a 20 20 0 1 0 -40 0 M 100 50 V 121 M 100 161 V 232 M 50 141 H 80 M 120 141 H 150 M 20 100 H 180 M 20 180 H 180" />
+                <path class="circuit-path" stroke="#8A2BE2" stroke-width="0.3" fill="none"
+                    d="M 10 80 H 190 V 200 H 10 Z" style="animation-delay: -5s;" />
+            </svg>
         </div>
 
-        <!-- Adım 1: Video Seçimi -->
-        <div class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center">
-            <label for="video-input" class="cursor-pointer w-full flex flex-col items-center">
-                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                <span class="mt-2 text-sm font-medium text-gray-600">Video Dosyası Seçin</span>
-                <span id="file-name" class="text-xs text-gray-500 mt-1">Henüz dosya seçilmedi</span>
-            </label>
-            <input type="file" id="video-input" class="hidden" accept="video/*">
-        </div>
+        <!-- 3. Katman: Metin İçeriği -->
+        <div class="content">
+            <!-- YENİ: Logo Eklendi -->
+            <img src="logo.png" alt="Topluluk Logosu" class="logo"
+                onerror="this.onerror=null;this.src='https://placehold.co/150x60/050210/FFFFFF?text=Logo';">
 
-        <!-- Video Önizleme -->
-        <video id="video-preview" class="w-full rounded-lg hidden" controls></video>
 
-        <!-- Ayarlar -->
-        <div id="settings" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label for="fps" class="block text-sm font-medium text-gray-700">FPS</label>
-                <input type="number" id="fps" value="10" min="1" max="30"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="quality" class="block text-sm font-medium text-gray-700">Kalite (1-20)</label>
-                <input type="number" id="quality" value="10" min="1" max="20"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="scale" class="block text-sm font-medium text-gray-700">Ölçek (%)</label>
-                <input type="number" id="scale" value="50" min="10" max="100" step="10"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <div class="event-title">IT Buluşması #7</div>
+            <hr class="separator">
+            <div class="details">
+                <p><span class="emoji">📅</span> 14 Ağustos Perşembe</p>
+                <p><span class="emoji">⏰</span> Saat 19:00</p>
+                <p><span class="emoji">📍</span> Recorner Alsancak</p>
             </div>
         </div>
-
-        <!-- Dönüştürme Butonu -->
-        <button id="convert-btn"
-            class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-            disabled>
-            GIF'e Dönüştür
-        </button>
-
-        <!-- İşlem Durumu -->
-        <div id="status" class="hidden flex flex-col items-center justify-center text-center p-4">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-            <p class="text-gray-600 font-medium">Dönüştürülüyor...</p>
-            <p id="progress" class="text-sm text-gray-500 mt-2">Lütfen bekleyin...</p>
-            <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
-                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    style="width: 0%"></div>
-            </div>
-        </div>
-
-        <!-- Sonuç -->
-        <div id="result" class="hidden text-center space-y-4">
-            <h2 class="text-2xl font-bold text-gray-800">Dönüştürme Başarılı!</h2>
-            <img id="gif-output" class="w-full max-w-md mx-auto rounded-lg border-2 border-gray-200"
-                alt="Oluşturulan GIF">
-            <div class="flex gap-4 justify-center">
-                <a id="download-btn" href="#" download="converted.gif"
-                    class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                    GIF'i İndir
-                </a>
-                <button id="new-conversion-btn"
-                    class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                    Yeni Dönüşüm
-                </button>
-            </div>
-        </div>
-
-        <!-- Gizli elementler -->
-        <canvas id="canvas" class="hidden"></canvas>
     </div>
 
     <script>
-        // DOM elementlerini seçme
-        const videoInput = document.getElementById('video-input');
-        const fileNameDisplay = document.getElementById('file-name');
-        const videoPreview = document.getElementById('video-preview');
-        const convertBtn = document.getElementById('convert-btn');
-        const settingsDiv = document.getElementById('settings');
-        const statusDiv = document.getElementById('status');
-        const progressText = document.getElementById('progress');
-        const progressBar = document.getElementById('progress-bar');
-        const resultDiv = document.getElementById('result');
-        const gifOutput = document.getElementById('gif-output');
-        const downloadBtn = document.getElementById('download-btn');
-        const newConversionBtn = document.getElementById('new-conversion-btn');
-        const canvas = document.getElementById('canvas');
+        // --- Dijital Yağmur Animasyonu ---
+        const canvas = document.getElementById('binary-rain-canvas');
         const ctx = canvas.getContext('2d');
-        const fpsInput = document.getElementById('fps');
-        const qualityInput = document.getElementById('quality');
-        const scaleInput = document.getElementById('scale');
 
-        let videoFile;
-        let isConverting = false;
+        // Canvas boyutunu konteynere göre ayarla
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
 
-        // Video dosyası seçildiğinde çalışacak fonksiyon
-        videoInput.addEventListener('change', (event) => {
-            videoFile = event.target.files[0];
-            if (videoFile) {
-                const videoURL = URL.createObjectURL(videoFile);
-                videoPreview.src = videoURL;
-                videoPreview.classList.remove('hidden');
-                settingsDiv.classList.remove('hidden');
-                fileNameDisplay.textContent = videoFile.name;
-                convertBtn.disabled = false;
-                resultDiv.classList.add('hidden');
-                statusDiv.classList.add('hidden');
-            }
-        });
+        const characters = '01';
+        const charArray = characters.split('');
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
 
-        // Yeni dönüşüm butonu
-        newConversionBtn.addEventListener('click', () => {
-            resetForm();
-        });
-
-        // Formu sıfırlama fonksiyonu
-        function resetForm() {
-            videoInput.value = '';
-            if (gifOutput.src) {
-                URL.revokeObjectURL(gifOutput.src); // Önceki GIF için oluşturulan URL'yi temizle
-            }
-            videoFile = null;
-            fileNameDisplay.textContent = 'Henüz dosya seçilmedi';
-            videoPreview.classList.add('hidden');
-            videoPreview.src = '';
-            settingsDiv.classList.add('hidden');
-            convertBtn.disabled = true;
-            resultDiv.classList.add('hidden');
-            statusDiv.classList.add('hidden');
-            isConverting = false;
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
         }
 
-        // Dönüştürme butonuna tıklandığında çalışacak fonksiyon
-        convertBtn.addEventListener('click', async () => {
-            if (!videoFile || isConverting) {
-                alert('Lütfen önce bir video dosyası seçin.');
-                return;
+        function drawRain() {
+            // Arka plana yarı saydam bir katman çizerek solma efekti yarat
+            ctx.fillStyle = 'rgba(2, 0, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00BFFF'; // Yağmur rengi
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Damlayı aşağı hareket ettir veya başa sar
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
             }
-
-            isConverting = true;
-
-            // Arayüzü güncelle
-            convertBtn.disabled = true;
-            statusDiv.classList.remove('hidden');
-            resultDiv.classList.add('hidden');
-            progressBar.style.width = '0%';
-            progressText.textContent = 'Video yükleniyor...';
-
-            try {
-                await processVideoToGif();
-            } catch (error) {
-                console.error('Dönüştürme hatası:', error);
-                alert('Dönüştürme sırasında bir hata oluştu: ' + error.message);
-                resetForm(); // Hata durumunda formu sıfırla
-            }
-        });
-
-        async function processVideoToGif() {
-            const video = document.createElement('video');
-            const videoURL = URL.createObjectURL(videoFile);
-            video.src = videoURL;
-            video.preload = 'metadata';
-            video.muted = true;
-
-            return new Promise((resolve, reject) => {
-                video.addEventListener('loadedmetadata', async () => {
-                    try {
-                        const duration = video.duration;
-                        const fps = parseInt(fpsInput.value) || 10;
-                        const quality = parseInt(qualityInput.value) || 10;
-                        const scale = parseInt(scaleInput.value) || 50;
-
-                        const originalWidth = video.videoWidth;
-                        const originalHeight = video.videoHeight;
-                        const width = Math.floor(originalWidth * scale / 100);
-                        const height = Math.floor(originalHeight * scale / 100);
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        const frameDelay = 1000 / fps;
-                        const totalFrames = Math.min(Math.floor(duration * fps), 300); // Max 300 frame
-
-                        if (totalFrames <= 0) {
-                            return reject(new Error('Video süresi çok kısa veya FPS değeri geçersiz.'));
-                        }
-
-                        progressText.textContent = `0 / ${totalFrames} kare işleniyor...`;
-
-                        const gif = new GIF({
-                            workers: 2,
-                            quality: quality,
-                            width: width,
-                            height: height,
-                            workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
-                        });
-
-                        gif.on('progress', (p) => {
-                            const percentage = Math.round(p * 100);
-                            progressText.textContent = `GIF oluşturuluyor... %${percentage}`;
-                            progressBar.style.width = percentage + '%';
-                        });
-
-                        gif.on('finished', (blob) => {
-                            const gifUrl = URL.createObjectURL(blob);
-                            gifOutput.src = gifUrl;
-                            downloadBtn.href = gifUrl;
-                            downloadBtn.download = `converted_${Date.now()}.gif`;
-
-                            statusDiv.classList.add('hidden');
-                            resultDiv.classList.remove('hidden');
-                            convertBtn.disabled = false;
-                            isConverting = false;
-
-                            URL.revokeObjectURL(videoURL);
-                            resolve();
-                        });
-
-                        let currentFrame = 0;
-                        const frameInterval = duration / totalFrames;
-
-                        // --- DÜZELTİLMİŞ KARE YAKALAMA MANTIĞI ---
-                        // 'onseeked' olayını bir kere tanımlıyoruz.
-                        // Bu fonksiyon, bir kareye atlama işlemi bittiğinde tetiklenir.
-                        video.onseeked = () => {
-                            // 1. Kareyi canvas'a çiz
-                            ctx.drawImage(video, 0, 0, width, height);
-                            // 2. Canvas'taki görüntüyü GIF'e ekle
-                            gif.addFrame(canvas, { copy: true, delay: frameDelay });
-
-                            currentFrame++;
-                            const progressPercentage = Math.round((currentFrame / totalFrames) * 100);
-                            progressBar.style.width = progressPercentage + '%';
-                            progressText.textContent = `${currentFrame} / ${totalFrames} kare işleniyor...`;
-
-                            // 3. Hala işlenecek kare varsa bir sonrakine atla
-                            if (currentFrame < totalFrames) {
-                                video.currentTime += frameInterval;
-                            } else {
-                                // 4. Tüm kareler bittiyse GIF'i oluştur (render)
-                                progressBar.style.width = '100%';
-                                progressText.textContent = 'Kareler tamamlandı, GIF oluşturuluyor...';
-                                gif.render();
-                            }
-                        };
-
-                        // İşlemi başlatmak için ilk kareye atla (currentTime = 0)
-                        // Bu, 'onseeked' olayını ilk kez tetikleyecektir.
-                        video.currentTime = 0.01; // 0'a atamak bazen sorun çıkarabilir, küçük bir değerle başla
-
-                    } catch (error) {
-                        reject(error);
-                    }
-                });
-
-                video.addEventListener('error', (e) => {
-                    reject(new Error('Video dosyası yüklenemedi veya bozuk.'));
-                });
-            });
         }
+
+        setInterval(drawRain, 40);
+
     </script>
+
 </body>
 
 </html>
