@@ -1,32 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@600&display=swap"
-      rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@600&display=swap"
+        rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #461959 0%, #6B3A7A 100%);
+            color: #AED8CC;
+            font-family: 'Edu SA Beginner', cursive;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .status {
+            font-size: 1.8rem;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 15px;
+            border: 2px solid #75C2F6;
+            font-weight: bold;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 10vh);
+            gap: 8px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+
+        .cells {
+            border: 4px solid #75C2F6;
+            height: 10vh;
+            width: 10vh;
+            cursor: pointer;
+            font-size: 7vh;
+            text-align: center;
+            line-height: 10vh;
+            font-family: 'Edu SA Beginner', cursive;
+            background-color: #CD6688;
+            color: #331D2C;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            border-radius: 10px;
+        }
+
+        .cells:hover:not(:disabled) {
+            background-color: #E8829F;
+            transform: scale(1.05);
+        }
+
+        .cells:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .cells:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background-color: #9BE8D8;
+            border: 0px;
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Edu SA Beginner', cursive;
+            font-weight: bold;
+            color: #331D2C;
+        }
+
+        button:hover {
+            background-color: #78C1F3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                grid-template-columns: repeat(3, 8vh);
+            }
+
+            .cells {
+                height: 8vh;
+                width: 8vh;
+                font-size: 5vh;
+            }
+
+            button {
+                padding: 12px 30px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
     <h1>Tic Tac Toe</h1>
-    <div class="container">
-      <div class="cells" cellIndex="0"></div>
-      <div class="cells" cellIndex="1"></div>
-      <div class="cells" cellIndex="2"></div>
-      <div class="cells" cellIndex="3"></div>
-      <div class="cells" cellIndex="4"></div>
-      <div class="cells" cellIndex="5"></div>
-      <div class="cells" cellIndex="6"></div>
-      <div class="cells" cellIndex="7"></div>
-      <div class="cells" cellIndex="8"></div>
+    <div class="game-container">
+        <div class="status"></div>
+        <div class="container">
+            <div class="cells" data-index="0"></div>
+            <div class="cells" data-index="1"></div>
+            <div class="cells" data-index="2"></div>
+            <div class="cells" data-index="3"></div>
+            <div class="cells" data-index="4"></div>
+            <div class="cells" data-index="5"></div>
+            <div class="cells" data-index="6"></div>
+            <div class="cells" data-index="7"></div>
+            <div class="cells" data-index="8"></div>
+        </div>
+        <div class="button-group">
+            <button class="restart-button">Restart Game</button>
+        </div>
     </div>
-    <div class="status"></div>
-    <button class="button">Restart</button>
-    <script src="script.js"></script>
-  </body>
+
+    <script>
+        const cells = document.querySelectorAll(".cells");
+        const statusText = document.querySelector(".status");
+        const restartButton = document.querySelector(".restart-button");
+
+        const winConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let currentPlayer = "X";
+        let gameActive = true;
+
+        function updateStatus() {
+            if (gameActive) {
+                statusText.textContent = `${currentPlayer}'s Turn`;
+            }
+        }
+
+        function checkWin() {
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    return board[a];
+                }
+            }
+            return null;
+        }
+
+        function checkDraw() {
+            return board.every(cell => cell !== "");
+        }
+
+        function endGame(message) {
+            gameActive = false;
+            statusText.textContent = message;
+            cells.forEach(cell => {
+                cell.style.pointerEvents = "none";
+                cell.style.opacity = "0.7";
+            });
+        }
+
+        function handleCellClick(e) {
+            if (!gameActive) return;
+
+            const index = parseInt(e.target.dataset.index);
+
+            if (board[index] !== "") return;
+
+            board[index] = currentPlayer;
+            e.target.textContent = currentPlayer;
+
+            const winner = checkWin();
+            if (winner) {
+                endGame(`${winner} Wins! 🎉`);
+                return;
+            }
+
+            if (checkDraw()) {
+                endGame("It's a Draw! 🤝");
+                return;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            updateStatus();
+        }
+
+        function restartGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            currentPlayer = "X";
+            gameActive = true;
+
+            cells.forEach(cell => {
+                cell.textContent = "";
+                cell.style.pointerEvents = "auto";
+                cell.style.opacity = "1";
+            });
+
+            updateStatus();
+        }
+
+        cells.forEach(cell => {
+            cell.addEventListener("click", handleCellClick);
+        });
+
+        restartButton.addEventListener("click", restartGame);
+
+        updateStatus();
+    </script>
+</body>
 </html>
