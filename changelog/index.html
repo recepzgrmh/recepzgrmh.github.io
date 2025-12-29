@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog - Sürüm Geçmişi</title>
+    <meta name="description" content="Uygulama sürüm geçmişi ve yapılan değişiklikler">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📋</span>
+                    <span class="logo-text">Changelog</span>
+                </div>
+                <div class="version-badge">
+                    <span class="version-label">Son Sürüm</span>
+                    <span class="version-number">v2.1.4+128</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Sürüm Geçmişi</span>
+                </h1>
+                <p class="hero-subtitle">Bu projedeki tüm kayda değer değişiklikler burada belgelenmektedir.</p>
+            </section>
+
+            <div class="timeline">
+                <!-- Version 2.1.4+128 -->
+                <article class="version-card" data-version="unreleased">
+                    <div class="version-header">
+                        <div class="version-info">
+                            <span class="version-tag unreleased">Unreleased</span>
+                            <h2 class="version-title">v2.1.4+128</h2>
+                        </div>
+                        <div class="version-date">
+                            <span class="date-icon">📅</span>
+                            <span>Yakında</span>
+                        </div>
+                    </div>
+
+                    <!-- Added Section -->
+                    <section class="change-section added">
+                        <div class="section-header">
+                            <span class="section-icon">✨</span>
+                            <h3 class="section-title">Eklenenler</h3>
+                        </div>
+
+                        <!-- Belgelerim Sekmesi -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">Yeni Özellik</span>
+                                <h4 class="feature-title">📁 Belgelerim Sekmesi</h4>
+                            </div>
+                            <p class="feature-description">
+                                My_Drawer'a Belgelerim sekmesi eklendi. Kullanıcı daha önce analiz etmiş olduğu tüm
+                                belgeleri görebiliyor.
+                                İsterse bu ekran üzerinden yeni dosya yüklemesi gerçekleştirebiliyor ve dosya
+                                analizlerine bu ekran üzerinden ulaşım sağlayabiliyor.
+                                Yüklemiş olduğu belgenin analizi yoksa yine bu ekran üzerinden analiz edebiliyor.
+                            </p>
+                            <div class="feature-highlights">
+                                <ul class="highlights-list">
+                                    <li>Bütün belgeleri görüntüleme</li>
+                                    <li>PDF / görsel ayrımı</li>
+                                    <li>İlgili belgeye tıklayınca açılan show bottom sheet modal</li>
+                                    <li>Dosyanın analizi varsa "Analize git" seçeneği</li>
+                                    <li>Dosyanın analizi yoksa "Analiz et" butonu</li>
+                                    <li>Dosyayı silme seçeneği</li>
+                                    <li>Yeni → Eski sıralama</li>
+                                    <li>Dosyalarda arama gerçekleştirme</li>
+                                    <li>Skeletonizer animasyonları</li>
+                                </ul>
+                            </div>
+                            <div class="feature-image-single">
+                                <img src="Screenshot_1766132504.png" alt="Belgelerim ekranı" loading="lazy"
+                                    onclick="openLightbox(this)">
+                            </div>
+                        </div>
+
+                        <!-- Dosya Hash & Duplicate Kontrolü -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">Güvenlik</span>
+                                <h4 class="feature-title">🔐 Dosya Hash & Duplicate Kontrolü</h4>
+                            </div>
+                            <p class="feature-description">
+                                Kullanıcı bir belge yüklediği zaman bu belge hashleniyor ve Firebase üzerine yazılıyor.
+                                Eğer kullanıcı daha önce yüklemiş olduğu bir belgeyi bir kez daha yüklemek isterse bu
+                                hash kontrol ediliyor.
+                                Eğer hash aynı çıkarsa kullanıcı bu belgeyi yükleyemiyor.
+                            </p>
+                            <div class="diagram-container">
+                                <h5 class="diagram-title">📊 Upload Akışı (Hash + Dedup + Storage)</h5>
+                                <img src="mermaid.svg" alt="Upload sequence diagram" loading="lazy"
+                                    onclick="openLightbox(this)">
+                            </div>
+                        </div>
+
+                        <!-- Yeni Özellikler -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">Yeni</span>
+                                <h4 class="feature-title">🎯 Diğer Yeni Özellikler</h4>
+                            </div>
+
+                            <div class="mini-features">
+                                <div class="mini-feature">
+                                    <span class="mini-icon">🔍</span>
+                                    <div class="mini-content">
+                                        <h5>Arama Çubuğu</h5>
+                                        <p>Geçmiş Sohbetler ekranına arama çubuğu eklendi</p>
+                                    </div>
+                                </div>
+
+                                <div class="mini-feature">
+                                    <span class="mini-icon">🔔</span>
+                                    <div class="mini-content">
+                                        <h5>Su Takip Bildirimi</h5>
+                                        <p>Kullanıcıya gönderilen su takip bildirimlerinin sesi değişti</p>
+                                        <audio controls class="audio-player">
+                                            <source src="assets/notifications/water_notification.mp3" type="audio/mpeg">
+                                            Tarayıcınız audio etiketini desteklemiyor.
+                                        </audio>
+                                    </div>
+                                </div>
+
+                                <div class="mini-feature">
+                                    <span class="mini-icon">📱</span>
+                                    <div class="mini-content">
+                                        <h5>iOS Güncelleme Dialogu</h5>
+                                        <p>iOS'da da, uygulama güncellendiğinde Android'deki gibi uygulama güncelleme
+                                            dialogu geliyor artık</p>
+                                        <div class="mini-image">
+                                            <img src="dialog.png" alt="Güncelleme Dialog" loading="lazy"
+                                                onclick="openLightbox(this)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mini-feature">
+                                    <span class="mini-icon">🧠</span>
+                                    <div class="mini-content">
+                                        <h5>Expert Mode Sayacı</h5>
+                                        <p>Kullanıcıya expert modda kalan soru sayısı hakkı gösteriliyor. Artık
+                                            expertUsage ve normalUsage olarak ayrılıyor veritabanında</p>
+                                        <div class="mini-image">
+                                            <img src="Screenshot_1767023633.png" alt="Expert Usage Gösterimi"
+                                                loading="lazy" onclick="openLightbox(this)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mini-feature">
+                                    <span class="mini-icon">⭐</span>
+                                    <div class="mini-content">
+                                        <h5>Yorum İsteme Dialogu</h5>
+                                        <p>Kullanıcıdan yorum istemek amacıyla kullanıcının karşısına bir dialog
+                                            çıkarılıyor</p>
+                                        <div class="mini-image">
+                                            <img src="rate.png" alt="Yorum İsteme Dialog" loading="lazy"
+                                                onclick="openLightbox(this)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PDF ve Resim Görüntüleme -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">Görüntüleme</span>
+                                <h4 class="feature-title">📄 PDF ve Resim Görüntüleme</h4>
+                            </div>
+                            <p class="feature-description">
+                                Kullanıcılar artık belgelerini uygulama içinde görüntüleyebilir. PDF ve görseller için
+                                özelleştirilmiş görüntüleyiciler eklendi.
+                            </p>
+                            <div class="image-gallery">
+                                <img src="image copy 4.png" alt="PDF Görüntüleme 1" loading="lazy"
+                                    onclick="openLightbox(this)">
+                                <img src="image copy 2.png" alt="PDF Görüntüleme 2" loading="lazy"
+                                    onclick="openLightbox(this)">
+                                <img src="image copy.png" alt="PDF Görüntüleme 3" loading="lazy"
+                                    onclick="openLightbox(this)">
+                                <img src="image.png" alt="Resim Görüntüleme" loading="lazy"
+                                    onclick="openLightbox(this)">
+                            </div>
+                        </div>
+
+                        <!-- Belge İsimlendirme -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">UX</span>
+                                <h4 class="feature-title">🏷️ Belge İsimlendirme</h4>
+                            </div>
+                            <p class="feature-description">
+                                Kullanıcının yüklemiş olduğu belgenin ismi artık akıllıca belirleniyor:
+                            </p>
+                            <div class="naming-rules">
+                                <div class="naming-rule">
+                                    <span class="rule-icon">📤</span>
+                                    <span>Eğer analiz olmadan direkt yüklerse → dosyanın telefondaki ismi</span>
+                                </div>
+                                <div class="naming-rule">
+                                    <span class="rule-icon">🔬</span>
+                                    <span>Eğer analiz ettiyse → analizde dosya için oluşturulan isim</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Yeni Paketler -->
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-badge">Bağımlılıklar</span>
+                                <h4 class="feature-title">📦 Yeni Eklenen Paketler</h4>
+                            </div>
+                            <div class="packages-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Paket</th>
+                                            <th>Versiyon</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/crypto" target="_blank"
+                                                    rel="noopener">crypto</a></td>
+                                            <td><code>^3.0.7</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/cached_network_image" target="_blank"
+                                                    rel="noopener">cached_network_image</a></td>
+                                            <td><code>^3.4.1</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/skeletonizer" target="_blank"
+                                                    rel="noopener">skeletonizer</a></td>
+                                            <td><code>^2.1.2</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/firebase_storage" target="_blank"
+                                                    rel="noopener">firebase_storage</a></td>
+                                            <td><code>^12.4.10</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/syncfusion_flutter_pdfviewer"
+                                                    target="_blank" rel="noopener">syncfusion_flutter_pdfviewer</a></td>
+                                            <td><code>^29.2.7</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="https://pub.dev/packages/in_app_review" target="_blank"
+                                                    rel="noopener">in_app_review</a></td>
+                                            <td><code>^2.0.10</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Changed Section -->
+                    <section class="change-section changed">
+                        <div class="section-header">
+                            <span class="section-icon">🔄</span>
+                            <h3 class="section-title">Değişenler</h3>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="changes-list">
+                                <div class="change-item">
+                                    <span class="change-icon">☁️</span>
+                                    <div class="change-content">
+                                        <h5>Firebase Storage Entegrasyonu</h5>
+                                        <p>Kullanıcının yüklemiş olduğu her türlü dosya Firebase Storage'da saklanıyor
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="change-item">
+                                    <span class="change-icon">💾</span>
+                                    <div class="change-content">
+                                        <h5>Cache Optimizasyonu</h5>
+                                        <p>Firebase Storage kullanımını azaltmak (maliyeti optimize etmek) için
+                                            kullanıcının yüklemiş olduğu belgeler her görüntülemede download etmek
+                                            yerine SharedPreferences ile kullanıcının cihazına kaydediliyor:</p>
+                                        <ul>
+                                            <li>Kullanıcı uygulamayı her yeniden açtığında bu cache okunuyor, Storage
+                                                üzerinden okuma gerçekleştirilmiyor</li>
+                                            <li>Kullanıcı ancak ve ancak uygulamadaki hesabından çıkış yaparsa bu
+                                                bilgiler cache'den siliniyor</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="change-item">
+                                    <span class="change-icon">🎨</span>
+                                    <div class="change-content">
+                                        <h5>AnalysisResultScreen Yenilendi</h5>
+                                        <p>Ekran renkleri değiştirildi ve daha modern bir görünüm kazandırıldı</p>
+                                    </div>
+                                </div>
+
+                                <div class="change-item">
+                                    <span class="change-icon">⚠️</span>
+                                    <div class="change-content">
+                                        <h5>Yaş Kısıtlaması</h5>
+                                        <p>Belirli yaştaki kullanıcıların kalori takibi yapması engellendi. <a
+                                                href="https://www.quora.com/Being-under-18-restricts-my-access-to-websites-for-calculating-caloric-maintenance-Can-the-Shofield-equation-x-1-26-be-relied-upon-as-a-valid-method-for-determining-caloric-maintenance-for-a-15-year-old-like-me"
+                                                target="_blank" rel="noopener">Kaynak</a></p>
+                                        <div class="image-gallery small">
+                                            <img src="image copy 6.png" alt="Kalori Takibi Yaş Uyarısı 1" loading="lazy"
+                                                onclick="openLightbox(this)">
+                                            <img src="image copy 7.png" alt="Kalori Takibi Yaş Uyarısı 2" loading="lazy"
+                                                onclick="openLightbox(this)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="change-item">
+                                    <span class="change-icon">👤</span>
+                                    <div class="change-content">
+                                        <h5>Anonim Kullanıcı Desteği</h5>
+                                        <p>Tüm kullanıcılar artık anonim bir şekilde trackerları kullanabiliyor ancak 3
+                                            kez herhangi bir işlem yaparsa karşısına hesabını yedeklemesi için bir
+                                            dialog çıkıyor</p>
+                                        <div class="mini-image">
+                                            <img src="image copy 5.png" alt="Hesap Yedekleme Dialog" loading="lazy"
+                                                onclick="openLightbox(this)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Fixed Section -->
+                    <section class="change-section fixed">
+                        <div class="section-header">
+                            <span class="section-icon">🐛</span>
+                            <h3 class="section-title">Düzeltmeler</h3>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="fix-content">
+                                <div class="fix-details">
+                                    <h5>Düzeltilen Hatalar:</h5>
+                                    <ul>
+                                        <li>Kullanıcı PDF analizi yaptıktan sonra, eski sohbetler ekranından
+                                            görüntülerken oluşan parse hatası düzeltildi.</li>
+                                        <li>Eski yapıda kalan <code>AnalysisDetailedScreen</code> kaldırıldı; PDF
+                                            analizinden sonra açılan <code>AnalysisResultScreen</code> public yapıldı ve
+                                            artık bu ekran kullanılıyor.</li>
+                                    </ul>
+                                </div>
+                                <div class="fix-image">
+                                    <img src="Screenshot_1766133905.png" alt="PDF Analiz Düzeltmesi" loading="lazy"
+                                        onclick="openLightbox(this)">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 - Tüm Hakları Saklıdır</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img src="" alt="" id="lightbox-img">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
