@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Esquadrão de Recuperação da Vanessa</title>
+    <style>
+        @font-face {
+            font-family: 'PressStart2P';
+            src: url('assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf') format('truetype');
+        }
+
+        :root {
+            --health-color: #ff4d6d;
+            --health-bg: #ffe5ec;
+            --text-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'PressStart2P', cursive;
+            background-color: #000;
+            /* Fallback */
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Background */
+        #bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* UI Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            /* Let clicks pass through to game elements */
+        }
+
+        /* Health Bar */
+        #health-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 400px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 3px solid #ff8fa3;
+            overflow: hidden;
+            pointer-events: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #health-fill {
+            height: 100%;
+            width: 10%;
+            /* Start at 10% */
+            background: linear-gradient(90deg, #ff4d6d, #ff758c);
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        #health-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 24px;
+            color: #d6002a;
+            font-weight: bold;
+            font-size: 14px;
+            top: 0;
+        }
+
+        /* Characters Layer */
+        #game-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 600px;
+            /* Constrain wide screens */
+            z-index: 10;
+        }
+
+        /* Main Character */
+        .character {
+            position: absolute;
+            top: 45%;
+            left: 35%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            /* Adjust based on image ratio */
+            max-width: 300px;
+            height: auto;
+            transition: opacity 0.5s;
+        }
+
+        #vanessa-sick,
+        #vanessa-happy {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(-30deg);
+        }
+
+        #vanessa-happy {
+            display: none;
+        }
+
+        /* Cats */
+        .cat {
+            position: absolute;
+            width: 20%;
+            max-width: 100px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2));
+            z-index: 20;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        /* Remove breathe on active/click */
+        .cat:active,
+        .cat.active {
+            transform: scale(0.8) !important;
+            animation: none;
+        }
+
+        /* Positioning Cats around center */
+        #cat1 {
+            top: 30%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        #cat2 {
+            top: 30%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+
+        #cat3 {
+            bottom: 35%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+
+        #cat4 {
+            bottom: 35%;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        /* Animation class for bounce (triggered on click) */
+        .bounce {
+            animation: bounce-anim 0.4s ease !important;
+        }
+
+        @keyframes bounce-anim {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px) scale(1.1);
+            }
+        }
+
+        /* Hero Action Overlay */
+        #hero-action-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            max-width: 250px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+            transition: opacity 0.3s;
+        }
+
+        /* Buttons */
+        .action-btn {
+            position: absolute;
+            bottom: 30px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
+            animation: float 4s ease-in-out infinite, pulse-glow 2s infinite;
+        }
+
+        .action-btn:active {
+            transform: scale(0.8) translateY(2px) !important;
+            animation: none;
+        }
+
+        #btn-hero {
+            left: 20px;
+            animation-delay: 0s;
+        }
+
+        #btn-love {
+            right: 20px;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Text Floaters */
+        .floating-text {
+            position: absolute;
+            color: #ff4d6d;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+            pointer-events: none;
+            animation: floatUp 1.5s forwards;
+            white-space: nowrap;
+            z-index: 200;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            50% {
+                transform: translate(-50%, -100%) scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -150%) scale(1);
+            }
+        }
+
+        /* Win Overlay */
+        #win-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 230, 240, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            /* Initially hidden */
+            transition: opacity 1s;
+        }
+
+        #win-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #win-message {
+            font-size: 2rem;
+            color: #d6002a;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.4;
+            max-width: 80%;
+            font-weight: bold;
+            animation: pulse-text 2s infinite;
+        }
+
+        @keyframes pulse-text {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Initial Hidden State for Happy Vanessa */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Heart Particles */
+        .heart-particle {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatHeart 1.5s forwards ease-out;
+            z-index: 150;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0.5);
+            }
+        }
+
+        /* --- Tutorial Overlay --- */
+        #tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            /* Highest priority */
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            cursor: pointer;
+        }
+
+        #tutorial-text {
+            color: #fff;
+            font-size: 1.5rem;
+            text-align: center;
+            line-height: 2;
+            padding: 20px;
+            animation: pulse-text 2s infinite;
+        }
+
+        #tutorial-hand {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: float 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-container">
+        <!-- Background -->
+        <img id="bg-image" src="assets/background-bg.png" alt="Background">
+
+        <!-- Game Area (Characters) -->
+        <div id="game-area">
+            <!-- Main Character -->
+            <img id="vanessa-sick" class="character" src="assets/vanessa_sick.png" alt="Vanessa Sick">
+            <img id="vanessa-happy" class="character hidden" src="assets/vanessa_happy.png" alt="Vanessa Happy">
+
+            <!-- Hero Action Overlay (Soup) -->
+            <img id="hero-action-overlay" src="assets/me_2.png" alt="Soup!">
+
+            <!-- Cats -->
+            <img id="cat1" class="cat" src="assets/cat1.png" alt="Cat 1">
+            <img id="cat2" class="cat" src="assets/cat2.png" alt="Cat 2">
+            <img id="cat3" class="cat" src="assets/cat3.png" alt="Cat 3">
+            <img id="cat4" class="cat" src="assets/cat4.png" alt="Cat 4">
+        </div>
+
+        <!-- UI Layer -->
+        <div id="ui-layer">
+            <div id="health-container">
+                <div id="health-fill"></div>
+                <div id="health-text">Saúde: 10%</div>
+            </div>
+        </div>
+
+        <!-- Buttons (Interactive) -->
+        <img id="btn-hero" class="action-btn" src="assets/me.png" alt="Hero">
+        <img id="btn-love" class="action-btn" src="assets/hearth_button.png" alt="Love">
+
+        <!-- Win Overlay -->
+        <div id="win-overlay">
+            <div id="win-message">Você não é mais um zumbi! ❤️<br><br>Mas seria bom descansar um pouco.</div>
+        </div>
+
+        <!-- Tutorial Overlay -->
+        <div id="tutorial-overlay">
+            <div id="tutorial-hand">👆</div>
+            <div id="tutorial-text">
+                TOQUE NOS GATOS PARA CURAR!<br>
+                🥣 TOQUE NO HERÓI PARA SOPA!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let currentHealth = 10;
+        let isWon = false;
+        let gameStarted = false;
+        const maxHealth = 100;
+
+        // Elements
+        const healthFill = document.getElementById('health-fill');
+        const healthText = document.getElementById('health-text');
+        const vanessaSick = document.getElementById('vanessa-sick');
+        const vanessaHappy = document.getElementById('vanessa-happy');
+        const heroOverlay = document.getElementById('hero-action-overlay');
+        const uiButtons = document.querySelectorAll('.action-btn');
+        const winOverlay = document.getElementById('win-overlay');
+        const tutorialOverlay = document.getElementById('tutorial-overlay');
+
+        // --- Tutorial Logic ---
+        // Hide tutorial on first click anywhere
+        document.body.addEventListener('click', () => {
+            if (!gameStarted) {
+                gameStarted = true;
+                tutorialOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    tutorialOverlay.style.display = 'none';
+                }, 500);
+            }
+        }, { once: true });
+
+
+        function updateHealth(amount) {
+            if (isWon || !gameStarted) return;
+
+            currentHealth += amount;
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+
+            // Visual Update
+            healthFill.style.width = currentHealth + '%';
+            healthText.innerText = 'Saúde: ' + currentHealth + '%';
+
+            // Image Swap at 50%
+            if (currentHealth >= 50 && currentHealth < 100) {
+                vanessaSick.style.display = 'none';
+                vanessaHappy.style.display = 'block';
+                vanessaHappy.classList.remove('hidden');
+            } else if (currentHealth < 50) {
+                vanessaSick.style.display = 'block';
+                vanessaHappy.style.display = 'none';
+            }
+
+            // Check Win
+            if (currentHealth >= maxHealth) {
+                triggerWin();
+            }
+        }
+
+        function triggerWin() {
+            isWon = true;
+
+            // Swap Images
+            vanessaSick.classList.add('hidden');
+            vanessaHappy.classList.remove('hidden');
+            vanessaHappy.style.display = 'block'; // Ensure display
+
+            // Hide UI Controls
+            uiButtons.forEach(btn => btn.style.display = 'none');
+            document.getElementById('health-container').style.display = 'none';
+            document.querySelectorAll('.cat').forEach(cat => cat.style.display = 'none');
+
+            // Show Win Message
+            winOverlay.style.display = 'flex';
+            // slight delay to allow display flex to apply before opacity transition
+            setTimeout(() => {
+                winOverlay.classList.add('visible');
+                startConfetti();
+            }, 100);
+        }
+
+        function spawnFloatingText(text, x, y) {
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.innerText = text;
+
+            // Randomize slight position offset
+            const offsetX = (Math.random() - 0.5) * 40;
+            const offsetY = (Math.random() - 0.5) * 20;
+
+            // If x/y not provided, center screen random
+            if (!x || !y) {
+                // center of screen
+                el.style.left = '50%';
+                el.style.top = '50%';
+            } else {
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+            }
+
+            document.body.appendChild(el);
+
+            // Cleanup
+            setTimeout(() => {
+                el.remove();
+            }, 1500);
+        }
+
+        // --- Interactions ---
+
+        // Cats
+        const catMessages = ["Purr...", "Miau!", "Brrrr...", "Ronronar..."];
+        document.querySelectorAll('.cat').forEach(cat => {
+            cat.addEventListener('click', (e) => {
+                if (isWon || !gameStarted) return; // Wait for tutorial to clear
+
+                // Keep event from bubbling to body (which clears tutorial) if we want specific logic there
+                // But we used {once:true} on body, so subsequent clicks are fine.
+                // However, the first click on a cat will ALSO clear the tutorial because of bubbling.
+                // That's actually fine - immediate gratification!
+
+                // Add Bounce (remove animation class to reset if needed, but we used keyframes)
+                // We use a class approach for the bounce trigger
+                cat.classList.remove('bounce');
+                void cat.offsetWidth; // trigger reflow
+                cat.classList.add('bounce');
+
+                // Heal
+                updateHealth(1);
+
+                // Text
+                const msg = catMessages[Math.floor(Math.random() * catMessages.length)];
+                spawnFloatingText(msg, e.clientX, e.clientY);
+            });
+        });
+
+        // Hero Button (Me)
+        document.getElementById('btn-hero').addEventListener('click', (e) => {
+            if (isWon || !gameStarted) return;
+
+            // Heal
+            updateHealth(5);
+
+            // Show Overlay
+            heroOverlay.style.opacity = '1';
+            setTimeout(() => {
+                heroOverlay.style.opacity = '0';
+            }, 1500);
+
+            // Text
+            const msgs = ["Sopa anti-zumbi chegou!", "Mistura Especial!"];
+            const msg = msgs[Math.floor(Math.random() * msgs.length)];
+
+            // Spawn text near center usually better for this big event
+            spawnFloatingText(msg, window.innerWidth / 2, window.innerHeight / 2);
+        });
+
+        // Love Button
+        document.getElementById('btn-love').addEventListener('click', (e) => {
+            if (isWon || !gameStarted) return;
+
+            // Heal
+            updateHealth(2);
+
+            // Text
+            const msgs = ["Te Amo", "Linda!", "❤️"];
+            const msg = msgs[Math.floor(Math.random() * msgs.length)];
+            spawnFloatingText(msg, e.clientX, e.clientY - 50);
+
+            // Spawn Hearts
+            spawnHearts(e.clientX, e.clientY);
+        });
+
+
+        function spawnHearts(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.innerText = '❤️';
+                heart.className = 'heart-particle';
+
+                // Spread
+                const rx = (Math.random() - 0.5) * 60;
+                const ry = (Math.random() - 0.5) * 60;
+
+                heart.style.left = (x + rx) + 'px';
+                heart.style.top = (y + ry) + 'px';
+
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 1500);
+            }
+        }
+
+
+        // --- Confetti (Simple Implementation) ---
+        function startConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+            setInterval(() => {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.zIndex = '9999';
+                conf.style.pointerEvents = 'none';
+
+                // Random fall animation
+                const duration = Math.random() * 3 + 2 + 's';
+                conf.style.transition = `top ${duration} linear, transform ${duration} linear`;
+
+                document.body.appendChild(conf);
+
+                // Trigger anim
+                setTimeout(() => {
+                    conf.style.top = '110vh';
+                    conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                }, 100);
+
+                // Cleanup
+                setTimeout(() => {
+                    conf.remove();
+                }, 5000);
+
+            }, 50);
+        }
+
+    </script>
+</body>
+
+</html>
