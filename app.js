@@ -1100,5 +1100,141 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderer.render(scene, camera);
     }
+
+    // ═══════════════════════════════════════
+    // TUBITAK MODAL COMPONENT (DRY)
+    // ═══════════════════════════════════════
+    function injectTubitakModal() {
+        if (document.getElementById('tubitak-modal')) return;
+
+        const modalHTML = `
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="tubitak-backdrop" onclick="closeTubitakModal()"></div>
+            
+            <!-- Modal Content -->
+            <div class="relative w-[90%] max-w-4xl bg-gray-900 border border-white/10 rounded-2xl p-6 md:p-10 shadow-2xl scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[85vh]" id="tubitak-content">
+                
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6 shrink-0">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-black text-white" data-i18n="apps.tubitak.title">Akıllı Yurt Bulma Sistemi</h2>
+                        <p class="text-xs font-bold text-cyan-400 mt-1 uppercase tracking-widest">TÜBİTAK 2209-A (2024)</p>
+                    </div>
+                    <button onclick="closeTubitakModal()" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Scrollable Body -->
+                <div class="overflow-y-auto overflow-x-hidden scrollbar-thin pr-4 pb-10 rounded-xl">
+                    <!-- Image Gallery (Horizontal Scroll) -->
+                    <div class="flex gap-4 overflow-x-auto pb-4 mb-6 snap-x snap-mandatory scrollbar-thin">
+                        <div class="flex-shrink-0 snap-center w-[260px] md:w-[320px]">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D2DAQF9hwywInbw9w/profile-treasury-image-shrink_800_800/B4DZd.b.ixHkAc-/0/1750172954795?e=1772719200&v=beta&t=iIn7jJf3V8CIX6PHAO6pEJoNjQCLLlm8VWl_FodLl2M" 
+                                alt="TÜBİTAK 1" 
+                                class="w-full h-auto object-contain rounded-xl border border-white/10 shadow-lg">
+                        </div>
+                        <div class="flex-shrink-0 snap-center w-[260px] md:w-[320px]">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D2DAQEDVNLaCoue0w/profile-treasury-image-shrink_800_800/B4DZd.cEEyGkAY-/0/1750172976929?e=1772719200&v=beta&t=U5y5zmbL3jgdLLzV404CW_LGD5JCpot9gpweIihDCQA" 
+                                alt="TÜBİTAK 2" 
+                                class="w-full h-auto object-contain rounded-xl border border-white/10 shadow-lg">
+                        </div>
+                        <div class="flex-shrink-0 snap-center w-[260px] md:w-[320px]">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D2DAQGExsXh3NAkfw/profile-treasury-image-shrink_800_800/B4DZd.cIP9GsAg-/0/1750172993889?e=1772719200&v=beta&t=4VkPBH8tboBi1y8t9nS8dellHB_9e40Hwsn1x7LlL2E" 
+                                alt="TÜBİTAK 3" 
+                                class="w-full h-auto object-contain rounded-xl border border-white/10 shadow-lg">
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-gray-300 font-light text-base md:text-lg leading-relaxed mb-6">
+                        Üniversite öğrencilerinin barınma problemine akıllı bir çözüm getirmeyi hedefleyen bu MVP, öğrencilerin kriterlerine en uygun yurtları ağırlıklı puanlama ve Haversine formülüyle hesaplanan mesafe algoritması sayesinde saniyeler içinde önermektedir.
+                    </p>
+
+                    <!-- Tech Stack -->
+                    <div class="mb-8">
+                        <div class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Kullanılan Teknolojiler</div>
+                        <div class="flex flex-wrap gap-2 text-sm text-cyan-400 font-semibold">
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">React Native</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">Node.js</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">Firebase</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">Firestore</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">TypeScript</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10">Storage</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Links -->
+                    <div class="flex">
+                        <a href="https://www.linkedin.com/posts/recepozgurmih_dokuz-eyl%C3%BCl-%C3%BCniversitesi-bilgisayar-bilimleri-activity-7339369307300081665-EkjX?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADgF4_0B5b3bVm1hzC7HK8Ng4cMTag3D_yg" 
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-8 py-4 bg-[#0A66C2] rounded-full text-white font-bold hover:bg-[#084e96] transition-all shadow-[0_0_20px_rgba(10,102,194,0.3)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            LinkedIn Üzerinden İncele
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const modalDiv = document.createElement('div');
+        modalDiv.id = 'tubitak-modal';
+        modalDiv.className = 'fixed inset-0 z-[100] hidden items-center justify-center pointer-events-none';
+        modalDiv.innerHTML = modalHTML;
+        document.body.appendChild(modalDiv);
+    }
+
+    // Attach to window so onclick works globally
+    window.openTubitakModal = function() {
+        injectTubitakModal();
+        const tubitakModal = document.getElementById('tubitak-modal');
+        const tubitakBackdrop = document.getElementById('tubitak-backdrop');
+        const tubitakContent = document.getElementById('tubitak-content');
+
+        tubitakModal.classList.remove('hidden');
+        tubitakModal.classList.add('flex');
+        tubitakModal.classList.remove('pointer-events-none');
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+            tubitakBackdrop.classList.remove('opacity-0');
+            tubitakBackdrop.classList.add('opacity-100');
+            
+            tubitakContent.classList.remove('opacity-0', 'scale-95');
+            tubitakContent.classList.add('opacity-100', 'scale-100');
+        }, 10);
+    };
+
+    window.closeTubitakModal = function() {
+        const tubitakModal = document.getElementById('tubitak-modal');
+        const tubitakBackdrop = document.getElementById('tubitak-backdrop');
+        const tubitakContent = document.getElementById('tubitak-content');
+
+        if (!tubitakModal) return;
+
+        tubitakBackdrop.classList.remove('opacity-100');
+        tubitakBackdrop.classList.add('opacity-0');
+        
+        tubitakContent.classList.remove('opacity-100', 'scale-100');
+        tubitakContent.classList.add('opacity-0', 'scale-95');
+
+        document.body.style.overflow = '';
+
+        setTimeout(() => {
+            tubitakModal.classList.remove('flex');
+            tubitakModal.classList.add('hidden');
+            tubitakModal.classList.add('pointer-events-none');
+        }, 300);
+    };
+
+    document.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('tubitak-modal');
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+            window.closeTubitakModal();
+        }
+    });
+
     animate();
 });

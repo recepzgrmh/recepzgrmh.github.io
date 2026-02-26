@@ -216,25 +216,50 @@
                 <!-- Other Projects -->
                 <h3 class="text-2xl font-bold text-gray-300 mb-8 fade-up" data-i18n="apps.other.title">Diğer Projeler
                 </h3>
-                <div class="flex flex-col gap-8">
+                <div class="grid md:grid-cols-2 gap-8">
                     <!-- TÜBİTAK -->
-                    <div class="bento-card p-8 fade-up">
-                        <div class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">TÜBİTAK 2209-A
-                            (2024)</div>
-                        <h3 class="text-xl font-bold text-white mb-4" data-i18n="apps.tubitak.title">Akıllı Yurt Bulma
-                            Sistemi</h3>
-                        <div class="mb-5 overflow-hidden rounded-xl border border-white/10 w-full sm:w-2/3 md:w-1/2">
+                    <div class="bento-card p-8 fade-up cursor-pointer hover:border-cyan-500/40 transition-colors group relative"
+                        onclick="openTubitakModal()">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">TÜBİTAK 2209-A (2024)
+                            </div>
+                            <span class="text-white/30 group-hover:text-cyan-400 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors"
+                            data-i18n="apps.tubitak.title">Akıllı Yurt Bulma Sistemi</h3>
+
+                        <div class="mb-5 overflow-hidden rounded-xl border border-white/10 w-full relative">
                             <img src="https://media.licdn.com/dms/image/v2/D4D2DAQF9hwywInbw9w/profile-treasury-image-shrink_800_800/B4DZd.b.ixHkAc-/0/1750172954795?e=1772719200&v=beta&t=iIn7jJf3V8CIX6PHAO6pEJoNjQCLLlm8VWl_FodLl2M"
                                 alt="TÜBİTAK"
-                                class="w-full h-40 object-cover hover:scale-105 transition-transform duration-500">
+                                class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div
+                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span
+                                    class="bg-cyan-500 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Detayları
+                                    Gör</span>
+                            </div>
                         </div>
-                        <p class="text-gray-300 font-light text-sm leading-relaxed mb-6" data-i18n="apps.tubitak.desc">
+
+                        <p class="text-gray-300 font-light text-sm leading-relaxed mb-6 line-clamp-2"
+                            data-i18n="apps.tubitak.desc">
                             Öğrenciler için yurt arama ve filtreleme MVP'si. Haversine mesafesi ve ağırlıklı puanlama
                             ile öneri motoru.
                         </p>
-                        <div class="flex flex-wrap gap-2 text-xs text-cyan-400 font-semibold">
+                        <div class="flex flex-wrap gap-2 text-xs text-cyan-400 font-semibold mb-4">
                             <span>React Native</span> • <span>Node.js</span> • <span>Firebase</span> •
                             <span>Firestore</span> • <span>TypeScript</span> • <span>Storage</span>
+                        </div>
+
+                        <!-- Mini indicator that this is clickable -->
+                        <div
+                            class="absolute bottom-6 right-8 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 text-sm font-semibold flex items-center gap-1">
+                            İncele &rarr;
                         </div>
                     </div>
 
@@ -572,6 +597,59 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // Modal Logic
+        const tubitakModal = document.getElementById('tubitak-modal');
+        const tubitakBackdrop = document.getElementById('tubitak-backdrop');
+        const tubitakContent = document.getElementById('tubitak-content');
+
+        function openTubitakModal() {
+            // Remove hidden
+            tubitakModal.classList.remove('hidden');
+            tubitakModal.classList.add('flex');
+
+            // Allow pointer events
+            tubitakModal.classList.remove('pointer-events-none');
+
+            // Block body scroll
+            document.body.style.overflow = 'hidden';
+
+            // Trigger animations
+            setTimeout(() => {
+                tubitakBackdrop.classList.remove('opacity-0');
+                tubitakBackdrop.classList.add('opacity-100');
+
+                tubitakContent.classList.remove('opacity-0', 'scale-95');
+                tubitakContent.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeTubitakModal() {
+            // Revert animations
+            tubitakBackdrop.classList.remove('opacity-100');
+            tubitakBackdrop.classList.add('opacity-0');
+
+            tubitakContent.classList.remove('opacity-100', 'scale-100');
+            tubitakContent.classList.add('opacity-0', 'scale-95');
+
+            // Restore body scroll
+            document.body.style.overflow = '';
+
+            // Hide modal after animation
+            setTimeout(() => {
+                tubitakModal.classList.remove('flex');
+                tubitakModal.classList.add('hidden');
+                tubitakModal.classList.add('pointer-events-none');
+            }, 300);
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !tubitakModal.classList.contains('hidden')) {
+                closeTubitakModal();
+            }
+        });
+    </script>
 </body>
 
 </html>
