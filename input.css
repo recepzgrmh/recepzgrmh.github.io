@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        /* Body transparent to see canvas behind */
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+        /* Ekranın kilitlenmesini (sticky) bozmadan yatay taşmayı engeller */
+        overflow-x: clip;
+        background-color: #000000;
+        /* Default background */
+    }
+}
+
+@layer components {
+
+    /* 3D Arka Plan */
+    #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        /* Behind content */
+        pointer-events: none;
+        background-color: #000000;
+    }
+
+    .z-10 {
+        z-index: 10;
+    }
+
+    /* Minimalist Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #000000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #333333;
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #06b6d4;
+    }
+
+    /* Tipografi */
+    .text-huge {
+        font-size: clamp(3rem, 10vw, 8rem);
+        line-height: 0.9;
+        letter-spacing: -0.05em;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #ffffff 0%, #71717a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .cyan-glow {
+        text-shadow: 0 0 40px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Premium Kartlar & Bento Box */
+    .premium-card,
+    .bento-card {
+        background: rgba(20, 20, 20, 0.4);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
+    }
+
+    .bento-card:hover,
+    .premium-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(6, 182, 212, 0.3);
+        background: rgba(30, 30, 30, 0.5);
+    }
+
+    /* Marquee (Kayan Yazı) */
+    .marquee-container {
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        gap: 2rem;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .marquee-content {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 2rem;
+        animation: scroll 25s linear infinite;
+    }
+
+    @keyframes scroll {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(-100% - 2rem));
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .marquee-content {
+            animation-play-state: paused;
+        }
+    }
+
+    /* Giriş Animasyonları */
+    .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease-out, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Yatay Kaydırma Konteyneri İçin İyileştirme */
+    #horizontal-container {
+        will-change: transform;
+    }
+
+    /* Horizontal scroll section — responsive height */
+    .horizontal-scroll-section {
+        height: 300vh;
+    }
+
+    @media (min-width: 768px) {
+        .horizontal-scroll-section {
+            height: 400vh;
+        }
+    }
+
+    /* Screenshot gallery scrollbar */
+    .scrollbar-thin::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 2px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #06b6d4;
+    }
+
+    /* Language toggle active state */
+    #lang-toggle {
+        min-width: 36px;
+        text-align: center;
+    }
+}

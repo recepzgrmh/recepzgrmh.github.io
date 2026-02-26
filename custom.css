@@ -1,0 +1,33 @@
+/* Custom Enhanced Styles */
+
+.magnetic-wrap {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ripple {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(6, 182, 212, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.8s ease-out;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.kinetic-text {
+    display: inline-block;
+    transition: transform 0.1s linear;
+}
+
+.cyan-glow {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
