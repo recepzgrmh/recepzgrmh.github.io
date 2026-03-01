@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[70463,["/ipek-date/_next/static/chunks/7d6486e20e54fbcc.js"],"default"]
+3:I[76633,["/ipek-date/_next/static/chunks/09ede5f3afd3128a.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"Dlpyr1DlP_ZE6cxa1QpOY","rsc":["$","$1","c",{"children":[["$","main",null,{"className":"relative min-h-screen flex items-center justify-center overflow-hidden px-4","children":[["$","div",null,{"className":"ambient-glow"}],["$","div",null,{"className":"ambient-glow two"}],["$","div",null,{"className":"w-full max-w-md bg-card-bg backdrop-blur-3xl border border-card-border shadow-2xl rounded-3xl p-6 sm:p-10 relative z-10 my-8","children":["$","$L2",null,{}]}]]}],[["$","script","script-0",{"src":"/ipek-date/_next/static/chunks/7d6486e20e54fbcc.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
