@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[76633,["/ipek-date/_next/static/chunks/09ede5f3afd3128a.js"],"ViewportBoundary"]
-3:I[76633,["/ipek-date/_next/static/chunks/09ede5f3afd3128a.js"],"MetadataBoundary"]
-4:"$Sreact.suspense"
-5:I[98488,["/ipek-date/_next/static/chunks/09ede5f3afd3128a.js"],"IconMark"]
-0:{"buildId":"Dlpyr1DlP_ZE6cxa1QpOY","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"#F8F9FA"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"#18181B"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Özgür & İpek 🤍"}],["$","meta","1",{"name":"description","content":"Bu akşamı birlikte planlayalım."}],["$","link","2",{"rel":"icon","href":"/ipek-date/favicon.ico?favicon.0b3bf435.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L5","3",{}]]}]}]}],null]}],"loading":null,"isPartial":false}
