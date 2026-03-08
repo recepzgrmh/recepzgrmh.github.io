@@ -1,0 +1,97 @@
+<!-- 
+  ██████╗  ██████╗ ███╗   ███╗
+  ██╔══██╗██╔═══██╗████╗ ████║
+  ██████╔╝██║   ██║██╔████╔██║
+  ██╔══██╗██║   ██║██║╚██╔╝██║
+  ██║  ██║╚██████╔╝██║ ╚═╝ ██║
+  ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+  RECEP ÖZGÜR MIH | 404 NOT FOUND
+-->
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | Sayfa Bulunamadı</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+
+    <!-- SEO: Multi-language -->
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/404.html" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/404.html" />
+    <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/404.html" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="custom.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <div class="relative z-10">
+
+        <!-- Header / Nav -->
+        <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 transition-all duration-300"
+            role="navigation" aria-label="Ana navigasyon">
+            <a href="index.html" aria-label="Ana sayfaya git">
+                <img src="assets/logo.png" alt="RÖM Logo"
+                    style="height:72px;width:auto;object-fit:contain;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            </a>
+            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
+                <button id="lang-toggle"
+                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
+                    aria-label="Dili değiştir / Switch language">
+                    EN
+                </button>
+                <a href="index.html#vision" class="hover:text-white transition-colors"><span
+                        data-i18n="nav.vision">VİZYON</span></a>
+                <a href="apps/" class="hover:text-white transition-colors"><span data-i18n="nav.apps">APPS</span></a>
+                <a href="blog/" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
+                <a href="contact/" class="hover:text-cyan-400 transition-colors"><span
+                        data-i18n="nav.contact">İLETİŞİM</span></a>
+            </div>
+        </nav>
+
+        <!-- 404 Content -->
+        <main id="page-content" class="page-transition">
+            <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+                <div class="fade-up">
+                    <h1 class="text-huge font-black mb-6 text-white cyan-glow" data-i18n="404.title">
+                        404
+                    </h1>
+                    <p class="text-gray-300 text-lg md:text-2xl max-w-2xl font-light leading-relaxed mb-10"
+                        data-i18n="404.desc">
+                        Aradığın sayfa dijital evrende kaybolmuş gibi görünüyor.
+                    </p>
+
+                    <a href="index.html" class="btn-premium btn-premium-cyan btn-premium-lg" role="button">
+                        <span data-i18n="404.button">Ana Sayfaya Dön &rarr;</span>
+                    </a>
+                </div>
+            </section>
+
+            <footer class="py-12 text-center border-t border-white/5 text-gray-500 text-sm">
+                <p data-i18n="footer.text">Tasarlayan ve Geliştiren: Recep Özgür Mih &copy; 2026</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="projects.js"></script>
+    <script src="modal.js"></script>
+    <script src="app.js"></script>
+    <script src="router.js"></script>
+    <script src="scroll.js"></script>
+    <script src="cursor.js"></script>
+</body>
+
+</html>

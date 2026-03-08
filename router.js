@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!link) return;
 
         const href = link.getAttribute("href");
-        
+
         // Skip external links, mailto, etc.
         if (!href || href.startsWith("http") || href.startsWith("mailto") || link.target === "_blank") {
             return;
@@ -32,13 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const targetUrl = new URL(href, window.location.origin);
         const currentPath = window.location.pathname;
-        const isSamePage = currentPath.replace('/index.html', '/') === targetUrl.pathname.replace('/index.html', '/');
+        const normalizedTargetPath = targetUrl.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '/');
+        const normalizedCurrentPath = currentPath.replace(/\/index\.html$/, '/').replace(/\.html$/, '/');
+        const isSamePage = normalizedCurrentPath === normalizedTargetPath;
 
         // If it's the same page and has a hash, let browser handle normal scroll jump
         if (isSamePage && targetUrl.hash) {
-            return; 
-        } 
-        
+            return;
+        }
+
         // If same page without hash, just ignore
         if (isSamePage && !targetUrl.hash) {
             e.preventDefault();
@@ -58,10 +60,13 @@ async function navigateTo(url, isPopState = false) {
     const targetUrlObj = new URL(url, window.location.origin);
     const targetPath = targetUrlObj.pathname;
     const currentPath = window.location.pathname;
-    
+
     // Safety check just in case
-    if (!isPopState && currentPath.replace('/index.html', '/') === targetPath.replace('/index.html', '/') && !targetUrlObj.hash) {
-        return; 
+    const normalizedTargetPath = targetPath.replace(/\/index\.html$/, '/').replace(/\.html$/, '/');
+    const normalizedCurrentPath = currentPath.replace(/\/index\.html$/, '/').replace(/\.html$/, '/');
+
+    if (!isPopState && normalizedCurrentPath === normalizedTargetPath && !targetUrlObj.hash) {
+        return;
     }
 
     const contentContainer = document.getElementById("page-content");
@@ -83,7 +88,7 @@ async function navigateTo(url, isPopState = false) {
             const response = await fetch(url);
             if (!response.ok) throw new Error("Page not found");
             html = await response.text();
-            if(window.pageCache) window.pageCache[url] = Promise.resolve(html);
+            if (window.pageCache) window.pageCache[url] = Promise.resolve(html);
         }
 
         if (!html) throw new Error("Could not load html");
@@ -105,7 +110,7 @@ async function navigateTo(url, isPopState = false) {
                 window.scrollTo(0, 0);
             }
         } else {
-            window.scrollTo(0, 0); 
+            window.scrollTo(0, 0);
         }
 
         if (!isPopState) {
@@ -117,12 +122,12 @@ async function navigateTo(url, isPopState = false) {
         if (typeof window.reinitDynamicContent === "function") {
             window.reinitDynamicContent();
         }
-        
+
         if (typeof window.reapplyLanguage === "function") {
             window.reapplyLanguage();
         }
 
-        if (url.includes("contact.html")) {
+        if (url.includes("contact.html") || url.includes("/contact/")) {
             if (typeof window.initContactBg === "function") window.initContactBg();
         } else {
             if (typeof window.destroyContactBg === "function") window.destroyContactBg();
@@ -150,7 +155,7 @@ function updateNavLinks(url) {
         // Normalize URLs to compare accurately
         const isIndex = url.endsWith("/") || url.endsWith("index.html");
         const linkIsIndex = href === "index.html" || href === "/";
-        
+
         const isMatch = (isIndex && linkIsIndex) || (!isIndex && !linkIsIndex && url.includes(href));
 
         if (isMatch) {
@@ -161,12 +166,12 @@ function updateNavLinks(url) {
             link.classList.add("hover:text-white");
             link.classList.remove("text-white");
         }
-        
+
         const span = link.querySelector("span");
         if (span) {
-           if(isMatch) {
-               span.classList.remove("text-white");
-           }
+            if (isMatch) {
+                span.classList.remove("text-white");
+            }
         }
     });
 }

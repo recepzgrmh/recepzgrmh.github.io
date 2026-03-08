@@ -19,13 +19,18 @@
     <title>Apps | Recep Özgür Mih</title>
     <meta name="description" content="Recep Özgür Mih tarafından geliştirilen uygulamalar.">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="icon" type="image/png" href="../assets/logo.png">
     <!-- Open Graph -->
     <meta property="og:image" content="https://recepzgrmh.github.io/assets/logo.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://recepzgrmh.github.io/assets/logo.png">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="custom.css">
+
+    <!-- SEO: Multi-language -->
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/apps/" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/apps/" />
+    <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/apps/" />
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../custom.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">
@@ -41,8 +46,8 @@
         <!-- Header / Nav -->
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
             role="navigation" aria-label="Ana navigasyon">
-            <a href="index.html" aria-label="Ana sayfaya git">
-                <img src="assets/logo.png" alt="RÖM Logo"
+            <a href="../index.html" aria-label="Ana sayfaya git">
+                <img src="../assets/logo.png" alt="RÖM Logo"
                     style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>
@@ -53,13 +58,11 @@
                     aria-label="Dili değiştir / Switch language">
                     EN
                 </button>
-                <a href="index.html#vision" class="hover:text-white transition-colors"><span
+                <a href="../index.html#vision" class="hover:text-white transition-colors"><span
                         data-i18n="nav.vision">VİZYON</span></a>
-                <a href="apps.html" class="text-white"><span data-i18n="nav.apps">APPS</span></a>
-                <a href="blog.html" class="hover:text-white transition-colors"><span
-                        data-i18n="nav.blog">BLOG</span></a>
-                <a href="contact.html" class="hover:text-cyan-400 transition-colors"
-                    data-i18n="nav.contact">İletişim</a>
+                <a href="../apps/" class="text-white"><span data-i18n="nav.apps">APPS</span></a>
+                <a href="../blog/" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
+                <a href="../contact/" class="hover:text-cyan-400 transition-colors" data-i18n="nav.contact">İletişim</a>
             </div>
         </nav>
 
@@ -110,22 +113,22 @@
                                     <span class="text-cyan-400 text-sm font-mono tracking-widest">01.</span> Copy Paste
                                 </h4>
                                 <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="./tindog/" target="_blank"
+                                    <a href="../tindog/" target="_blank"
                                         class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Tindog</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./drum/" target="_blank"
+                                    <a href="../drum/" target="_blank"
                                         class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Drum Kit</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./expanding cards/" target="_blank"
+                                    <a href="../expanding cards/" target="_blank"
                                         class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Expanding Cards</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Progress Steps/" target="_blank"
+                                    <a href="../Progress Steps/" target="_blank"
                                         class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Progress Steps</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
@@ -143,37 +146,37 @@
                                     <span class="text-blue-400 text-sm font-mono tracking-widest">02.</span> HTML / CSS
                                 </h4>
                                 <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="./portfolio/" target="_blank"
+                                    <a href="../portfolio/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Old Portfolio</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./cv/" target="_blank"
+                                    <a href="../cv/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Old CV</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Dilan-polat/" target="_blank"
+                                    <a href="../Dilan-polat/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Dilan-Polat</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Ferrari/" target="_blank"
+                                    <a href="../Ferrari/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Ferrari</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Shopping-website/" target="_blank"
+                                    <a href="../Shopping-website/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Shopping Website</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./samsung/" target="_blank"
+                                    <a href="../samsung/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Samsung</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./solar-system/" target="_blank"
+                                    <a href="../solar-system/" target="_blank"
                                         class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Solar System</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
@@ -192,57 +195,57 @@
                                     JAVASCRIPT
                                 </h4>
                                 <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="./pomodoro/" target="_blank"
+                                    <a href="../pomodoro/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Pomodoro Timer</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Background-color/" target="_blank"
+                                    <a href="../Background-color/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Background Color</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./clock/" target="_blank"
+                                    <a href="../clock/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Clock</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./dicee/" target="_blank"
+                                    <a href="../dicee/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Dicee Game</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./car/" target="_blank"
+                                    <a href="../car/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Car - Expanding Cards</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./image slide/" target="_blank"
+                                    <a href="../image slide/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Image Slide</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Predict-number/" target="_blank"
+                                    <a href="../Predict-number/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Predict Number</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./to-do/" target="_blank"
+                                    <a href="../to-do/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>To-Do App</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./Random-number/" target="_blank"
+                                    <a href="../Random-number/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Random Number</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./tic-tac-toe/" target="_blank"
+                                    <a href="../tic-tac-toe/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Tic-Tac-Toe</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
                                     </a>
-                                    <a href="./troll/" target="_blank"
+                                    <a href="../troll/" target="_blank"
                                         class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
                                         <span>Troll Sounds</span><span
                                             class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
@@ -260,13 +263,13 @@
         </main>
     </div>
 
-    <script src="projects.js"></script>
-    <script src="modal.js"></script>
-    <script src="contact-bg.js"></script>
-    <script src="app.js"></script>
-    <script src="router.js"></script>
-    <script src="scroll.js"></script>
-    <script src="cursor.js"></script>
+    <script src="../projects.js"></script>
+    <script src="../modal.js"></script>
+    <script src="../contact-bg.js"></script>
+    <script src="../app.js"></script>
+    <script src="../router.js"></script>
+    <script src="../scroll.js"></script>
+    <script src="../cursor.js"></script>
 </body>
 
 </html>

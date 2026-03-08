@@ -223,7 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'toast.success': '✅ Mesajın ulaştı!',
             'toast.error': '❌ Hata oluştu.',
             'toast.validation.fields': '⚠️ Lütfen zorunlu alanları doldurun.',
-            'toast.validation.email': '⚠️ Geçerli bir e-posta adresi girin.'
+            'toast.validation.email': '⚠️ Geçerli bir e-posta adresi girin.',
+
+            '404.title': '404',
+            '404.desc': 'Aradığın sayfa dijital evrende kaybolmuş gibi görünüyor.',
+            '404.button': 'Ana Sayfaya Dön &rarr;'
         },
         en: {
             'meta.title': 'Recep Özgür Mih | AI-Driven Mobile Engineer',
@@ -367,7 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'toast.success': '✅ Message sent!',
             'toast.error': '❌ Error occurred.',
             'toast.validation.fields': '⚠️ Please fill in required fields.',
-            'toast.validation.email': '⚠️ Please enter a valid email address.'
+            'toast.validation.email': '⚠️ Please enter a valid email address.',
+
+            '404.title': '404',
+            '404.desc': 'It seems the page you are looking for has vanished into the digital void.',
+            '404.button': 'Return to Home &rarr;'
         }
     };
 
