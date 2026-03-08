@@ -14,7 +14,7 @@ function renderFeaturedProject(containerId, isAppPage = false) {
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
                 <h3 class="${titleClass} font-bold text-white mb-2">Sano AI${isAppPage ? '' : ': <span data-i18n="projects.sano.subtitle">Sağlık Asistanı</span>'}</h3>
-                <p class="text-cyan-400 font-semibold tracking-wide" ${isAppPage ? 'data-i18n="apps.sano.tag"': ''}>
+                <p class="text-cyan-400 font-semibold tracking-wide" ${isAppPage ? 'data-i18n="apps.sano.tag"' : 'data-i18n="projects.sano.subtitle_alt"'}>
                     ${isAppPage ? 'AI-Powered Sağlık Asistanı' : 'MaviPiksel | App Store & Google Play'}
                 </p>
             </div>
@@ -54,7 +54,7 @@ function renderFeaturedProject(containerId, isAppPage = false) {
                 ${isAppPage ? 'Ekran Görüntüleri' : 'Uygulama Ekran Görüntüleri'}
             </div>
             <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin">
-                ${[1,2,3,4,5,6].map(i => `
+                ${[1, 2, 3, 4, 5, 6].map(i => `
                 <div class="flex-shrink-0 snap-center">
                     <img src="assets/sano-${i}.png" alt="Sano AI Ekran ${i}" class="w-[140px] md:w-[${isAppPage ? '200' : '180'}px] h-auto rounded-2xl border border-white/10 hover:border-cyan-500/40 transition-all hover:scale-105 duration-300 shadow-lg">
                 </div>`).join('')}
@@ -70,7 +70,7 @@ function renderFeaturedProject(containerId, isAppPage = false) {
             </div>
             <div class="text-center">
                 <div class="text-3xl font-black text-white cyan-glow">99.9%</div>
-                <p class="text-gray-400 text-sm mt-1">Crash-Free</p>
+                <p class="text-gray-400 text-sm mt-1" data-i18n="apps.sano.stat2">Crash-Free</p>
             </div>
             <div class="text-center">
                 <div class="text-3xl font-black text-white cyan-glow">16+</div>
@@ -148,12 +148,12 @@ function renderOtherProjects(containerId, isAppPage = false) {
     ];
 
     let content = isAppPage ? `<h3 class="text-2xl font-bold text-gray-300 mb-8 fade-up" data-i18n="apps.other.title">Diğer Projeler</h3>` : '';
-    
+
     content += `<div class="grid md:grid-cols-2 gap-8">`;
 
     projects.forEach(p => {
         const interactiveClass = p.onclick ? 'cursor-pointer hover:border-cyan-500/40 transition-colors group relative' : 'group relative';
-        
+
         content += `
         <div class="bento-card p-8 fade-up ${interactiveClass}" ${p.onclick ? `onclick="${p.onclick}"` : ''}>
             <div class="flex justify-between items-start mb-3">
@@ -174,7 +174,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
                 <img src="${p.img}" alt="${p.title}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${p.fallback}'">
                 ${p.onclick ? `
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span class="bg-cyan-500 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Detayları Gör</span>
+                    <span class="bg-cyan-500 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider" data-i18n="projects.details">Detayları Gör</span>
                 </div>` : ''}
             </div>
 
@@ -188,7 +188,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
 
             ${p.onclick ? `
             <!-- Mini indicator -->
-            <div class="absolute bottom-6 right-8 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 text-sm font-semibold flex items-center gap-1">
+            <div class="absolute bottom-6 right-8 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 text-sm font-semibold flex items-center gap-1" data-i18n="projects.inspect">
                 İncele &rarr;
             </div>` : ''}
         </div>`;

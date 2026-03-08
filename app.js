@@ -1,38 +1,32 @@
+/**
+ * RECEP ÖZGÜR MIH - Portfolio Core Engine
+ * --------------------------------------
+ * Architecture: Event-driven initialization with spatial-grid optimized particles.
+ * Performance: O(n) proximity calculation using uniform grid partitioning.
+ * Stack: Three.js, GSAP, Custom i18n, Vanilla JS.
+ */
+
+// --- DEVELOPER EASTER EGG ---
+console.log(
+    "%c  RECEP ÖZGÜR MIH  ",
+    "background: #06b6d4; color: #fff; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 5px;"
+);
+console.log(
+    "%cAI-Driven Mobil Mühendis. Kodlarımı incelediğin için teşekkürler! 🚀",
+    "color: #06b6d4; font-size: 14px;"
+);
+console.log(
+    "%cTech Stack: Flutter / Firebase / Node.js / Python / Three.js / GSAP",
+    "color: #9ca3af; font-size: 12px;"
+);
+console.log(
+    "%c github.com/recepzgrmh",
+    "color: #9ca3af; font-size: 11px; text-decoration: underline;"
+);
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- FONT SWITCHER LOGIC ---
-    window.changeFont = function(fontName) {
-        let fontStyle = '';
-        if (fontName === 'Apple') {
-            fontStyle = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-        } else if (fontName === 'JetBrains Mono') {
-            fontStyle = '"JetBrains Mono", monospace';
-        } else if (fontName === 'Outfit') {
-            fontStyle = '"Outfit", sans-serif';
-        } else if (fontName === 'Plus Jakarta Sans') {
-            fontStyle = '"Plus Jakarta Sans", sans-serif';
-        } else {
-            fontStyle = '"Inter", system-ui, sans-serif'; // Default
-        }
-        
-        // Apply globally to body
-        document.body.style.fontFamily = fontStyle;
-        
-        // Optional: keep Aa button font in sync
-        const fontBtns = document.querySelectorAll('.group > button');
-        fontBtns.forEach(btn => {
-            if(btn.textContent.includes('Aa')) btn.style.fontFamily = fontStyle;
-        });
-
-        // Save selection
-        localStorage.setItem('site-font', fontName);
-    };
-
-    // Initialize font from local storage or default to Plus Jakarta Sans
-    const savedFont = localStorage.getItem('site-font') || 'Plus Jakarta Sans';
-    window.changeFont(savedFont);
-
-    window.reinitDynamicContent = function() {
+    window.reinitDynamicContent = function () {
         const isAppPage = window.location.pathname.includes('apps.html');
         if (typeof renderFeaturedProject === 'function') {
             const container = document.getElementById('featured-project-container');
@@ -55,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof gsap !== 'undefined') {
             const buttons = document.querySelectorAll('a, button');
             buttons.forEach(btn => {
-                // Remove old listeners if any by cloning, or just prevent duplicates (simplified for speed)
                 btn.addEventListener('mousemove', (e) => {
                     const rect = btn.getBoundingClientRect();
                     const x = e.clientX - rect.left - rect.width / 2;
@@ -72,70 +65,101 @@ document.addEventListener('DOMContentLoaded', () => {
     // run initially
     window.reinitDynamicContent();
 
+    // --- DYNAMIC HEADER SCROLL EFFECT ---
+    const nav = document.querySelector('nav.fixed');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
     // ----------------------------------------------------
-    // ELEMENT SEÇİMLERİ VE DEĞİŞKENLER
-    // ----------------------------------------------------
-    // ═══════════════════════════════════════
     // i18n TRANSLATION SYSTEM
-    // ═══════════════════════════════════════
+    // Light-weight dictionary-based mapping with 
+    // real-time DOM hydration.
+    // ----------------------------------------------------
     const translations = {
         tr: {
+            'meta.title': 'Recep Özgür Mih | AI-Driven Mobil Mühendis',
+            'meta.desc': 'AI destekli üretkenlik ve ölçeklenebilir mimari ile ürünler inşa eden yazılım mühendisi.',
+            'contact.meta.title': 'İletişim',
+            'contact.meta.desc': 'Recep Özgür Mih ile iletişime geçin.',
+            'apps.meta.title': 'Uygulamalar | Recep Özgür Mih',
+            'apps.meta.desc': 'Recep Özgür Mih tarafından geliştirilen mobil uygulamalar.',
+            'blog.meta.title': 'Blog | Recep Özgür Mih',
+            'blog.meta.desc': 'Teknik blog yazıları ve derinlemesine analizler.',
+
             'nav.vision': 'VİZYON',
             'nav.apps': 'APPS',
             'nav.blog': 'BLOG',
             'nav.contact': 'İLETİŞİM',
+
             'hero.available': 'Tam Zamanlı Çalışmaya Açık',
             'hero.subtitle': 'Mobil Geliştirici & Ürün Odaklı Mühendis',
+            'hero.name': 'RECEP<br>ÖZGÜR.',
             'hero.desc': 'Fikirleri uçtan uca ölçeklenebilir ürünlere dönüştürüyorum. Otonom problem çözme becerisi ve <span class="text-white font-medium">AI destekli modern mühendislik iş akışlarıyla</span> tam donanımlı mobil deneyimler inşa ediyorum.',
             'hero.cta': 'Hikayemi Keşfet',
-            'philosophy.intro': 'Modern ve ölçeklenebilir mobil geliştirme.',
-            'philosophy.title': 'AI-Augmented<br>üretkenlik ve ölçeklenebilir<br>mimari.',
+
+            'philosophy.intro': 'Ölçeklenebilir mobil geliştirme.',
+            'philosophy.title': 'AI-Augmented<br>üretkenlik ve mimari.',
             'philosophy.p1.title': 'Uçtan Uca Sahiplik',
-            'philosophy.p1.desc': 'Sano AI projesini tek başıma sıfırdan canlıya aldım. Firebase, GCP, IAP entegrasyonlarını ve backend ihtiyaçlarını kusursuzca yönettim.',
-            'philosophy.p2.title': 'Yüksek Stabilite & Kalite Güvencesi',
-            'philosophy.p2.desc': 'Crashlytics ile %99.9 çökmesiz (crash-free) deneyim. Kapsamlı birim testleri ile hataya yer bırakmayan sürüm teslimatları.',
-            'philosophy.p3.title': 'Hızlı Prototipleme (MVP)',
-            'philosophy.p3.desc': 'Fikirleri hızla doğrulamak için Python, React ve Swift ile AI araçlarını entegre ederek çevik ve işlevsel MVP süreçleri yürütme.',
-            'vision.title': 'Kariyer Hedefi &<br>Teknolojik Vizyon.',
+            'philosophy.p1.desc': 'Sano AI projesini tek başıma sıfırdan canlıya aldım.',
+            'philosophy.p2.title': 'Yüksek Stabilite',
+            'philosophy.p2.desc': '%99.9 çökmesiz deneyim ve kapsamlı testler.',
+            'philosophy.p3.title': 'Hızlı MVP',
+            'philosophy.p3.desc': 'AI araçlarıyla çevik prototipleme.',
+
+            'vision.title': 'Kariyer Hedefi &<br>Vizyon.',
             'vision.scroll': 'Kaydırmaya devam et',
             'vision.p1.tag': '1. Otonom Üretim',
-            'vision.p1.title': 'Sıfırdan Canlıya<br><span class="text-cyan-400">Ürün Sahipliği</span>',
-            'vision.p1.desc': 'Mevcut işimde tek mobil geliştirici olarak tüm ürün sorumluluğunu taşıyorum. Sano AI\'ı Flutter ile sıfırdan yazdım; Firebase, GCP ve abonelik (IAP) altyapısını araştırma ve "problem çözme" yaklaşımımla bağımsız olarak ayağa kaldırdım.',
+            'vision.p1.title': 'Sıfırdan Canlıya Ürün',
+            'vision.p1.desc': 'Firebase, GCP ve IAP altyapısını bağımsız kurdum.',
             'vision.p2.tag': '2. Çevik Geliştirme',
-            'vision.p2.title': 'Çevik ve AI Destekli<br><span class="text-blue-400">MVP Geliştirme</span>',
-            'vision.p2.desc': 'Mobil ile yetinmiyorum. Fikirleri hızla test etmek için AI-Augmented üretkenlik araçlarını kullanıyorum. Python, React Vite ve Swift kullanarak çok kısa sürelerde çalışan tam donanımlı prototipler (MVP) oluşturabiliyorum.',
-            'vision.p3.tag': '3. Ar-Ge & Derin Öğrenme',
-            'vision.p3.title': 'Lokal LLM &<br><span class="text-purple-400">Quantization</span>',
-            'vision.p3.desc': 'Modern mühendislik sadece API bağlamak değildir. Büyük Dil Modellerinin (LLM) çalışma mantığını kavramak adına lokal ortamımda Mistral ve Qwen gibi modellerle <strong class="text-white">4-bit quantization</strong> modellemeleri ve performans testleri gerçekleştiriyorum.',
-            'vision.p4.tag': '4. Kariyer Hedefi',
-            'vision.p4.title': 'Büyük Bir Ekibe<br><span class="text-white">Değer Katmaya Hazırım</span>',
-            'vision.p4.desc': 'Amacım; yüksek kod standartlarına sahip büyük ölçekli bir ekibe dahil olmak, deneyimli mühendislerle çalışmak ve sağlam bir mimari vizyon geliştirmek. <strong class="text-white">Esnek akademik programım sayesinde tam zamanlı pozisyonlar için tamamen müsaitim.</strong>',
-            'bento.title': 'Akademik &<br>Teknik Ekosistem.',
-            'bento.bbt.role': 'Kurucu Ortak & Lider',
+            'vision.p2.title': 'AI Destekli MVP',
+            'vision.p2.desc': 'Python, React ve Swift ile hızlı prototipler.',
+            'vision.p3.tag': '3. Ar-Ge',
+            'vision.p3.title': 'Lokal LLM & Quantization',
+            'vision.p3.desc': 'Mistral ve Qwen modelleriyle performans testleri.',
+            'vision.p4.tag': '4. Hedef',
+            'vision.p4.title': 'Büyük Ekiplere Hazırım',
+            'vision.p4.desc': 'Esnek akademik programla tam zamanlı müsaitim.',
+
+            'bento.title': 'Akademik & Teknik.',
+            'bento.bbt.role': 'Kurucu & Lider',
             'bento.bbt.desc': 'Teknoloji Topluluğu Yönetimi',
             'bento.bbt.stat': 'Etkinlik Katılımcısı',
             'bento.bbt.org': '60+ Organizasyon',
             'bento.bbt.event': 'İzmir Blockchain Zirvesi',
             'bento.edu.label': 'Akademik',
-            'bento.edu.title': 'Bilgisayar Mühendisliği (B.Sc.)',
-            'bento.edu.school': 'Dokuz Eylül Üniversitesi, İzmir',
+            'bento.edu.title': 'Bilgisayar Mühendisi',
+            'bento.edu.school': 'Dokuz Eylül Üniversitesi',
             'bento.edu.status': 'Esnek Program (Tam Zamanlıya Uygun)',
             'bento.tech.label': 'Gelişmiş Teknoloji Yığını',
+
             'projects.title': 'Ürünler &<br>Çözümler.',
             'projects.sano.subtitle': 'Sağlık Asistanı',
+            'projects.sano.subtitle_alt': 'MaviPiksel | App Store & Google Play',
             'projects.sano.date': 'Oca 2024 - Devam',
             'projects.sano.feat1': 'Projeyi Flutter, Firebase ve GCP kullanarak <strong>uçtan uca tek geliştirici</strong> olarak canlıya aldım. 16+ dil yerelleştirmesi, AI Soru-Cevap ve analiz özelliklerini geliştirdim.',
             'projects.sano.feat2': 'Google Play RTDN ve App Store Server Notifications entegrasyonu ile <strong>IAP/Abonelik sistemlerini</strong> sıfırdan güvenli bir mimariyle (Node.js Cloud Functions) kurdum.',
             'projects.sano.feat3': 'Firebase Crashlytics ile <strong>%99.9+ crash-free</strong> oranını yakalayarak 1000+ aktif kullanıcı ve 18B+ App Store gösterimi sağladım.',
             'projects.sano.screens': 'Uygulama Ekran Görüntüleri',
             'projects.sano.website': 'Web Sitesi',
+
             'projects.tubitak.title': 'Akıllı Yurt Bulma Sistemi',
             'projects.tubitak.desc': 'Öğrenciler için yurt arama ve filtreleme MVP\'si. Haversine mesafesi ve ağırlıklı puanlama kullanılarak özel bir öneri motoru geliştirildi.',
             'projects.astro.label': 'Kişisel Proje (2023)',
             'projects.astro.title': 'Astroloji Uygulaması',
             'projects.astro.desc': 'Günlük, haftalık burç yorumları sunan uygulama. Firebase Auth ile yönetim, Crashlytics ile kalite güvencesi sağlandı.',
+            'projects.moneo.title': 'Moneo',
+            'projects.moneo.desc': 'Privacy-first kişisel finans dashboard\'u. Ekstre PDF parse, 18 grafik, AI asistan, 19 tema.',
+            'projects.details': 'Detayları Gör',
+            'projects.inspect': 'İncele &rarr;',
+
             'blog.badge': 'Yakında',
-            'blog.title': 'Teknik Yazılar &<br>Derinlemesine Analizler.',
+            'blog.title': 'Teknik Yazılar.',
             'blog.desc': 'LLM Quantization, Flutter mimari kalıpları, AI-Augmented geliştirme iş akışları ve daha fazlası hakkında teknik blog yazılarım çok yakında burada olacak.',
             'blog.topic1.tag': 'Yakında',
             'blog.topic1.title': 'Lokal LLM Quantization Rehberi',
@@ -146,11 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.topic3.tag': 'Yakında',
             'blog.topic3.title': 'AI İş Akışlarıyla Üretkenliği Katlamak',
             'blog.topic3.desc': 'Modern yazılım süreçlerinde yapay zeka araçlarını entegre etme rehberi.',
-            'cta.title': 'Mimari vizyonunuzu<br>birlikte kodlayalım.',
+            'blog.cta': 'İletişime Geç &rarr;',
+
+            'cta.title': 'Birlikte kodlayalım.',
             'cta.desc': 'Büyük ölçekli ekiplere değer katmaya, tecrübelerden öğrenmeye ve en iyisini inşa etmeye hazırım.',
-            'cta.button': 'Ekibe Katılmaya Hazırım →',
-            'footer.text': 'Tasarlayan ve Geliştiren: Recep Özgür Mih © 2026',
-            // Apps page
+            'cta.button': 'Ekibe Hazırım →',
+
+            'footer.text': 'Recep Özgür Mih &copy; 2026',
+
             'apps.subtitle': 'Yayındaki Uygulamalar',
             'apps.title': 'Apps.',
             'apps.desc': 'Sıfırdan geliştirdiğim, canlıda olan uygulamalar. Her biri bir problemi çözmek için tasarlandı.',
@@ -159,17 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'apps.sano.desc': 'Flutter ile sıfırdan geliştirdiğim, Firebase ve GCP altyapısı üzerine kurulu AI sağlık asistanı. 16+ dilde yerelleştirilmiş, IAP/abonelik sistemi, AI analiz ve soru-cevap özellikleri barındırıyor.',
             'apps.sano.screens': 'Ekran Görüntüleri',
             'apps.sano.stat1': 'Aktif Kullanıcı',
+            'apps.sano.stat2': 'Crash-Free',
             'apps.sano.stat3': 'Dil Desteği',
             'apps.sano.stat4': 'App Store Gösterim',
             'apps.sano.tech': 'Teknoloji',
             'apps.sano.website': 'Web Sitesi',
             'apps.other.title': 'Diğer Projeler',
-            'apps.tubitak.title': 'Akıllı Yurt Bulma Sistemi',
-            'apps.tubitak.desc': 'Öğrenciler için yurt arama ve filtreleme MVP\'si. Haversine mesafesi ve ağırlıklı puanlama ile öneri motoru.',
-            'apps.astro.label': 'Kişisel Proje (2023)',
-            'apps.astro.title': 'Astroloji Uygulaması',
-            'apps.astro.desc': 'Günlük, haftalık burç yorumları sunan uygulama. Firebase Auth ile yönetim.',
-            // Blog page
+
             'blog.page.title': 'Blog.',
             'blog.page.desc': 'LLM Quantization, Flutter mimari kalıpları, AI-Augmented geliştirme iş akışları ve daha fazlası hakkında teknik derinlemesine analizler.',
             'blog.topic4.tag': 'Yakında',
@@ -177,98 +200,110 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.topic4.desc': 'Google Play RTDN ve App Store Server Notifications ile güvenli abonelik yönetimi.',
             'blog.notify.title': 'Yazılar yayınlandığında haber al',
             'blog.notify.desc': 'İlk teknik yazılarım çok yakında burada olacak. Takipte kal!',
-            // Web Experiments section
+
             'exp.title': 'Web Deneyimleri',
             'exp.desc': 'Öğrenme sürecimde geliştirdiğim, GitHub Pages üzerinde barındırılan mini HTML/CSS/JS projeleri.',
-            'exp.tictactoe.title': 'Tic-Tac-Toe',
-            'exp.tictactoe.desc': 'Klasik X-O-X oyunu. JavaScript ile DOM manipülasyonu ve oyun mantığı pratiği.',
-            'exp.pomodoro.title': 'Pomodoro Timer',
-            'exp.pomodoro.desc': 'Zaman yönetimi için geliştirilmiş fonksiyonel bir Pomodoro saati.',
-            'exp.drum.title': 'Drum Kit',
-            'exp.drum.desc': 'Klavye tuşlarıyla etkileşimli çalışan web tabanlı bateri seti.',
-            'exp.dicee.title': 'Dicee Game',
-            'exp.dicee.desc': 'Rastgele zar atma mantığına dayalı, iki oyunculu basit ve eğlenceli bir oyun.',
-            'exp.todo.title': 'To-Do App',
-            'exp.todo.desc': 'Günlük görevlerinizi takip edebileceğiniz, JavaScript tabanlı yapılacaklar listesi.',
-            'exp.tindog.title': 'TinDog',
-            'exp.tindog.desc': 'Köpekler için Tinder. Bootstrap kullanılarak geliştirilmiş modern bir landing page tasarımı.',
-            'exp.view': 'Projeyi İncele',
-            'contact.subtitle': 'İletişim & İş Birliği',
-            'contact.title': 'Konuşalım.',
-            'contact.desc': 'Yenilikçi bir fikir, teknik bir çözüm ya da sadece profesyonel bir ağ oluşturmak için doğru yerdesiniz.',
-            'contact.form.label': 'Direkt Mesaj',
-            'contact.form.title': 'Mesajınızı Bırakın',
-            'contact.form.name': 'Adınız Soyadınız',
-            'contact.form.email': 'E-Posta Adresiniz',
-            'contact.form.subject': 'Konu (Opsiyonel)',
-            'contact.form.message': 'Mesajınız',
-            'contact.form.submit': 'Gönder',
-            'contact.form.success.title': 'Mesaj Başarıyla İletildi!',
-            'contact.form.success.desc': 'En kısa sürede profesyonel bir dönüş yapacağım.',
-            'contact.form.success.retry': 'Yeni bir mesaj gönder',
-            'contact.info.label': 'Hızlı Erişim',
-            'contact.social.label': 'Sosyal Ağlar',
-            'contact.guarantee.label': 'Yanıt Garantisi',
-            'contact.guarantee.time': 'Maksimum 24 Saat',
-            'contact.guarantee.desc': 'Projeleriniz için en kısa sürede teknik analiz ve geri dönüş sağlıyorum.'
+
+            'contact.form.title': 'Mesaj Gönder',
+            'contact.form.label.name': 'Adın',
+            'contact.form.label.email': 'E-posta',
+            'contact.form.label.subject': 'Konu',
+            'contact.form.label.message': 'Mesajın',
+            'contact.form.placeholder.name': 'Recep',
+            'contact.form.placeholder.email': 'recep@u.com',
+            'contact.form.placeholder.subject': 'İş Teklifi / Proje / Merhaba',
+            'contact.form.placeholder.message': 'Projen, pozisyon veya işbirliği hakkında birkaç satır yaz...',
+            'contact.form.info.direct': 'Direkt İletişim',
+            'contact.form.info.stack': 'Çalıştığım Teknolojiler',
+            'contact.form.cta.bottom.label': 'Hadi başlayalım',
+            'contact.form.cta.bottom.title': 'Birlikte bir<br><span class="text-cyan-400 cyan-glow">şeyler üretelim.</span>',
+            'contact.form.cta.bottom.desc': 'İster iş teklifi, ister proje fikri olsun — seninle konuşmaktan mutluluk duyarım.',
+
+            'toast.loading': 'Gönderiliyor...',
+            'toast.success': '✅ Mesajın ulaştı!',
+            'toast.error': '❌ Hata oluştu.',
+            'toast.validation.fields': '⚠️ Lütfen zorunlu alanları doldurun.',
+            'toast.validation.email': '⚠️ Geçerli bir e-posta adresi girin.'
         },
         en: {
+            'meta.title': 'Recep Özgür Mih | AI-Driven Mobile Engineer',
+            'meta.desc': 'Software engineer building products with AI.',
+            'contact.meta.title': 'Contact',
+            'contact.meta.desc': 'Get in touch with Recep Özgür Mih.',
+            'apps.meta.title': 'Apps | Recep Özgür Mih',
+            'apps.meta.desc': 'Mobile applications by Recep Özgür Mih.',
+            'blog.meta.title': 'Blog | Recep Özgür Mih',
+            'blog.meta.desc': 'Technical blog posts.',
+
             'nav.vision': 'VISION',
             'nav.apps': 'APPS',
             'nav.blog': 'BLOG',
             'nav.contact': 'CONTACT',
-            'hero.available': 'Available for Full-Time Roles',
-            'hero.subtitle': 'Mobile Developer & Product Builder',
-            'hero.desc': 'I transform ideas into scalable end-to-end products. I build fully-equipped mobile experiences by leveraging autonomous problem-solving and <span class="text-white font-medium">AI-augmented modern engineering workflows</span>.',
+
+            'hero.available': 'Available for Full-Time',
+            'hero.subtitle': 'Mobile Developer & Builder',
+            'hero.name': 'RECEP<br>ÖZGÜR.',
+            'hero.desc': 'I build scalable mobile experiences with <span class="text-white font-medium">AI-augmented workflows</span>.',
             'hero.cta': 'Discover My Story',
-            'philosophy.intro': 'Modern and scalable mobile development.',
-            'philosophy.title': 'AI-Augmented<br>productivity and scalable<br>architecture.',
+
+            'philosophy.intro': 'Scalable mobile development.',
+            'philosophy.title': 'AI-Augmented architecture.',
             'philosophy.p1.title': 'End-to-End Ownership',
-            'philosophy.p1.desc': 'I single-handedly took the Sano AI project from zero to production. Seamlessly managed Firebase, GCP, IAP integrations and backend needs.',
-            'philosophy.p2.title': 'High Stability & Quality Assurance',
-            'philosophy.p2.desc': '99.9% crash-free experience with Crashlytics. Comprehensive unit tests ensuring fault-free release deliveries.',
-            'philosophy.p3.title': 'Rapid Prototyping (MVP)',
-            'philosophy.p3.desc': 'Executing agile and functional MVP processes by integrating Python, React, and Swift with AI tools to rapidly validate ideas.',
-            'vision.title': 'Career Goal &<br>Tech Vision.',
+            'philosophy.p1.desc': 'I took Sano AI from zero to production.',
+            'philosophy.p2.title': 'High Stability',
+            'philosophy.p2.desc': '99.9% crash-free and tested.',
+            'philosophy.p3.title': 'Rapid MVP',
+            'philosophy.p3.desc': 'Agile processes with AI tools.',
+
+            'vision.title': 'Career Goal & Vision.',
             'vision.scroll': 'Keep scrolling',
-            'vision.p1.tag': '1. Autonomous Production',
-            'vision.p1.title': 'Zero to Production<br><span class="text-cyan-400">Product Ownership</span>',
-            'vision.p1.desc': 'As the sole mobile developer in my current role, I own the entire product responsibility. I built Sano AI from scratch with Flutter; independently set up Firebase, GCP, and subscription (IAP) infrastructure through research and a "problem-solving" approach.',
-            'vision.p2.tag': '2. Agile Development',
-            'vision.p2.title': 'Agile & AI-Powered<br><span class="text-blue-400">MVP Development</span>',
-            'vision.p2.desc': 'I don\'t limit myself to mobile. I use AI-Augmented productivity tools to rapidly test ideas. I can build fully-equipped prototypes (MVPs) in record time using Python, React Vite, and Swift.',
-            'vision.p3.tag': '3. R&D & Deep Learning',
-            'vision.p3.title': 'Local LLM &<br><span class="text-purple-400">Quantization</span>',
-            'vision.p3.desc': 'Modern engineering is more than just connecting APIs. To understand how Large Language Models (LLMs) work, I perform <strong class="text-white">4-bit quantization</strong> experiments and benchmark tests with models like Mistral and Qwen in my local environment.',
-            'vision.p4.tag': '4. Career Goal',
-            'vision.p4.title': 'Ready to Add Value<br><span class="text-white">to a Great Team</span>',
-            'vision.p4.desc': 'My goal is to join a large-scale team with high code standards, collaborate with experienced engineers, and develop a solid architectural vision. <strong class="text-white">With a flexible academic schedule, I am fully available for full-time roles.</strong>',
-            'bento.title': 'Academic &<br>Tech Ecosystem.',
+            'vision.p1.tag': '1. Ownership',
+            'vision.p1.title': 'Zero to Production',
+            'vision.p1.desc': 'Independently built Firebase and GCP infra.',
+            'vision.p2.tag': '2. Agile',
+            'vision.p2.title': 'AI-Powered MVP',
+            'vision.p2.desc': 'Fast prototypes in Python, React, Swift.',
+            'vision.p3.tag': '3. R&D',
+            'vision.p3.title': 'Local LLM & Quantization',
+            'vision.p3.desc': 'Quantization tests with Mistral & Qwen.',
+            'vision.p4.tag': '4. Goal',
+            'vision.p4.title': 'Ready for Great Teams',
+            'vision.p4.desc': 'Fully available with flexible schedule.',
+
+            'bento.title': 'Academic & Tech.',
             'bento.bbt.role': 'Co-Founder & Lead',
             'bento.bbt.desc': 'Tech Community Management',
             'bento.bbt.stat': 'Event Participants',
             'bento.bbt.org': '60+ Events Organized',
             'bento.bbt.event': 'Izmir Blockchain Summit',
             'bento.edu.label': 'Academic',
-            'bento.edu.title': 'Computer Engineering (B.Sc.)',
-            'bento.edu.school': 'Dokuz Eylul University, Izmir',
+            'bento.edu.title': 'Computer Engineer',
+            'bento.edu.school': 'Dokuz Eylul University',
             'bento.edu.status': 'Flexible Schedule (Full-Time Ready)',
             'bento.tech.label': 'Advanced Tech Stack',
-            'projects.title': 'Products &<br>Solutions.',
+
+            'projects.title': 'Products & Solutions.',
             'projects.sano.subtitle': 'Health Assistant',
+            'projects.sano.subtitle_alt': 'MaviPiksel | App Store & Google Play',
             'projects.sano.date': 'Jan 2024 - Present',
             'projects.sano.feat1': 'Took the project live as the <strong>sole end-to-end developer</strong> using Flutter, Firebase, and GCP. Developed 16+ language localizations, AI Q&A, and analysis features.',
             'projects.sano.feat2': 'Built <strong>IAP/Subscription systems</strong> from scratch with a secure architecture (Node.js Cloud Functions) integrating Google Play RTDN and App Store Server Notifications.',
             'projects.sano.feat3': 'Achieved <strong>99.9%+ crash-free</strong> rate with Firebase Crashlytics, reaching 1000+ active users and 18B+ App Store impressions.',
             'projects.sano.screens': 'App Screenshots',
             'projects.sano.website': 'Website',
+
             'projects.tubitak.title': 'Smart Dorm Finder System',
             'projects.tubitak.desc': 'A dorm search and filtering MVP for students. A custom recommendation engine was developed using Haversine distance and weighted scoring.',
             'projects.astro.label': 'Personal Project (2023)',
             'projects.astro.title': 'Astrology App',
             'projects.astro.desc': 'An app offering daily and weekly horoscope readings. Managed with Firebase Auth, quality assured with Crashlytics.',
-            'blog.badge': 'Coming Soon',
-            'blog.title': 'Technical Articles &<br>Deep Dive Analyses.',
+            'projects.moneo.title': 'Moneo',
+            'projects.moneo.desc': 'Privacy-first personal finance dashboard. Parse PDF statements, 18 charts, AI assistant, 19 themes.',
+            'projects.details': 'See Details',
+            'projects.inspect': 'Inspect &rarr;',
+
+            'blog.badge': 'Soon',
+            'blog.title': 'Technical Articles.',
             'blog.desc': 'Technical blog posts on LLM Quantization, Flutter architecture patterns, AI-Augmented development workflows and more are coming here very soon.',
             'blog.topic1.tag': 'Coming Soon',
             'blog.topic1.title': 'Local LLM Quantization Guide',
@@ -279,11 +314,14 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.topic3.tag': 'Coming Soon',
             'blog.topic3.title': 'Maximizing Productivity with AI Workflows',
             'blog.topic3.desc': 'A guide to integrating AI tools into modern software development processes.',
-            'cta.title': 'Let\'s code your<br>architectural vision together.',
+            'blog.cta': 'Get in Touch &rarr;',
+
+            'cta.title': 'Let\'s code together.',
             'cta.desc': 'Ready to add value to large-scale teams, learn from experience, and build the best.',
-            'cta.button': 'Ready to Join the Team →',
-            'footer.text': 'Designed & Developed by Recep Özgür Mih © 2026',
-            // Apps page
+            'cta.button': 'Ready to Join →',
+
+            'footer.text': 'Recep Özgür Mih &copy; 2026',
+
             'apps.subtitle': 'Published Apps',
             'apps.title': 'Apps.',
             'apps.desc': 'Applications I built from scratch that are live in production. Each one designed to solve a real problem.',
@@ -292,17 +330,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'apps.sano.desc': 'An AI health assistant built from scratch with Flutter, powered by Firebase and GCP infrastructure. Localized in 16+ languages with IAP/subscription systems, AI analysis and Q&A features.',
             'apps.sano.screens': 'Screenshots',
             'apps.sano.stat1': 'Active Users',
+            'apps.sano.stat2': 'Crash-Free',
             'apps.sano.stat3': 'Languages',
             'apps.sano.stat4': 'App Store Impressions',
             'apps.sano.tech': 'Technology',
             'apps.sano.website': 'Website',
             'apps.other.title': 'Other Projects',
-            'apps.tubitak.title': 'Smart Dorm Finder System',
-            'apps.tubitak.desc': 'A dorm search and filtering MVP for students. Custom recommendation engine with Haversine distance and weighted scoring.',
-            'apps.astro.label': 'Personal Project (2023)',
-            'apps.astro.title': 'Astrology App',
-            'apps.astro.desc': 'An app offering daily and weekly horoscope readings. Managed with Firebase Auth.',
-            // Blog page
+
             'blog.page.title': 'Blog.',
             'blog.page.desc': 'Technical deep-dive analyses on LLM Quantization, Flutter architecture patterns, AI-Augmented development workflows and more.',
             'blog.topic4.tag': 'Coming Soon',
@@ -310,44 +344,39 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.topic4.desc': 'Secure subscription management with Google Play RTDN and App Store Server Notifications.',
             'blog.notify.title': 'Get notified when posts are published',
             'blog.notify.desc': 'My first technical articles are coming very soon. Stay tuned!',
-            // Web Experiments section
-            'exp.title': 'Web Experiments',
+
+            'exp.title': 'Web Experiences',
             'exp.desc': 'Mini HTML/CSS/JS projects built during my learning journey, hosted on GitHub Pages.',
-            'exp.tictactoe.title': 'Tic-Tac-Toe',
-            'exp.tictactoe.desc': 'The classic game. Practice with DOM manipulation and game logic using JavaScript.',
-            'exp.pomodoro.title': 'Pomodoro Timer',
-            'exp.pomodoro.desc': 'A functional Pomodoro clock built for time management.',
-            'exp.drum.title': 'Drum Kit',
-            'exp.drum.desc': 'An interactive web-based drum kit that responds to keyboard presses.',
-            'exp.dicee.title': 'Dicee Game',
-            'exp.dicee.desc': 'A simple, fun two-player game based on random dice roll logic.',
-            'exp.todo.title': 'To-Do App',
-            'exp.todo.desc': 'A JavaScript-based to-do list to keep track of your daily tasks.',
-            'exp.tindog.title': 'TinDog',
-            'exp.tindog.desc': 'Tinder for dogs. A modern landing page design created using Bootstrap.',
-            'exp.view': 'View Project',
-            'contact.subtitle': 'Contact & Collaboration',
-            'contact.title': 'Let\'s Talk.',
-            'contact.desc': 'You are in the right place for an innovative idea, a technical solution, or just to build a professional network.',
-            'contact.form.label': 'Direct Message',
-            'contact.form.title': 'Leave Your Message',
-            'contact.form.name': 'Your Name',
-            'contact.form.email': 'Your Email Address',
-            'contact.form.subject': 'Subject (Optional)',
-            'contact.form.message': 'Your Message',
-            'contact.form.submit': 'Send',
-            'contact.form.success.title': 'Message Sent Successfully!',
-            'contact.form.success.desc': 'I will provide a professional response as soon as possible.',
-            'contact.form.success.retry': 'Send a new message',
-            'contact.info.label': 'Quick Access',
-            'contact.social.label': 'Social Networks',
-            'contact.guarantee.label': 'Response Guarantee',
-            'contact.guarantee.time': 'Maximum 24 Hours',
-            'contact.guarantee.desc': 'I provide technical analysis and feedback for your projects as soon as possible.'
+
+            'contact.form.title': 'Send Message',
+            'contact.form.label.name': 'Name',
+            'contact.form.label.email': 'Email',
+            'contact.form.label.subject': 'Subject',
+            'contact.form.label.message': 'Your Message',
+            'contact.form.placeholder.name': 'John',
+            'contact.form.placeholder.email': 'john@c.com',
+            'contact.form.placeholder.subject': 'Job Offer / Project / Hello',
+            'contact.form.placeholder.message': 'Write a few lines about your project, position or collaboration...',
+            'contact.form.info.direct': 'Direct Contact',
+            'contact.form.info.stack': 'Tech I Work With',
+            'contact.form.cta.bottom.label': 'Let\'s get started',
+            'contact.form.cta.bottom.title': 'Let\'s build<br><span class="text-cyan-400 cyan-glow">something together.</span>',
+            'contact.form.cta.bottom.desc': 'Whether it\'s a job offer or a project idea — I\'d be happy to talk to you.',
+
+            'toast.loading': 'Sending...',
+            'toast.success': '✅ Message sent!',
+            'toast.error': '❌ Error occurred.',
+            'toast.validation.fields': '⚠️ Please fill in required fields.',
+            'toast.validation.email': '⚠️ Please enter a valid email address.'
         }
     };
 
     let currentLang = localStorage.getItem('portfolio-lang') || 'tr';
+
+    // --- i18n HELPERS ---
+    window.getTranslation = function (key) {
+        return (translations[currentLang] && translations[currentLang][key]) || key;
+    };
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -360,6 +389,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.innerHTML = translations[lang][key];
             }
         });
+
+        // Update input placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (translations[lang] && translations[lang][key]) {
+                el.placeholder = translations[lang][key];
+            }
+        });
+
+        // Update metadata
+        const titleKey = window.location.pathname.includes('contact') ? 'contact.meta.title' :
+            window.location.pathname.includes('apps') ? 'apps.meta.title' :
+                window.location.pathname.includes('blog') ? 'blog.meta.title' : 'meta.title';
+        const descKey = window.location.pathname.includes('contact') ? 'contact.meta.desc' :
+            window.location.pathname.includes('apps') ? 'apps.meta.desc' :
+                window.location.pathname.includes('blog') ? 'blog.meta.desc' : 'meta.desc';
+
+        if (translations[lang][titleKey]) document.title = translations[lang][titleKey];
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && translations[lang][descKey]) metaDesc.content = translations[lang][descKey];
 
         // Update toggle button text
         const toggleBtn = document.getElementById('lang-toggle');
@@ -379,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.reapplyLanguage = function() {
+    window.reapplyLanguage = function () {
         setLanguage(currentLang);
     };
 
@@ -492,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         const horizontalSection = document.getElementById('vision');
         const horizontalContainer = document.getElementById('horizontal-container');
-        
+
         const docH = document.documentElement.scrollHeight - window.innerHeight;
         scrollDepth = docH > 0 ? Math.max(0, Math.min(1, window.scrollY / docH)) : 0;
         scrollVelocity = Math.abs(window.scrollY - prevScrollY);
@@ -506,12 +555,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sp = Math.max(0, Math.min(1, sp));
             horizontalProgress = sp;
             horizontalActive = rect.top <= 0 && rect.bottom >= viewportHeight;
-            
+
             // Kart Kart Kaydırma Animasyonu (Snap Mode)
             const cardsCount = horizontalContainer.children.length || 4;
             const steps = Math.max(1, cardsCount - 1);
             const snappedSp = Math.round(sp * steps) / steps;
-            
+
             const maxTranslateX = horizontalContainer.scrollWidth - window.innerWidth + 150;
             horizontalContainer.style.transform = `translateX(-${snappedSp * maxTranslateX}px)`;
         }
