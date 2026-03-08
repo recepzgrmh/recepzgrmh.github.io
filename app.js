@@ -1,5 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- FONT SWITCHER LOGIC ---
+    window.changeFont = function(fontName) {
+        let fontStyle = '';
+        if (fontName === 'Apple') {
+            fontStyle = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        } else if (fontName === 'JetBrains Mono') {
+            fontStyle = '"JetBrains Mono", monospace';
+        } else if (fontName === 'Outfit') {
+            fontStyle = '"Outfit", sans-serif';
+        } else if (fontName === 'Plus Jakarta Sans') {
+            fontStyle = '"Plus Jakarta Sans", sans-serif';
+        } else {
+            fontStyle = '"Inter", system-ui, sans-serif'; // Default
+        }
+        
+        // Apply globally to body
+        document.body.style.fontFamily = fontStyle;
+        
+        // Optional: keep Aa button font in sync
+        const fontBtns = document.querySelectorAll('.group > button');
+        fontBtns.forEach(btn => {
+            if(btn.textContent.includes('Aa')) btn.style.fontFamily = fontStyle;
+        });
+
+        // Save selection
+        localStorage.setItem('site-font', fontName);
+    };
+
+    // Initialize font from local storage or default to Plus Jakarta Sans
+    const savedFont = localStorage.getItem('site-font') || 'Plus Jakarta Sans';
+    window.changeFont(savedFont);
+
     window.reinitDynamicContent = function() {
         const isAppPage = window.location.pathname.includes('apps.html');
         if (typeof renderFeaturedProject === 'function') {
