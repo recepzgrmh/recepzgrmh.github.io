@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim | Recep Özgür Mih</title>
+    <meta name="description" content="Recep Özgür Mih ile iletişime geçin. İş fırsatları, proje teklifleri veya işbirliği için.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="İletişim | Recep Özgür Mih">
+    <meta property="og:description" content="Mobil mühendis Recep Özgür Mih ile iletişime geçin.">
+    <meta property="og:url" content="https://recepzgrmh.github.io/contact.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://recepzgrmh.github.io/assets/logo.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="custom.css">
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <style>
+        /* ─── Contact Page Specific ───────────────── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        /* Form inputs */
+        .form-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+            outline: none;
+            resize: none;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .form-input:focus {
+            border-color: rgba(6, 182, 212, 0.7);
+            background: rgba(6, 182, 212, 0.06);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
+        }
+
+        .form-input:focus::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Submit button */
+        .submit-btn {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: 16px 24px;
+            background: #fff;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: transform 0.25s, box-shadow 0.25s;
+            letter-spacing: 0.03em;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .submit-btn .btn-shimmer {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+            animation: btn-shimmer-anim 2.5s infinite;
+        }
+
+        @keyframes btn-shimmer-anim {
+            0%   { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9998;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s;
+            pointer-events: none;
+            max-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        /* Social links */
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.45);
+            text-decoration: none;
+            transition: border-color 0.25s, background 0.25s, transform 0.25s;
+        }
+
+        .social-link:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            background: rgba(6, 182, 212, 0.08);
+            transform: translateX(4px);
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Availability pulse */
+        .avail-dot {
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+
+        /* Divider */
+        .contact-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            margin: 2rem 0;
+        }
+
+        /* Label */
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+        }
+
+        /* Character counter */
+        .char-counter {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.25);
+            text-align: right;
+            margin-top: 6px;
+            transition: color 0.2s;
+        }
+
+        .char-counter.warn {
+            color: rgba(251, 146, 60, 0.7);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <div class="relative z-10">
+
+        <!-- Header / Nav -->
+        <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
+            role="navigation" aria-label="Ana navigasyon">
+            <a href="index.html" aria-label="Ana sayfaya git">
+                <img src="assets/logo.png" alt="RÖM Logo"
+                    style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            </a>
+            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
+                <!-- Language Toggle -->
+                <button id="lang-toggle"
+                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
+                    aria-label="Dili değiştir / Switch language">
+                    EN
+                </button>
+                <a href="index.html#vision" class="hover:text-white transition-colors"><span data-i18n="nav.vision">VİZYON</span></a>
+                <a href="apps.html" class="hover:text-white transition-colors"><span data-i18n="nav.apps">APPS</span></a>
+                <a href="blog.html" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
+                <a href="contact.html" class="text-cyan-400"><span data-i18n="nav.contact">İLETİŞİM</span></a>
+            </div>
+        </nav>
+
+        <main id="page-content" class="page-transition">
+        <!-- Page Header -->
+        <section class="min-h-[50vh] flex flex-col justify-center px-6 md:px-20 lg:px-32 pt-24">
+            <div class="fade-up">
+                <p class="text-cyan-400 font-semibold tracking-widest mb-4 text-sm uppercase flex items-center gap-3">
+                    <span class="w-8 h-[2px] bg-cyan-400 inline-block"></span>
+                    <span data-i18n="contact.subtitle">İletişim & İş Birliği</span>
+                </p>
+                <h1 class="text-5xl md:text-8xl font-black text-white mb-6 cyan-glow" data-i18n="contact.title">Konuşalım.</h1>
+                <p class="text-gray-300 text-lg md:text-xl max-w-2xl font-light leading-relaxed" data-i18n="contact.desc">
+                    Yenilikçi bir fikir, teknik bir çözüm ya da sadece profesyonel bir ağ oluşturmak için doğru yerdesiniz.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="py-20 px-6 md:px-20 lg:px-32 border-t border-white/5 relative z-10">
+            <div class="max-w-6xl mx-auto">
+                <div class="contact-grid">
+
+                    <!-- LEFT: Contact Form -->
+                <div class="fade-up h-full">
+                    <div class="bento-card p-8 md:p-10 h-full flex flex-col bg-black/40 backdrop-blur-md shadow-2xl border border-white/10">
+                            <div class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                <span class="w-4 h-[1px] bg-cyan-400 inline-block"></span>
+                                Mesaj Gönder
+                            </div>
+
+                            <form id="contact-form" class="flex flex-col flex-grow" novalidate>
+                                <!-- Name + Email row -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="form-label" for="contact-name">Adın</label>
+                                        <input
+                                            id="contact-name"
+                                            name="from_name"
+                                            type="text"
+                                            class="form-input"
+                                            placeholder="Recep"
+                                            required
+                                            autocomplete="given-name"
+                                        >
+                                    </div>
+                                    <div>
+                                        <label class="form-label" for="contact-email">E-posta</label>
+                                        <input
+                                            id="contact-email"
+                                            name="reply_to"
+                                            type="email"
+                                            class="form-input"
+                                            placeholder="recep@şirket.com"
+                                            required
+                                            autocomplete="email"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!-- Subject -->
+                                <div class="mb-4">
+                                    <label class="form-label" for="contact-subject">Konu</label>
+                                    <input
+                                        id="contact-subject"
+                                        name="subject"
+                                        type="text"
+                                        class="form-input"
+                                        placeholder="İş Teklifi / Proje / Merhaba"
+                                        autocomplete="off"
+                                    >
+                                </div>
+
+                                <!-- Message -->
+                                <div class="mb-6 flex-grow flex flex-col">
+                                    <label class="form-label" for="contact-message">Mesajın</label>
+                                    <textarea
+                                        id="contact-message"
+                                        name="message"
+                                        class="form-input flex-grow"
+                                        rows="6"
+                                        placeholder="Projen, pozisyon veya işbirliği hakkında birkaç satır yaz..."
+                                        required
+                                        maxlength="1000"
+                                    ></textarea>
+                                    <div class="char-counter" id="char-counter">0 / 1000</div>
+                                </div>
+
+                                <button type="submit" class="submit-btn mt-auto" id="submit-btn">
+                                    <span class="btn-shimmer"></span>
+                                    <span id="btn-text">Mesajı Gönder →</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                <!-- RIGHT: Info Panel -->
+                <div class="fade-up h-full" style="transition-delay: 150ms;">
+                    <div class="bento-card p-8 md:p-10 h-full flex flex-col gap-0 justify-between bg-black/40 backdrop-blur-md shadow-2xl border border-white/10">
+
+                            <!-- Direct contact -->
+                            <div class="mb-8">
+                                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5 flex items-center gap-2">
+                                    <span class="w-4 h-[1px] bg-gray-600 inline-block"></span>
+                                    Direkt İletişim
+                                </div>
+
+                                <div class="flex flex-col gap-3">
+                                    <!-- Email -->
+                                    <a href="mailto:recepzgrmh@gmail.com" class="social-link group" aria-label="E-posta gönder">
+                                        <div class="social-icon bg-cyan-500/10 border border-cyan-500/20">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5">E-posta</div>
+                                            <div class="text-white font-semibold text-sm group-hover:text-cyan-400 transition-colors">recepzgrmh@gmail.com</div>
+                                        </div>
+                                        <svg class="ml-auto text-gray-600 group-hover:text-cyan-400 transition-all group-hover:translate-x-1" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    </a>
+
+                                    <!-- LinkedIn -->
+                                    <a href="https://linkedin.com/in/recepozgurmih" target="_blank" rel="noopener noreferrer" class="social-link group" aria-label="LinkedIn profili">
+                                        <div class="social-icon bg-blue-500/10 border border-blue-500/20">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#3b82f6">
+                                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5">LinkedIn</div>
+                                            <div class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">recepozgurmih</div>
+                                        </div>
+                                        <svg class="ml-auto text-gray-600 group-hover:text-blue-400 transition-all group-hover:translate-x-1" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    </a>
+
+                                    <!-- GitHub -->
+                                    <a href="https://github.com/recepzgrmh" target="_blank" rel="noopener noreferrer" class="social-link group" aria-label="GitHub profili">
+                                        <div class="social-icon bg-white/5 border border-white/10">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)">
+                                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5">GitHub</div>
+                                            <div class="text-white font-semibold text-sm group-hover:text-white transition-colors">recepzgrmh</div>
+                                        </div>
+                                        <svg class="ml-auto text-gray-600 group-hover:text-white transition-all group-hover:translate-x-1" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="contact-divider"></div>
+
+
+
+                            <!-- Stack summary -->
+                            <div>
+                                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <span class="w-4 h-[1px] bg-gray-600 inline-block"></span>
+                                    Çalıştığım Teknolojiler
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-xs font-semibold">Flutter</span>
+                                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Firebase</span>
+                                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Node.js</span>
+                                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Python</span>
+                                    <span class="px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-300 text-xs font-semibold">GCP</span>
+                                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">React Vite</span>
+                                    <span class="px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-300 text-xs font-semibold">AI / LLM</span>
+                                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Swift</span>
+                                </div>
+                            </div>
+
+                        </div><!-- /bento-card -->
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTA -->
+        <section class="py-24 px-6 md:px-20 lg:px-32 text-center border-t border-white/5 relative overflow-hidden">
+            <div class="absolute inset-0 bg-cyan-500/5 blur-[120px] rounded-full w-[600px] h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            <div class="relative z-10 fade-up">
+                <p class="text-gray-500 text-sm font-medium uppercase tracking-widest mb-4">Hadi başlayalım</p>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
+                    Birlikte bir<br><span class="text-cyan-400 cyan-glow">şeyler üretelim.</span>
+                </h2>
+                <p class="text-gray-400 text-lg font-light max-w-xl mx-auto">
+                    İster iş teklifi, ister proje fikri olsun — seninle konuşmaktan mutluluk duyarım.
+                </p>
+            </div>
+        </section>
+
+        <footer class="py-12 text-center border-t border-white/5 text-gray-500 text-sm">
+            <p>Tasarlayan ve Geliştiren: Recep Özgür Mih &copy; 2026</p>
+        </footer>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="router.js"></script>
+    <script src="scroll.js"></script>
+    <script src="cursor.js"></script>
+
+    <script>
+        // ─── EmailJS Initialization ───────────────────────────────────────────
+        // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key.
+        // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' in the sendForm function.
+        emailjs.init({ publicKey: 'YOUR_PUBLIC_KEY' });
+
+        // ─── Character Counter ────────────────────────────────────────────────
+        const textarea = document.getElementById('contact-message');
+        const counter  = document.getElementById('char-counter');
+
+        textarea.addEventListener('input', () => {
+            const len = textarea.value.length;
+            counter.textContent = `${len} / 1000`;
+            counter.classList.toggle('warn', len > 800);
+        });
+
+        // ─── Toast Helper ─────────────────────────────────────────────────────
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast ${type}`;
+            void toast.offsetWidth; // reflow
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 4500);
+        }
+
+        // ─── Contact Form Submission ──────────────────────────────────────────
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const form    = e.target;
+            const btn     = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+
+            // Basic validation
+            const name    = form.from_name.value.trim();
+            const email   = form.reply_to.value.trim();
+            const message = form.message.value.trim();
+
+            if (!name || !email || !message) {
+                showToast('⚠️ Lütfen zorunlu alanları doldurun.', 'error');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('⚠️ Geçerli bir e-posta adresi girin.', 'error');
+                return;
+            }
+
+            // Loading state
+            btn.disabled = true;
+            btnText.textContent = 'Gönderiliyor...';
+
+            try {
+                // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual values from EmailJS.
+                await emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form);
+                showToast('✅ Mesajın ulaştı! En kısa sürede geri döneceğim.', 'success');
+                form.reset();
+                counter.textContent = '0 / 1000';
+            } catch (err) {
+                console.error('EmailJS error:', err);
+                showToast('❌ Mesaj gönderilemedi. Lütfen doğrudan e-posta ile ulaşın.', 'error');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Mesajı Gönder →';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    window.reinitDynamicContent = function() {
+        const isAppPage = window.location.pathname.includes('apps.html');
+        if (typeof renderFeaturedProject === 'function') {
+            const container = document.getElementById('featured-project-container');
+            if (container) { container.innerHTML = ''; renderFeaturedProject('featured-project-container', isAppPage); }
+        }
+        if (typeof renderOtherProjects === 'function') {
+            const container = document.getElementById('other-projects-container');
+            if (container) { container.innerHTML = ''; renderOtherProjects('other-projects-container', isAppPage); }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        if (typeof gsap !== 'undefined') {
+            const buttons = document.querySelectorAll('a, button');
+            buttons.forEach(btn => {
+                // Remove old listeners if any by cloning, or just prevent duplicates (simplified for speed)
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: "power2.out" });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+                });
+            });
+        }
+    };
+
+    // run initially
+    window.reinitDynamicContent();
+
+    // ----------------------------------------------------
+    // ELEMENT SEÇİMLERİ VE DEĞİŞKENLER
+    // ----------------------------------------------------
     // ═══════════════════════════════════════
     // i18n TRANSLATION SYSTEM
     // ═══════════════════════════════════════
@@ -118,6 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
             'exp.tindog.title': 'TinDog',
             'exp.tindog.desc': 'Köpekler için Tinder. Bootstrap kullanılarak geliştirilmiş modern bir landing page tasarımı.',
             'exp.view': 'Projeyi İncele',
+            'contact.subtitle': 'İletişim & İş Birliği',
+            'contact.title': 'Konuşalım.',
+            'contact.desc': 'Yenilikçi bir fikir, teknik bir çözüm ya da sadece profesyonel bir ağ oluşturmak için doğru yerdesiniz.',
+            'contact.form.label': 'Direkt Mesaj',
+            'contact.form.title': 'Mesajınızı Bırakın',
+            'contact.form.name': 'Adınız Soyadınız',
+            'contact.form.email': 'E-Posta Adresiniz',
+            'contact.form.subject': 'Konu (Opsiyonel)',
+            'contact.form.message': 'Mesajınız',
+            'contact.form.submit': 'Gönder',
+            'contact.form.success.title': 'Mesaj Başarıyla İletildi!',
+            'contact.form.success.desc': 'En kısa sürede profesyonel bir dönüş yapacağım.',
+            'contact.form.success.retry': 'Yeni bir mesaj gönder',
+            'contact.info.label': 'Hızlı Erişim',
+            'contact.social.label': 'Sosyal Ağlar',
+            'contact.guarantee.label': 'Yanıt Garantisi',
+            'contact.guarantee.time': 'Maksimum 24 Saat',
+            'contact.guarantee.desc': 'Projeleriniz için en kısa sürede teknik analiz ve geri dönüş sağlıyorum.'
         },
         en: {
             'nav.vision': 'VISION',
@@ -233,6 +294,24 @@ document.addEventListener('DOMContentLoaded', () => {
             'exp.tindog.title': 'TinDog',
             'exp.tindog.desc': 'Tinder for dogs. A modern landing page design created using Bootstrap.',
             'exp.view': 'View Project',
+            'contact.subtitle': 'Contact & Collaboration',
+            'contact.title': 'Let\'s Talk.',
+            'contact.desc': 'You are in the right place for an innovative idea, a technical solution, or just to build a professional network.',
+            'contact.form.label': 'Direct Message',
+            'contact.form.title': 'Leave Your Message',
+            'contact.form.name': 'Your Name',
+            'contact.form.email': 'Your Email Address',
+            'contact.form.subject': 'Subject (Optional)',
+            'contact.form.message': 'Your Message',
+            'contact.form.submit': 'Send',
+            'contact.form.success.title': 'Message Sent Successfully!',
+            'contact.form.success.desc': 'I will provide a professional response as soon as possible.',
+            'contact.form.success.retry': 'Send a new message',
+            'contact.info.label': 'Quick Access',
+            'contact.social.label': 'Social Networks',
+            'contact.guarantee.label': 'Response Guarantee',
+            'contact.guarantee.time': 'Maximum 24 Hours',
+            'contact.guarantee.desc': 'I provide technical analysis and feedback for your projects as soon as possible.'
         }
     };
 
@@ -268,7 +347,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Apply saved language
+    window.reapplyLanguage = function() {
+        setLanguage(currentLang);
+    };
+
+    // Apply saved language initially
     setLanguage(currentLang);
 
 
@@ -367,20 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLayout = 'SPHERE';
     let layoutBlend = 0;
 
-    // 1. UI Intersection Observer
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
     // 2. HORIZONTAL SCROLL LOGIC + SCROLL STATE
-    const horizontalSection = document.getElementById('vision');
-    const horizontalContainer = document.getElementById('horizontal-container');
-
     let scrollDepth = 0;
     let horizontalActive = false;
     let horizontalProgress = 0;
@@ -388,6 +458,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let scrollVelocity = 0;
 
     window.addEventListener('scroll', () => {
+        const horizontalSection = document.getElementById('vision');
+        const horizontalContainer = document.getElementById('horizontal-container');
+        
         const docH = document.documentElement.scrollHeight - window.innerHeight;
         scrollDepth = docH > 0 ? Math.max(0, Math.min(1, window.scrollY / docH)) : 0;
         scrollVelocity = Math.abs(window.scrollY - prevScrollY);
@@ -401,33 +474,16 @@ document.addEventListener('DOMContentLoaded', () => {
             sp = Math.max(0, Math.min(1, sp));
             horizontalProgress = sp;
             horizontalActive = rect.top <= 0 && rect.bottom >= viewportHeight;
+            
+            // Kart Kart Kaydırma Animasyonu (Snap Mode)
+            const cardsCount = horizontalContainer.children.length || 4;
+            const steps = Math.max(1, cardsCount - 1);
+            const snappedSp = Math.round(sp * steps) / steps;
+            
             const maxTranslateX = horizontalContainer.scrollWidth - window.innerWidth + 150;
-            horizontalContainer.style.transform = `translateX(-${sp * maxTranslateX}px)`;
+            horizontalContainer.style.transform = `translateX(-${snappedSp * maxTranslateX}px)`;
         }
     });
-
-    // 2.6 MAGNETIC BUTTONS
-    function initMagneticButtons() {
-        if (typeof gsap === 'undefined') return; // Gsap check
-        const buttons = document.querySelectorAll('a, button');
-        buttons.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(btn, {
-                    x: x * 0.3,
-                    y: y * 0.3,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-            });
-        });
-    }
-    initMagneticButtons();
 
     // 2.7 MICRO-FEEDBACK (Ripples)
     window.addEventListener('mousedown', (e) => {
