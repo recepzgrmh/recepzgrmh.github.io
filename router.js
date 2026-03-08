@@ -122,6 +122,12 @@ async function navigateTo(url, isPopState = false) {
             window.reapplyLanguage();
         }
 
+        if (url.includes("contact.html")) {
+            if (typeof window.initContactBg === "function") window.initContactBg();
+        } else {
+            if (typeof window.destroyContactBg === "function") window.destroyContactBg();
+        }
+
         // Fast fade in
         if (typeof gsap !== "undefined") {
             gsap.fromTo(contentContainer, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
