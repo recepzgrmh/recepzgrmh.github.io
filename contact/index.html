@@ -20,12 +20,12 @@
     <meta name="description"
         content="Recep Özgür Mih ile iletişime geçin. İş fırsatları, proje teklifleri veya işbirliği için.">
 
-    <!-- Open Graph -->
+    <!-- Meta -->
     <meta property="og:title" content="İletişim">
     <meta property="og:description" content="Mobil mühendis Recep Özgür Mih ile iletişime geçin.">
-    <meta property="og:url" content="https://recepzgrmh.github.io/contact.html">
+    <meta property="og:url" content="https://recepozgur.com/contact/">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://recepzgrmh.github.io/assets/logo.png">
+    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
 
     <!-- SEO: Multi-language -->
     <link rel="alternate" hreflang="tr" href="https://recepozgur.com/contact/" />
@@ -33,11 +33,12 @@
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/contact/" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../custom.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/custom.css">
+    <link rel="stylesheet" href="/contact.css">
 
     <!-- Google Fonts: Inter -->
     <link
@@ -51,177 +52,6 @@
     <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-    <style>
-        /* ─── Contact Page Specific ───────────────── */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: start;
-        }
-
-        @media (max-width: 900px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-        }
-
-        /* Form inputs */
-        .form-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
-            outline: none;
-            resize: none;
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        .form-input:focus {
-            border-color: rgba(6, 182, 212, 0.7);
-            background: rgba(6, 182, 212, 0.06);
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
-        }
-
-        .form-input:focus::placeholder {
-            color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Submit button structure is now handled by .btn-premium in style.css */
-
-        @keyframes btn-shimmer-anim {
-            0% {
-                left: -100%;
-            }
-
-            100% {
-                left: 200%;
-            }
-        }
-
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 9998;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            backdrop-filter: blur(12px);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s;
-            pointer-events: none;
-            max-width: 320px;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #6ee7b7;
-        }
-
-        .toast.error {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-
-        /* Social links */
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(0, 0, 0, 0.45);
-            text-decoration: none;
-            transition: border-color 0.25s, background 0.25s, transform 0.25s;
-        }
-
-        .social-link:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            background: rgba(6, 182, 212, 0.08);
-            transform: translateX(4px);
-        }
-
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        /* Availability pulse */
-        .avail-dot {
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.4;
-            }
-        }
-
-        /* Divider */
-        .contact-divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            margin: 2rem 0;
-        }
-
-        /* Label */
-        .form-label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 8px;
-        }
-
-        /* Character counter */
-        .char-counter {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.25);
-            text-align: right;
-            margin-top: 6px;
-            transition: color 0.2s;
-        }
-
-        .char-counter.warn {
-            color: rgba(251, 146, 60, 0.7);
-        }
-    </style>
 </head>
 
 <body class="selection:bg-cyan-500/30 selection:text-cyan-200">
@@ -233,8 +63,8 @@
         <!-- Header / Nav -->
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
             role="navigation" aria-label="Ana navigasyon">
-            <a href="../index.html" aria-label="Ana sayfaya git">
-                <img src="../assets/logo.png" alt="RÖM Logo"
+            <a href="/" aria-label="Ana sayfaya git">
+                <img src="/assets/logo.png" alt="RÖM Logo"
                     style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>
@@ -245,11 +75,11 @@
                     aria-label="Dili değiştir / Switch language">
                     EN
                 </button>
-                <a href="../index.html#vision" class="hover:text-white transition-colors"><span
+                <a href="/#vision" class="hover:text-white transition-colors"><span
                         data-i18n="nav.vision">VİZYON</span></a>
-                <a href="../apps/" class="hover:text-white transition-colors"><span data-i18n="nav.apps">APPS</span></a>
-                <a href="../blog/" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
-                <a href="../contact/" class="text-cyan-400"><span data-i18n="nav.contact">İLETİŞİM</span></a>
+                <a href="/apps/" class="hover:text-white transition-colors"><span data-i18n="nav.apps">APPS</span></a>
+                <a href="/blog/" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
+                <a href="/contact/" class="text-cyan-400"><span data-i18n="nav.contact">İLETİŞİM</span></a>
             </div>
         </nav>
 
@@ -499,81 +329,13 @@
     <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
     <!-- Scripts -->
-    <script src="../contact-bg.js"></script>
-    <script src="../app.js"></script>
-    <script src="../router.js"></script>
-    <script src="../scroll.js"></script>
-    <script src="../cursor.js"></script>
+    <script src="/contact-bg.js"></script>
+    <script src="/app.js"></script>
+    <script src="/router.js"></script>
+    <script src="/scroll.js"></script>
+    <script src="/cursor.js"></script>
+    <script src="/contact-form.js"></script>
 
-    <script>
-        // ─── EmailJS Initialization ───────────────────────────────────────────
-        // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key.
-        // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' in the sendForm function.
-        emailjs.init({ publicKey: '6UsGL5jjdfUHsKChM' });
-
-        // ─── Character Counter ────────────────────────────────────────────────
-        const textarea = document.getElementById('contact-message');
-        const counter = document.getElementById('char-counter');
-
-        textarea.addEventListener('input', () => {
-            const len = textarea.value.length;
-            counter.textContent = `${len} / 1000`;
-            counter.classList.toggle('warn', len > 800);
-        });
-
-        // ─── Toast Helper ─────────────────────────────────────────────────────
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.className = `toast ${type}`;
-            void toast.offsetWidth; // reflow
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 4500);
-        }
-
-        // ─── Contact Form Submission ──────────────────────────────────────────
-        document.getElementById('contact-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const form = e.target;
-            const btn = document.getElementById('submit-btn');
-            const btnText = document.getElementById('btn-text');
-
-            // Basic validation
-            const name = form.from_name.value.trim();
-            const email = form.reply_to.value.trim();
-            const message = form.message.value.trim();
-
-            if (!name || !email || !message) {
-                showToast(getTranslation('toast.validation.fields'), 'error');
-                return;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showToast(getTranslation('toast.validation.email'), 'error');
-                return;
-            }
-
-            // Loading state
-            btn.disabled = true;
-            btnText.textContent = getTranslation('toast.loading');
-
-            try {
-                // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual values from EmailJS.
-                await emailjs.sendForm('service_wo9fcpn', 'template_x8j4alq', form);
-                showToast(getTranslation('toast.success'), 'success');
-                form.reset();
-                counter.textContent = '0 / 1000';
-            } catch (err) {
-                console.error('EmailJS error:', err);
-                showToast(getTranslation('toast.error'), 'error');
-            } finally {
-                btn.disabled = false;
-                btnText.textContent = getTranslation('blog.cta').replace('&rarr;', '→');
-            }
-        });
-    </script>
 </body>
 
 </html>

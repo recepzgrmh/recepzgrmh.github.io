@@ -129,6 +129,7 @@ async function navigateTo(url, isPopState = false) {
 
         if (url.includes("contact.html") || url.includes("/contact/")) {
             if (typeof window.initContactBg === "function") window.initContactBg();
+            if (typeof window.initContactForm === "function") window.initContactForm();
         } else {
             if (typeof window.destroyContactBg === "function") window.destroyContactBg();
         }

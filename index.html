@@ -24,11 +24,11 @@
     <meta property="og:title" content="Recep Özgür Mih | AI-Driven Mobil Mühendis">
     <meta property="og:description"
         content="AI destekli üretkenlik ve ölçeklenebilir mimari ile ürünler inşa eden yazılım mühendisi.">
-    <meta property="og:url" content="https://recepzgrmh.github.io">
+    <meta property="og:url" content="https://recepozgur.com">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://recepzgrmh.github.io/assets/logo.png">
+    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://recepzgrmh.github.io/assets/logo.png">
+    <meta name="twitter:image" content="https://recepozgur.com/assets/logo.png">
 
     <!-- SEO: Multi-language -->
     <link rel="alternate" hreflang="tr" href="https://recepozgur.com/" />
@@ -36,11 +36,11 @@
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/custom.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">
@@ -64,8 +64,8 @@
         <!-- Header / Nav -->
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 transition-all duration-300"
             role="navigation" aria-label="Ana navigasyon">
-            <a href="index.html" aria-label="Ana sayfaya git">
-                <img src="assets/logo.png" alt="RÖM Logo"
+            <a href="/" aria-label="Ana sayfaya git">
+                <img src="/assets/logo.png" alt="RÖM Logo"
                     style="height:72px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>
@@ -76,13 +76,13 @@
                     aria-label="Dili değiştir / Switch language">
                     EN
                 </button>
-                <a href="#vision" class="hover:text-white transition-colors" aria-label="Vizyon bölümüne git"><span
+                <a href="/#vision" class="hover:text-white transition-colors" aria-label="Vizyon bölümüne git"><span
                         data-i18n="nav.vision">VİZYON</span></a>
-                <a href="apps/" class="hover:text-white transition-colors" aria-label="Uygulamalarımı görüntüle"><span
+                <a href="/apps/" class="hover:text-white transition-colors" aria-label="Uygulamalarımı görüntüle"><span
                         data-i18n="nav.apps">APPS</span></a>
-                <a href="blog/" class="hover:text-white transition-colors" aria-label="Blog yazılarımı oku"><span
+                <a href="/blog/" class="hover:text-white transition-colors" aria-label="Blog yazılarımı oku"><span
                         data-i18n="nav.blog">BLOG</span></a>
-                <a href="contact/" class="hover:text-cyan-400 transition-colors"
+                <a href="/contact/" class="hover:text-cyan-400 transition-colors"
                     aria-label="İletişim sayfasına git"><span data-i18n="nav.contact">İLETİŞİM</span></a>
             </div>
         </nav>
@@ -114,7 +114,11 @@
                                 akışlarıyla</span> tam donanımlı mobil deneyimler inşa ediyorum.</span>
                     </p>
 
-                    <div class="flex flex-wrap items-center gap-6">
+                    <div class="hero-live-panel mb-8">
+                        <div id="spotify-card-anchor"></div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 relative z-50">
                         <a href="#vision"
                             class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white"
                             aria-label="Hikayemi keşfet">
@@ -124,7 +128,9 @@
                             </span>
                             <span data-i18n="hero.cta">Hikayemi Keşfet</span>
                         </a>
+
                         <div class="h-6 w-px bg-white/20 hidden sm:block"></div>
+
                         <div class="flex gap-4">
                             <a href="https://github.com/recepzgrmh" target="_blank" rel="noopener noreferrer"
                                 class="text-gray-300 hover:text-white transition-colors text-sm font-semibold tracking-wider"
@@ -454,7 +460,7 @@
                                 üretkenliği maksimize etme rehberi.</p>
                         </div>
                     </div>
-                    <a href="contact/" class="btn-premium btn-premium-cyan btn-premium-sm mt-20" role="button"
+                    <a href="/contact/" class="btn-premium btn-premium-cyan btn-premium-sm mt-20" role="button"
                         aria-label="İletişim sayfasına git">
                         <span data-i18n="blog.cta">Mesaj Gönder &rarr;</span>
                     </a>
@@ -476,7 +482,7 @@
                         Büyük ölçekli ekiplere değer katmaya, tecrübelerden öğrenmeye ve en iyisini inşa etmeye hazırım.
                     </p>
 
-                    <a href="contact/" class="btn-premium btn-premium-cyan btn-premium-lg" role="button"
+                    <a href="/contact/" class="btn-premium btn-premium-cyan btn-premium-lg" role="button"
                         aria-label="İletişim sayfasına git">
                         <span data-i18n="cta.button">Ekibe Katılmaya Hazırım &rarr;</span>
                     </a>
@@ -490,13 +496,18 @@
     </div>
 
     <!-- Scripts -->
-    <script src="projects.js"></script>
-    <script src="modal.js"></script>
-    <script src="contact-bg.js"></script>
-    <script src="app.js"></script>
-    <script src="router.js"></script>
-    <script src="scroll.js"></script>
-    <script src="cursor.js"></script>
+    <!-- Phase 2 Integration -->
+    <!-- Spotify Integration -->
+    <script src="/lib/spotify.js"></script>
+    <script src="/components/SpotifyLiveCard.js"></script>
+
+    <script src="/projects.js"></script>
+    <script src="/modal.js"></script>
+    <script src="/contact-bg.js"></script>
+    <script src="/app.js"></script>
+    <script src="/router.js"></script>
+    <script src="/scroll.js"></script>
+    <script src="/cursor.js"></script>
 </body>
 
 </html>

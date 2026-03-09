@@ -27,7 +27,7 @@ console.log(
 document.addEventListener('DOMContentLoaded', () => {
 
     window.reinitDynamicContent = function () {
-        const isAppPage = window.location.pathname.includes('apps.html');
+        const isAppPage = window.location.pathname.includes('apps.html') || window.location.pathname.includes('/apps/');
         if (typeof renderFeaturedProject === 'function') {
             const container = document.getElementById('featured-project-container');
             if (container) { container.innerHTML = ''; renderFeaturedProject('featured-project-container', isAppPage); }
@@ -36,6 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('other-projects-container');
             if (container) { container.innerHTML = ''; renderOtherProjects('other-projects-container', isAppPage); }
         }
+
+        // Initialize Spotify Card
+        window.App = window.App || {};
+
+        window.App.initSpotifyCard = function () {
+            // Pre-emptively check for anchor
+            const anchor = document.getElementById('spotify-card-anchor');
+            if (!anchor) return;
+
+            // Prevent duplicate mounting
+            if (document.getElementById('spotify-live-card')) return;
+
+            if (typeof window.App.createSpotifyLiveCard === 'function') {
+                const spotifyCard = window.App.createSpotifyLiveCard();
+                anchor.appendChild(spotifyCard);
+                console.log('[App] Spotify card mounted.');
+            }
+        };
+
+        // Call it
+        window.App.initSpotifyCard();
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
