@@ -370,14 +370,14 @@ body {
 }
 
 .cyan-glow {
-    text-shadow: 0 0 40px #06b6d466
+    text-shadow: 0 0 15px #06b6d488
 }
 
 .bento-card,
 .premium-card {
     background: #14141466;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid #ffffff14;
     border-radius: 32px;
     overflow: hidden;

@@ -43,8 +43,7 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/custom.css">
     <link rel="stylesheet" href="/contact.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">
 
     <!-- 
@@ -53,8 +52,6 @@
         - GSAP (GreenSock): Managing complex sequences and micro-interactions.
         - Custom i18n: Zero-dependency translation system for multi-language support.
     -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 
 <body class="selection:bg-cyan-500/30 selection:text-cyan-200">
@@ -497,19 +494,21 @@
         </main>
     </div>
 
-    <!-- Scripts -->
-    <!-- Phase 2 Integration -->
-    <!-- Spotify Integration -->
-    <script src="/lib/spotify.js"></script>
-    <script src="/components/SpotifyLiveCard.js"></script>
+    <!-- Optimized Library Loading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 
-    <script src="/projects.js"></script>
-    <script src="/modal.js"></script>
-    <script src="/contact-bg.js"></script>
-    <script src="/app.js"></script>
-    <script src="/router.js"></script>
-    <script src="/scroll.js"></script>
-    <script src="/cursor.js"></script>
+    <!-- Spotify Integration -->
+    <script src="/lib/spotify.js" defer></script>
+    <script src="/components/SpotifyLiveCard.js" defer></script>
+
+    <script src="/projects.js" defer></script>
+    <script src="/modal.js" defer></script>
+    <script src="/contact-bg.js" defer></script>
+    <script src="/app.js" defer></script>
+    <script src="/router.js" defer></script>
+    <script src="/scroll.js" defer></script>
+    <script src="/cursor.js" defer></script>
 </body>
 
 </html>
