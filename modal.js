@@ -347,6 +347,10 @@ document.addEventListener('keydown', (e) => {
         if (moneoModal && moneoModal.style.display !== 'none') {
             window.closeMoneoModal();
         }
+        const astroModal = document.getElementById('astro-modal');
+        if (astroModal && astroModal.style.display !== 'none') {
+            window.closeAstroModal();
+        }
     }
 });
 
@@ -774,6 +778,288 @@ window.closeMoneoModal = function () {
     const modal = document.getElementById('moneo-modal');
     const backdrop = document.getElementById('moneo-backdrop');
     const content = document.getElementById('moneo-content');
+    if (!modal) return;
+
+    backdrop.style.opacity = '0';
+    content.style.opacity = '0';
+    content.style.transform = 'scale(0.95) translateY(16px)';
+    document.body.style.overflow = '';
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+};
+
+// ═══════════════════════════════════════
+// ASTRO MODAL COMPONENT — Pure Inline CSS
+// ═══════════════════════════════════════
+
+function injectAstroModal() {
+    if (document.getElementById('astro-modal')) return;
+
+    // ── Container ──
+    const modal = document.createElement('div');
+    modal.id = 'astro-modal';
+    Object.assign(modal.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
+        zIndex: '99999',
+        display: 'none',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem',
+    });
+
+    // ── Backdrop ──
+    const backdrop = document.createElement('div');
+    backdrop.id = 'astro-backdrop';
+    Object.assign(backdrop.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        opacity: '0',
+        transition: 'opacity 0.3s ease',
+        zIndex: '1',
+    });
+    backdrop.addEventListener('click', () => window.closeAstroModal());
+    modal.appendChild(backdrop);
+
+    // ── Content Card ──
+    const content = document.createElement('div');
+    content.id = 'astro-content';
+    Object.assign(content.style, {
+        position: 'relative',
+        zIndex: '2',
+        width: '100%',
+        maxWidth: '960px',
+        maxHeight: '90vh',
+        backgroundColor: 'rgba(10,10,10,0.95)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '24px',
+        boxShadow: '0 0 80px rgba(0,0,0,0.8)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        opacity: '0',
+        transform: 'scale(0.95) translateY(16px)',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
+    });
+
+    // ── Header ──
+    const header = document.createElement('div');
+    Object.assign(header.style, {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '24px 32px',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(255,255,255,0.02)',
+        flexShrink: '0',
+    });
+
+    const headerLeft = document.createElement('div');
+    const title = document.createElement('h2');
+    title.textContent = 'Astroloji Uygulaması';
+    title.setAttribute('data-i18n', 'projects.astro.title');
+    Object.assign(title.style, {
+        fontSize: '1.75rem',
+        fontWeight: '900',
+        color: '#ffffff',
+        margin: '0',
+        letterSpacing: '-0.02em',
+    });
+
+    const badge = document.createElement('span');
+    badge.textContent = 'Kişisel Proje (2023)';
+    badge.setAttribute('data-i18n', 'projects.astro.label');
+    Object.assign(badge.style, {
+        display: 'inline-block',
+        marginTop: '8px',
+        padding: '4px 12px',
+        fontSize: '0.65rem',
+        fontWeight: '700',
+        color: '#f472b6',
+        backgroundColor: 'rgba(244,114,182,0.1)',
+        border: '1px solid rgba(244,114,182,0.2)',
+        borderRadius: '6px',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+    });
+
+    headerLeft.appendChild(title);
+    headerLeft.appendChild(badge);
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    Object.assign(closeBtn.style, {
+        width: '44px',
+        height: '44px',
+        borderRadius: '50%',
+        border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(255,255,255,0.05)',
+        color: '#9ca3af',
+        fontSize: '1.5rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'all 0.3s ease',
+        flexShrink: '0',
+        marginLeft: '16px',
+        lineHeight: '1',
+    });
+    closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.background = 'rgba(255,255,255,0.1)';
+        closeBtn.style.color = '#ffffff';
+        closeBtn.style.transform = 'rotate(90deg)';
+    });
+    closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.background = 'rgba(255,255,255,0.05)';
+        closeBtn.style.color = '#9ca3af';
+        closeBtn.style.transform = 'rotate(0deg)';
+    });
+    closeBtn.addEventListener('click', () => window.closeAstroModal());
+
+    header.appendChild(headerLeft);
+    header.appendChild(closeBtn);
+    content.appendChild(header);
+
+    // ── Scrollable Body ──
+    const body = document.createElement('div');
+    Object.assign(body.style, {
+        overflowY: 'auto',
+        padding: '24px 32px 32px',
+    });
+
+    // Description
+    const desc = document.createElement('p');
+    desc.textContent = 'Günlük, haftalık burç yorumları sunan uygulama. Firebase Auth ile yönetim, Crashlytics ile kalite güvencesi sağlandı.';
+    desc.setAttribute('data-i18n', 'projects.astro.desc');
+    Object.assign(desc.style, {
+        color: '#d1d5db',
+        fontWeight: '300',
+        fontSize: '1rem',
+        lineHeight: '1.75',
+        marginBottom: '32px',
+    });
+    body.appendChild(desc);
+
+    // Tech Stack
+    const techSection = document.createElement('div');
+    techSection.style.marginBottom = '32px';
+
+    const techLabel = document.createElement('div');
+    techLabel.textContent = 'Kullanılan Teknolojiler';
+    Object.assign(techLabel.style, {
+        fontSize: '0.7rem',
+        fontWeight: '700',
+        color: '#9ca3af',
+        marginBottom: '12px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+    });
+    techSection.appendChild(techLabel);
+
+    const techList = document.createElement('div');
+    Object.assign(techList.style, {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '10px',
+    });
+
+    const techs = [
+        { name: 'Flutter', color: '#06b6d4', bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.2)' },
+        { name: 'Firebase', color: '#eab308', bg: 'rgba(234,179,8,0.1)', border: 'rgba(234,179,8,0.2)' },
+        { name: 'Crashlytics', color: '#f43f5e', bg: 'rgba(244,63,94,0.1)', border: 'rgba(244,63,94,0.2)' },
+    ];
+    techs.forEach(t => {
+        const chip = document.createElement('span');
+        chip.textContent = t.name;
+        Object.assign(chip.style, {
+            padding: '6px 14px',
+            fontSize: '0.8rem',
+            fontWeight: '600',
+            color: t.color,
+            backgroundColor: t.bg,
+            border: `1px solid ${t.border}`,
+            borderRadius: '9999px',
+        });
+        techList.appendChild(chip);
+    });
+    techSection.appendChild(techList);
+    body.appendChild(techSection);
+
+    // GitHub Button
+    const actionDiv = document.createElement('div');
+    Object.assign(actionDiv.style, {
+        paddingTop: '16px',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+    });
+
+    const ghBtn = document.createElement('a');
+    ghBtn.href = 'https://github.com/recepzgrmh/Horoscope_App';
+    ghBtn.target = '_blank';
+    ghBtn.rel = 'noopener noreferrer';
+    ghBtn.innerHTML = '<span>💻</span><span>GitHub Repo</span>';
+    Object.assign(ghBtn.style, {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '14px 24px',
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        color: '#e5e7eb',
+        fontWeight: '700',
+        fontSize: '0.9rem',
+        borderRadius: '12px',
+        textDecoration: 'none',
+        border: '1px solid rgba(255,255,255,0.1)',
+        transition: 'all 0.3s ease',
+    });
+    ghBtn.addEventListener('mouseenter', () => {
+        ghBtn.style.backgroundColor = 'rgba(255,255,255,0.1)';
+        ghBtn.style.transform = 'translateY(-2px)';
+    });
+    ghBtn.addEventListener('mouseleave', () => {
+        ghBtn.style.backgroundColor = 'rgba(255,255,255,0.05)';
+        ghBtn.style.transform = 'translateY(0)';
+    });
+    actionDiv.appendChild(ghBtn);
+    body.appendChild(actionDiv);
+
+    content.appendChild(body);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+// ── Global open/close for Astro ──
+window.openAstroModal = function () {
+    injectAstroModal();
+    const modal = document.getElementById('astro-modal');
+    const backdrop = document.getElementById('astro-backdrop');
+    const content = document.getElementById('astro-content');
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    void modal.offsetWidth;
+
+    backdrop.style.opacity = '1';
+    content.style.opacity = '1';
+    content.style.transform = 'scale(1) translateY(0)';
+};
+
+window.closeAstroModal = function () {
+    const modal = document.getElementById('astro-modal');
+    const backdrop = document.getElementById('astro-backdrop');
+    const content = document.getElementById('astro-content');
     if (!modal) return;
 
     backdrop.style.opacity = '0';

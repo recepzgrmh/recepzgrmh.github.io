@@ -143,7 +143,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
             img: 'https://picsum.photos/seed/astro/600/340',
             fallback: 'https://picsum.photos/seed/astro/600/340',
             tech: ['Flutter', 'Firebase'],
-            onclick: ''
+            onclick: 'openAstroModal()'
         }
     ];
 
