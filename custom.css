@@ -392,14 +392,14 @@ body {
 
 @media (max-width: 1200px) and (min-width: 769px) {
     .missions-panel-wrapper {
-        top: auto;
-        bottom: 2rem;
-        right: 2rem;
-        transform: none;
+        top: auto !important;
+        bottom: 1rem !important;
+        right: 1.5rem !important;
+        transform: none !important;
     }
 
     .visible-home {
-        animation: islandAppearBottom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        animation: islandAppearBottom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
     }
 }
 
