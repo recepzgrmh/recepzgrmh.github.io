@@ -1,19 +1,15 @@
 /**
- * cursor.js — Premium Custom Cursor
+ * cursor.js — Optimized Premium Custom Cursor
  * Dot + Ring + Magnetic + Cyan Trail
- * Recep OZGUR MIH portfolio sitesine özel
  */
 
 (function () {
   'use strict';
 
-  // ─── Mobilde çalıştırma ───────────────────────────────────────────
   if (window.matchMedia('(pointer: coarse)').matches) return;
 
-  // ─── CSS enjeksiyon ───────────────────────────────────────────────
   const style = document.createElement('style');
   style.textContent = `
-    /* Her şeyin üzerinde native imleci tamamen kapatıyoruz */
     *, *::before, *::after { cursor: none !important; }
 
     #c-dot {
@@ -24,11 +20,10 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 2147483647;
-      transform: translate(-50%, -50%);
-      transition: width .2s, height .2s, opacity .15s, background .2s;
       box-shadow: 0 0 10px #06b6d4, 0 0 20px rgba(6,182,212,0.8);
       will-change: transform;
       mix-blend-mode: difference;
+      transition: width .2s, height .2s, opacity .15s, background .2s;
     }
 
     #c-ring {
@@ -39,15 +34,13 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 2147483646;
-      transform: translate(-50%, -50%);
-      transition: width .2s, height .2s, border-color .2s, background .2s, opacity .15s;
-      will-change: transform;
       background: rgba(6,182,212,0.05);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
+      will-change: transform;
+      transition: width .2s, height .2s, border-color .2s, background .2s, opacity .15s;
     }
 
-    /* Üzerine gelince (Hover) animasyonu: dot büyür renk değiştirir, ring genişler ve mor renk parlar */
     #c-dot.is-hovering {
       width: 12px; height: 12px;
       background: #a855f7;
@@ -63,7 +56,6 @@
       box-shadow: 0 0 20px rgba(168,85,247,0.3);
     }
 
-    /* Tıklama (Click) animasyonu */
     #c-dot.is-clicking {
       width: 4px; height: 4px;
       box-shadow: 0 0 15px #a855f7;
@@ -78,83 +70,73 @@
 
     .c-trail {
       position: fixed;
+      top: 0; left: 0;
       width: 5px; height: 5px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99997;
-      transform: translate(-50%, -50%);
       animation: trail-fade 0.6s ease-out forwards;
+      will-change: transform, opacity;
     }
 
     @keyframes trail-fade {
-      0%   { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
+      0%   { opacity: 0.7; transform: translate3d(-50%, -50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.1); }
     }
   `;
   document.head.appendChild(style);
 
-  // ─── Elementler ───────────────────────────────────────────────────
   const dot = document.createElement('div'); dot.id = 'c-dot';
   const ring = document.createElement('div'); ring.id = 'c-ring';
   document.body.appendChild(dot);
   document.body.appendChild(ring);
 
-  // ─── State ────────────────────────────────────────────────────────
   let mouseX = -100, mouseY = -100;
   let ringX = -100, ringY = -100;
+  let dotX = -100, dotY = -100;
   let trailTimer = 0;
   let trailIndex = 0;
 
-  const TRAIL_COLORS = [
-    '#06b6d4', '#22d3ee', '#67e8f9',
-    '#a855f7', '#c084fc', '#06b6d4',
-  ];
+  const TRAIL_COLORS = ['#06b6d4', '#22d3ee', '#67e8f9', '#a855f7', '#c084fc', '#06b6d4'];
 
-  // ─── Mouse takip ─────────────────────────────────────────────────
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-  });
+  }, { passive: true });
 
-  // ─── Trail spawn ─────────────────────────────────────────────────
   function spawnTrail(x, y) {
     const t = document.createElement('div');
     t.className = 'c-trail';
     const color = TRAIL_COLORS[trailIndex % TRAIL_COLORS.length];
     trailIndex++;
-    t.style.cssText = `
-      left: ${x}px;
-      top: ${y}px;
-      background: ${color};
-      box-shadow: 0 0 6px ${color};
-      width: ${3 + Math.random() * 4}px;
-      height: ${3 + Math.random() * 4}px;
-    `;
+    t.style.backgroundColor = color;
+    t.style.boxShadow = `0 0 6px ${color}`;
+    const size = 3 + Math.random() * 4;
+    t.style.width = size + 'px';
+    t.style.height = size + 'px';
+    t.style.transform = `translate3d(${x}px, ${y}px, 0) translate3d(-50%, -50%, 0)`;
     document.body.appendChild(t);
-    setTimeout(() => t.remove(), 620);
+    setTimeout(() => t.remove(), 600);
   }
 
-  // ─── Ring smooth follow (rAF) ─────────────────────────────────────
   function animate() {
-    // Dot — anlık
-    dot.style.left = mouseX + 'px';
-    dot.style.top = mouseY + 'px';
+    dotX += (mouseX - dotX) * 0.8;
+    dotY += (mouseY - dotY) * 0.8;
+    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate3d(-50%, -50%, 0)`;
 
-    // Ring — geride lerp ile takip
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    ring.style.left = ringX + 'px';
-    ring.style.top = ringY + 'px';
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate3d(-50%, -50%, 0)`;
 
-    // Trail parçacığı — her 3 frame'de bir (Performans için rAF içinde)
     trailTimer++;
-    if (trailTimer % 3 === 0 && mouseX > 0) spawnTrail(mouseX, mouseY);
+    if (trailTimer % 4 === 0 && mouseX > 0) {
+      spawnTrail(mouseX, mouseY);
+    }
 
     requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
 
-  // ─── Hover efekti ─────────────────────────────────────────────────
   const hoverSelectors = 'a, button, [role="button"], input, textarea, select, label, .bento-card, .premium-card';
 
   document.addEventListener('mouseover', (e) => {
@@ -171,7 +153,6 @@
     }
   });
 
-  // ─── Click efekti ─────────────────────────────────────────────────
   document.addEventListener('mousedown', () => {
     dot.classList.add('is-clicking');
     ring.classList.add('is-clicking');
@@ -182,7 +163,6 @@
     ring.classList.remove('is-clicking');
   });
 
-  // ─── Sayfa dışına çıkınca gizle ──────────────────────────────────
   document.addEventListener('mouseleave', () => {
     dot.style.opacity = '0';
     ring.style.opacity = '0';
