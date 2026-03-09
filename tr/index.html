@@ -381,87 +381,205 @@
 
                     <div id="horizontal-container" class="flex gap-8 md:gap-16 px-6 md:px-20 lg:px-32 w-max mt-24">
 
-                        <!-- Panel 1 -->
-                        <div
-                            class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group">
-                            <div
-                                class="absolute -right-20 -top-20 w-64 h-64 bg-cyan/10 blur-3xl rounded-full group-hover:bg-cyan-500/20 transition-all">
+                        <!-- Panel 1: Otonom Üretim -->
+                        <div class="w-[85vw] md:w-[45vw] lg:w-[35vw] premium-card flex-shrink-0 group">
+                            <div class="card-bg-number">01</div>
+                            <div class="card-icon-badge">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m7.5 4.27 9 5.15"></path>
+                                    <path
+                                        d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                                    </path>
+                                    <path d="m3.3 7 8.7 5 8.7-5"></path>
+                                    <path d="M12 22V12"></path>
+                                </svg>
                             </div>
-                            <div
-                                class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
-                                <span data-i18n="vision.p1.tag">1. Otonom Üretim</span>
+                            <div class="relative z-10">
+                                <div class="text-xs font-bold text-cyan mb-3 uppercase tracking-widest"
+                                    data-i18n="vision.p1.tag">Otonom Üretim</div>
+                                <h3 class="text-3xl font-black text-main mb-4 leading-tight"
+                                    data-i18n="vision.p1.title">Sıfırdan Canlıya<br>Ürün Sahipliği</h3>
+                                <p class="text-muted font-light leading-relaxed mb-6" data-i18n="vision.p1.desc">
+                                    Tek mobil geliştirici olarak tüm ürün sorumluluğunu omuzlayan otonom bir çalışma
+                                    disiplinine sahibim.
+                                </p>
+                                <ul class="card-highlights">
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Flutter ile uçtan uca ürün yayını</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>GCP & Firebase ekosistem yönetimi</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>IAP & Abonelik modelleri entegrasyonu</span>
+                                    </li>
+                                </ul>
                             </div>
-                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
-                                    data-i18n="vision.p1.title">Sıfırdan Canlıya<br><span class="text-cyan">Ürün
-                                        Sahipliği</span></span></h3>
-                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p1.desc">
-                                Mevcut işimde tek mobil geliştirici olarak tüm ürün sorumluluğunu taşıyorum. Sano AI'ı
-                                Flutter ile sıfırdan yazdım; Firebase, GCP ve abonelik (IAP) altyapısını araştırma ve
-                                "problem çözme" yaklaşımımla bağımsız olarak ayağa kaldırdım.
-                            </p>
                         </div>
 
-                        <!-- Panel 2 -->
-                        <div
-                            class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group">
-                            <div
-                                class="absolute -right-20 -top-20 w-64 h-64 bg-blue-500/10 blur-3xl rounded-full group-hover:bg-blue-500/20 transition-all">
+                        <!-- Panel 2: Çevik Geliştirme -->
+                        <div class="w-[85vw] md:w-[45vw] lg:w-[35vw] premium-card flex-shrink-0 group">
+                            <div class="card-bg-number">02</div>
+                            <div class="card-icon-badge">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                </svg>
                             </div>
-                            <div
-                                class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
-                                <span data-i18n="vision.p2.tag">2. Çevik Geliştirme</span>
+                            <div class="relative z-10">
+                                <div class="text-xs font-bold text-blue-400 mb-3 uppercase tracking-widest"
+                                    data-i18n="vision.p2.tag">Çevik Geliştirme</div>
+                                <h3 class="text-3xl font-black text-main mb-4 leading-tight"
+                                    data-i18n="vision.p2.title">Yapay Zeka Destekli<br>Hızlı Prototipleme</h3>
+                                <p class="text-muted font-light leading-relaxed mb-6" data-i18n="vision.p2.desc">
+                                    Modern AI araçlarını iş akışıma entegre ederek fikirleri rekor sürede çalışan
+                                    prototiplere dönüştürüyorum.
+                                </p>
+                                <ul class="card-highlights">
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Python & React ile hızlı MVP üretimi</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>AI-Augmented mühendislik pratikleri</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Swift ile native Apple deneyimleri</span>
+                                    </li>
+                                </ul>
                             </div>
-                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
-                                    data-i18n="vision.p2.title">Yapay Zeka Destekli<br><span class="text-blue-400">Işık
-                                        Hızında MVP</span></span></h3>
-                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p2.desc">
-                                Mobil ile yetinmiyorum. Fikirleri hızla test etmek için AI-Augmented üretkenlik
-                                araçlarını
-                                kullanıyorum. Python, React Vite ve Swift kullanarak çok kısa sürelerde çalışan tam
-                                donanımlı prototipler (MVP) oluşturabiliyorum.
-                            </p>
                         </div>
 
-                        <!-- Panel 3 -->
-                        <div
-                            class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group">
-                            <div
-                                class="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-all">
+                        <!-- Panel 3: Ar-Ge -->
+                        <div class="w-[85vw] md:w-[45vw] lg:w-[35vw] premium-card flex-shrink-0 group">
+                            <div class="card-bg-number">03</div>
+                            <div class="card-icon-badge">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.54-2.43V4.5A2.5 2.5 0 0 1 7 2z">
+                                    </path>
+                                    <path
+                                        d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.54-2.43V4.5A2.5 2.5 0 0 0 17 2z">
+                                    </path>
+                                </svg>
                             </div>
-                            <div
-                                class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
-                                <span data-i18n="vision.p3.tag">3. Ar-Ge & Derin Öğrenme</span>
+                            <div class="relative z-10">
+                                <div class="text-xs font-bold text-purple-400 mb-3 uppercase tracking-widest"
+                                    data-i18n="vision.p3.tag">Ar-Ge & Analiz</div>
+                                <h3 class="text-3xl font-black text-main mb-4 leading-tight"
+                                    data-i18n="vision.p3.title">Lokal LLM &<br>Quantization</h3>
+                                <p class="text-muted font-light leading-relaxed mb-6" data-i18n="vision.p3.desc">
+                                    Yapay zekanın derinliklerini araştırıyor, büyük dil modellerini lokal ortamımda
+                                    optimize ediyorum.
+                                </p>
+                                <ul class="card-highlights">
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Mistral & Qwen model performans testleri</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>4-bit Quantization modelleme denemeleri</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>GPU tabanlı çıkarım (inference) optimizasyonu</span>
+                                    </li>
+                                </ul>
                             </div>
-                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
-                                    data-i18n="vision.p3.title">Lokal LLM &<br><span
-                                        class="text-purple-400">Quantization</span></span></h3>
-                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p3.desc">
-                                Modern mühendislik sadece API bağlamak değildir. Büyük Dil Modellerinin (LLM) çalışma
-                                mantığını kavramak adına lokal ortamımda Mistral ve Qwen gibi modellerle <strong
-                                    class="text-main">4-bit quantization</strong> modellemeleri ve performans testleri
-                                gerçekleştiriyorum.
-                            </p>
                         </div>
 
-                        <!-- Panel 4 -->
+                        <!-- Panel 4: Kariyer Hedefi -->
                         <div
-                            class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group border-cyan-500/30">
-                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
-                            <div
-                                class="text-xs font-bold text-cyan mb-4 uppercase tracking-widest border border-cyan-500/30 w-max px-3 py-1 rounded-full bg-cyan/10">
-                                <span data-i18n="vision.p4.tag">4. Kariyer Hedefi</span>
+                            class="w-[85vw] md:w-[45vw] lg:w-[35vw] premium-card flex-shrink-0 group border-cyan-500/30">
+                            <div class="card-bg-number">04</div>
+                            <div class="card-icon-badge">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <circle cx="12" cy="12" r="6"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                </svg>
                             </div>
-                            <h3 class="text-3xl font-black text-main mb-6 leading-tight relative z-10"><span
-                                    data-i18n="vision.p4.title">Büyük Bir Ekibe<br><span class="text-main">Değer
-                                        Katmaya
-                                        Hazırım</span></span></h3>
-                            <p class="text-muted font-light leading-relaxed text-lg relative z-10"
-                                data-i18n="vision.p4.desc">
-                                Amacım; yüksek kod standartlarına sahip büyük ölçekli bir ekibe dahil olmak, deneyimli
-                                mühendislerle çalışmak ve sağlam bir mimari vizyon geliştirmek. <strong
-                                    class="text-main">Esnek akademik programım sayesinde tam zamanlı pozisyonlar için
-                                    tamamen müsaitim.</strong>
-                            </p>
+                            <div class="relative z-10">
+                                <div class="text-xs font-bold text-cyan mb-3 uppercase tracking-widest"
+                                    data-i18n="vision.p4.tag">Kariyer Hedefi</div>
+                                <h3 class="text-3xl font-black text-main mb-4 leading-tight"
+                                    data-i18n="vision.p4.title">Değer Katmaya<br>Hazırım</h3>
+                                <p class="text-muted font-light leading-relaxed mb-6" data-i18n="vision.p4.desc">
+                                    Ölçeklenebilir mimariler kuran, yüksek mühendislik standartlarına sahip ekiplerin
+                                    bir parçası olmak istiyorum.
+                                </p>
+                                <ul class="card-highlights">
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Tam zamanlı pozisyonlar için müsaitlik</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Sürekli öğrenme & mimari vizyon geliştirme</span>
+                                    </li>
+                                    <li class="card-highlight-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>Global kod standartlarına tam uyum</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
                     </div>
