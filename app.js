@@ -410,6 +410,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ----------------------------------------------------
+    // THEME MANAGEMENT SYSTEM
+    // ----------------------------------------------------
+    let currentTheme = localStorage.getItem('portfolio-theme') || 'dark';
+
+    function updateThemeUI(theme) {
+        const isLight = theme === 'light';
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+
+        if (isLight) {
+            document.documentElement.classList.add('light-mode');
+            if (sunIcon) sunIcon.classList.remove('hidden');
+            if (moonIcon) moonIcon.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('light-mode');
+            if (sunIcon) sunIcon.classList.add('hidden');
+            if (moonIcon) moonIcon.classList.remove('hidden');
+        }
+
+        // Update Three.js if initialized
+        if (window.App && window.App.updateBackground) {
+            window.App.updateBackground(theme);
+        } else {
+            // If Three.js is not yet ready, it will pick up currentTheme on init
+            console.log("Three.js not ready, will init with:", theme);
+        }
+    }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('portfolio-theme', currentTheme);
+            updateThemeUI(currentTheme);
+        });
+    }
+
+    // Initialize theme based on saved preference
+    updateThemeUI(currentTheme);
+
     const pathSegments = window.location.pathname.split('/');
     const pathLang = pathSegments[1];
     let currentLang = (pathLang === 'tr' || pathLang === 'en') ? pathLang : (localStorage.getItem('portfolio-lang') || 'tr');
@@ -682,9 +723,11 @@ document.addEventListener('DOMContentLoaded', () => {
         camera.position.z = 700;
 
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
-        renderer.setClearColor(0x0f0f0f, 1);
+        renderer.setClearColor(currentTheme === 'light' ? 0xf1f5f9 : 0x0f0f0f, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Expose update function will be defined later after materials are ready
 
         // ═══════════════════════════════════════
         // PARTICLES
@@ -717,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const particleMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                uColor: { value: new THREE.Color(0xcccccc) },
+                uColor: { value: new THREE.Color(currentTheme === 'light' ? 0x475569 : 0xcccccc) },
                 uGlowColor: { value: new THREE.Color(0x06b6d4) },
             },
             vertexShader: `
@@ -746,7 +789,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `,
             transparent: true,
             depthWrite: false,
-            blending: THREE.AdditiveBlending,
+            blending: currentTheme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending,
         });
 
         const pointCloud = new THREE.Points(particleGeometry, particleMaterial);
@@ -766,8 +809,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const lineMaterial = new THREE.LineBasicMaterial({
             vertexColors: true,
             transparent: true,
-            opacity: 0.7,
-            blending: THREE.AdditiveBlending,
+            opacity: currentTheme === 'light' ? 0.2 : 0.7,
+            blending: currentTheme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending,
             depthWrite: false,
         });
 
@@ -800,6 +843,51 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < MAX_SHOOTS; i++) {
             shootLines.push(createShootLine());
         }
+
+        // Expose update function - defined here after materials are ready
+        window.App = window.App || {};
+        window.App.updateBackground = (theme) => {
+            const isLight = theme === 'light';
+            const targetColor = isLight ? 0xf1f5f9 : 0x0f0f0f;
+            const particleColor = isLight ? 0x475569 : 0xcccccc;
+
+            if (typeof gsap !== 'undefined') {
+                gsap.to(renderer.getClearColor(), {
+                    r: (targetColor >> 16 & 255) / 255,
+                    g: (targetColor >> 8 & 255) / 255,
+                    b: (targetColor & 255) / 255,
+                    duration: 0.8,
+                    onUpdate: () => renderer.setClearColor(renderer.getClearColor())
+                });
+
+                gsap.to(particleMaterial.uniforms.uColor.value, {
+                    r: (particleColor >> 16 & 255) / 255,
+                    g: (particleColor >> 8 & 255) / 255,
+                    b: (particleColor & 255) / 255,
+                    duration: 0.8
+                });
+            } else {
+                renderer.setClearColor(targetColor);
+                particleMaterial.uniforms.uColor.value.setHex(particleColor);
+            }
+
+            particleMaterial.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+            lineMaterial.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+            lineMaterial.opacity = isLight ? 0.2 : 0.7;
+
+            particleMaterial.needsUpdate = true;
+            lineMaterial.needsUpdate = true;
+        };
+
+        const syncTheme = () => {
+            const isLight = document.documentElement.classList.contains('light-mode');
+            const theme = isLight ? 'light' : 'dark';
+            window.App.updateBackground(theme);
+        };
+
+        // ═══════════════════════════════════════
+        // Final initialization check
+        syncTheme();
 
         // ═══════════════════════════════════════
         // MOUSE TRACKING

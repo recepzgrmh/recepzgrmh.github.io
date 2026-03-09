@@ -26,9 +26,9 @@
         content="AI destekli üretkenlik ve ölçeklenebilir mimari ile ürünler inşa eden yazılım mühendisi.">
     <meta property="og:url" content="https://recepozgur.com">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
+    <meta property="og:image" content="https://recepozgur.com/assets/logo.webp">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://recepozgur.com/assets/logo.png">
+    <meta name="twitter:image" content="https://recepozgur.com/assets/logo.webp">
 
     <!-- SEO: Multi-language -->
     <link rel="canonical" href="https://recepozgur.com/tr/" />
@@ -37,12 +37,13 @@
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/logo.png">
+    <link rel="icon" type="image/png" href="/assets/logo.webp">
 
     <!-- Styles -->
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/custom.css">
     <link rel="stylesheet" href="/contact.css">
+    <link rel="stylesheet" href="/theme-fix.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">
 
@@ -52,9 +53,17 @@
         - GSAP (GreenSock): Managing complex sequences and micro-interactions.
         - Custom i18n: Zero-dependency translation system for multi-language support.
     -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('portfolio-theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+        })();
+    </script>
 </head>
 
-<body class="selection:bg-cyan-500 selection:text-white">
+<body class="selection:bg-cyan-500 selection:text-main">
 
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
@@ -64,24 +73,40 @@
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 transition-all duration-300"
             role="navigation" aria-label="Ana navigasyon">
             <a href="/tr/" aria-label="Ana sayfaya git">
-                <img src="/assets/logo.png" alt="RÖM Logo"
+                <img src="/assets/logo.webp" alt="RÖM Logo"
                     style="height:72px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>
-            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
+            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-muted">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle"
+                    class="p-2 rounded-full border border-border bg-card hover:bg-white/10 transition-all flex items-center justify-center"
+                    aria-label="Temayı değiştir">
+                    <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                        </path>
+                    </svg>
+                    <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                        </path>
+                    </svg>
+                </button>
                 <!-- Language Toggle -->
                 <button id="lang-toggle"
-                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
+                    class="px-3 py-1.5 rounded-full border border-border bg-card hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
                     aria-label="Dili değiştir / Switch language">
                     EN
                 </button>
-                <a href="/tr/#vision" class="hover:text-white transition-colors" aria-label="Vizyon bölümüne git"><span
+                <a href="/tr/#vision" class="hover:text-main transition-colors" aria-label="Vizyon bölümüne git"><span
                         data-i18n="nav.vision">VİZYON</span></a>
-                <a href="/tr/apps/" class="hover:text-white transition-colors"
+                <a href="/tr/apps/" class="hover:text-main transition-colors"
                     aria-label="Uygulamalarımı görüntüle"><span data-i18n="nav.apps">APPS</span></a>
-                <a href="/tr/blog/" class="hover:text-white transition-colors" aria-label="Blog yazılarımı oku"><span
+                <a href="/tr/blog/" class="hover:text-main transition-colors" aria-label="Blog yazılarımı oku"><span
                         data-i18n="nav.blog">BLOG</span></a>
-                <a href="/tr/contact/" class="hover:text-cyan-400 transition-colors"
+                <a href="/tr/contact/" class="hover:text-cyan transition-colors"
                     aria-label="İletişim sayfasına git"><span data-i18n="nav.contact">İLETİŞİM</span></a>
             </div>
         </nav>
@@ -98,17 +123,17 @@
                     </div>
 
                     <p
-                        class="text-cyan-400 font-semibold tracking-widest mb-4 text-sm md:text-base uppercase flex items-center gap-3">
-                        <span class="w-8 h-[2px] bg-cyan-400 inline-block"></span>
+                        class="text-cyan font-semibold tracking-widest mb-4 text-sm md:text-base uppercase flex items-center gap-3">
+                        <span class="w-8 h-[2px] bg-cyan inline-block"></span>
                         <span data-i18n="hero.subtitle">Mobil Geliştirici & Ürün Odaklı Mühendis</span>
                     </p>
-                    <h1 class="text-huge font-black mb-6 text-white cyan-glow">
+                    <h1 class="text-huge font-black mb-6 text-main cyan-glow">
                         RECEP<br>
                         OZGUR.
                     </h1>
-                    <p class="text-gray-300 text-lg md:text-2xl max-w-3xl font-light leading-relaxed mb-10">
+                    <p class="text-muted text-lg md:text-2xl max-w-3xl font-light leading-relaxed mb-10">
                         <span data-i18n="hero.desc">Fikirleri uçtan uca ölçeklenebilir ürünlere dönüştürüyorum. Otonom
-                            problem çözme becerisi ve <span class="text-white font-medium">AI destekli modern
+                            problem çözme becerisi ve <span class="text-main font-medium">AI destekli modern
                                 mühendislik iş
                                 akışlarıyla</span> tam donanımlı mobil deneyimler inşa ediyorum.</span>
                     </p>
@@ -119,10 +144,10 @@
 
                     <div class="flex flex-wrap items-center gap-6 relative z-50">
                         <a href="/tr/#vision"
-                            class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white"
+                            class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-main"
                             aria-label="Hikayemi keşfet">
                             <span
-                                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 text-lg">
+                                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-border flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 text-lg">
                                 ↓
                             </span>
                             <span data-i18n="hero.cta">Hikayemi Keşfet</span>
@@ -132,10 +157,10 @@
 
                         <div class="flex gap-4">
                             <a href="https://github.com/recepzgrmh" target="_blank" rel="noopener noreferrer"
-                                class="text-gray-300 hover:text-white transition-colors text-sm font-semibold tracking-wider"
+                                class="text-muted hover:text-main transition-colors text-sm font-semibold tracking-wider"
                                 aria-label="GitHub profilini aç">GITHUB</a>
                             <a href="https://linkedin.com/in/recepozgurMIH" target="_blank" rel="noopener noreferrer"
-                                class="text-gray-300 hover:text-white transition-colors text-sm font-semibold tracking-wider"
+                                class="text-muted hover:text-main transition-colors text-sm font-semibold tracking-wider"
                                 aria-label="LinkedIn profilini aç">LINKEDIN</a>
                         </div>
                     </div>
@@ -144,15 +169,15 @@
 
             <!-- Bölüm 1: Mühendislik Felsefesi -->
             <section
-                class="min-h-screen flex flex-col justify-center px-6 md:px-20 lg:px-32 py-32 border-t border-white/5 relative">
+                class="min-h-screen flex flex-col justify-center px-6 md:px-20 lg:px-32 py-32 border-t border-border relative">
                 <div
                     class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-900/5 to-transparent pointer-events-none">
                 </div>
 
                 <div class="max-w-6xl fade-up">
-                    <h2 class="text-2xl md:text-4xl font-light text-gray-300 mb-8 leading-tight">
+                    <h2 class="text-2xl md:text-4xl font-light text-muted mb-8 leading-tight">
                         <span data-i18n="philosophy.intro">Klasik mobil geliştiriciliğin ötesinde.</span><br>
-                        <span class="text-white font-black text-4xl md:text-7xl mt-4 block cyan-glow"
+                        <span class="text-main font-black text-4xl md:text-7xl mt-4 block cyan-glow"
                             data-i18n="philosophy.title">AI-Augmented<br>üretkenlik
                             ve ölçeklenebilir<br>mimari.</span>
                     </h2>
@@ -160,24 +185,24 @@
                     <div class="grid md:grid-cols-3 gap-12 mt-20">
                         <div class="fade-up">
                             <div
-                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-cyan-400 font-bold text-xl">
+                                class="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center mb-6 text-cyan font-bold text-xl">
                                 1</div>
-                            <h3 class="text-xl font-bold text-white mb-4" data-i18n="philosophy.p1.title">Uçtan Uca
+                            <h3 class="text-xl font-bold text-main mb-4" data-i18n="philosophy.p1.title">Uçtan Uca
                                 Sahiplik
                             </h3>
-                            <p class="text-gray-300 font-light leading-relaxed" data-i18n="philosophy.p1.desc">Sano AI
+                            <p class="text-muted font-light leading-relaxed" data-i18n="philosophy.p1.desc">Sano AI
                                 projesini tek başıma sıfırdan
                                 canlıya aldım. Firebase, GCP, IAP entegrasyonlarını ve backend ihtiyaçlarını kusursuzca
                                 yönettim.</p>
                         </div>
                         <div class="fade-up" style="transition-delay: 200ms;">
                             <div
-                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-cyan-400 font-bold text-xl">
+                                class="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center mb-6 text-cyan font-bold text-xl">
                                 2</div>
-                            <h3 class="text-xl font-bold text-white mb-4" data-i18n="philosophy.p2.title">Yüksek
+                            <h3 class="text-xl font-bold text-main mb-4" data-i18n="philosophy.p2.title">Yüksek
                                 Stabilite &
                                 Kalite Güvencesi</h3>
-                            <p class="text-gray-300 font-light leading-relaxed" data-i18n="philosophy.p2.desc">
+                            <p class="text-muted font-light leading-relaxed" data-i18n="philosophy.p2.desc">
                                 Crashlytics
                                 ile %99.9 çökmesiz (crash-free) deneyim. Kapsamlı birim testleri ile hataya yer
                                 bırakmayan
@@ -185,12 +210,12 @@
                         </div>
                         <div class="fade-up" style="transition-delay: 400ms;">
                             <div
-                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-cyan-400 font-bold text-xl">
+                                class="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center mb-6 text-cyan font-bold text-xl">
                                 3</div>
-                            <h3 class="text-xl font-bold text-white mb-4" data-i18n="philosophy.p3.title">Hızlı
+                            <h3 class="text-xl font-bold text-main mb-4" data-i18n="philosophy.p3.title">Hızlı
                                 Prototipleme
                                 (MVP)</h3>
-                            <p class="text-gray-300 font-light leading-relaxed" data-i18n="philosophy.p3.desc">Fikirleri
+                            <p class="text-muted font-light leading-relaxed" data-i18n="philosophy.p3.desc">Fikirleri
                                 hızla doğrulamak için Python, React ve Swift ile AI araçlarını entegre ederek çevik ve
                                 işlevsel MVP süreçleri yürütme.</p>
                         </div>
@@ -201,14 +226,14 @@
             <!-- BÖLÜM 2: YATAY KAYDIRMA -->
             <section id="vision" class="relative horizontal-scroll-section">
                 <div
-                    class="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-black/60 border-y border-white/5">
+                    class="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-black/60 border-y border-border">
 
                     <div class="absolute top-12 left-6 md:left-20 lg:left-32 z-20">
-                        <h2 class="text-2xl md:text-4xl font-black text-white fade-up tracking-tight"><span
+                        <h2 class="text-2xl md:text-4xl font-black text-main fade-up tracking-tight"><span
                                 data-i18n="vision.title">Kariyer Hedefi
                                 &<br>Teknolojik Vizyon.</span></h2>
-                        <p class="text-cyan-400 font-mono text-sm mt-2 flex items-center gap-2"><span
-                                class="animate-ping w-2 h-2 bg-cyan-400 rounded-full inline-block"></span> <span
+                        <p class="text-cyan font-mono text-sm mt-2 flex items-center gap-2"><span
+                                class="animate-ping w-2 h-2 bg-cyan rounded-full inline-block"></span> <span
                                 data-i18n="vision.scroll">Kaydırmaya devam
                                 et</span></p>
                     </div>
@@ -219,16 +244,16 @@
                         <div
                             class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group">
                             <div
-                                class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/10 blur-3xl rounded-full group-hover:bg-cyan-500/20 transition-all">
+                                class="absolute -right-20 -top-20 w-64 h-64 bg-cyan/10 blur-3xl rounded-full group-hover:bg-cyan-500/20 transition-all">
                             </div>
                             <div
                                 class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
                                 <span data-i18n="vision.p1.tag">1. Otonom Üretim</span>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-6 leading-tight"><span
-                                    data-i18n="vision.p1.title">Sıfırdan Canlıya<br><span class="text-cyan-400">Ürün
+                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
+                                    data-i18n="vision.p1.title">Sıfırdan Canlıya<br><span class="text-cyan">Ürün
                                         Sahipliği</span></span></h3>
-                            <p class="text-gray-300 font-light leading-relaxed text-lg" data-i18n="vision.p1.desc">
+                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p1.desc">
                                 Mevcut işimde tek mobil geliştirici olarak tüm ürün sorumluluğunu taşıyorum. Sano AI'ı
                                 Flutter ile sıfırdan yazdım; Firebase, GCP ve abonelik (IAP) altyapısını araştırma ve
                                 "problem çözme" yaklaşımımla bağımsız olarak ayağa kaldırdım.
@@ -245,10 +270,10 @@
                                 class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
                                 <span data-i18n="vision.p2.tag">2. Çevik Geliştirme</span>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-6 leading-tight"><span
+                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
                                     data-i18n="vision.p2.title">Yapay Zeka Destekli<br><span class="text-blue-400">Işık
                                         Hızında MVP</span></span></h3>
-                            <p class="text-gray-300 font-light leading-relaxed text-lg" data-i18n="vision.p2.desc">
+                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p2.desc">
                                 Mobil ile yetinmiyorum. Fikirleri hızla test etmek için AI-Augmented üretkenlik
                                 araçlarını
                                 kullanıyorum. Python, React Vite ve Swift kullanarak çok kısa sürelerde çalışan tam
@@ -266,13 +291,13 @@
                                 class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest border border-gray-700/50 w-max px-3 py-1 rounded-full">
                                 <span data-i18n="vision.p3.tag">3. Ar-Ge & Derin Öğrenme</span>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-6 leading-tight"><span
+                            <h3 class="text-3xl font-black text-main mb-6 leading-tight"><span
                                     data-i18n="vision.p3.title">Lokal LLM &<br><span
                                         class="text-purple-400">Quantization</span></span></h3>
-                            <p class="text-gray-300 font-light leading-relaxed text-lg" data-i18n="vision.p3.desc">
+                            <p class="text-muted font-light leading-relaxed text-lg" data-i18n="vision.p3.desc">
                                 Modern mühendislik sadece API bağlamak değildir. Büyük Dil Modellerinin (LLM) çalışma
                                 mantığını kavramak adına lokal ortamımda Mistral ve Qwen gibi modellerle <strong
-                                    class="text-white">4-bit quantization</strong> modellemeleri ve performans testleri
+                                    class="text-main">4-bit quantization</strong> modellemeleri ve performans testleri
                                 gerçekleştiriyorum.
                             </p>
                         </div>
@@ -282,18 +307,18 @@
                             class="w-[85vw] md:w-[45vw] lg:w-[35vw] h-[55vh] premium-card p-10 flex flex-col justify-center flex-shrink-0 relative overflow-hidden group border-cyan-500/30">
                             <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
                             <div
-                                class="text-xs font-bold text-cyan-400 mb-4 uppercase tracking-widest border border-cyan-500/30 w-max px-3 py-1 rounded-full bg-cyan-500/10">
+                                class="text-xs font-bold text-cyan mb-4 uppercase tracking-widest border border-cyan-500/30 w-max px-3 py-1 rounded-full bg-cyan/10">
                                 <span data-i18n="vision.p4.tag">4. Kariyer Hedefi</span>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-6 leading-tight relative z-10"><span
-                                    data-i18n="vision.p4.title">Büyük Bir Ekibe<br><span class="text-white">Değer
+                            <h3 class="text-3xl font-black text-main mb-6 leading-tight relative z-10"><span
+                                    data-i18n="vision.p4.title">Büyük Bir Ekibe<br><span class="text-main">Değer
                                         Katmaya
                                         Hazırım</span></span></h3>
-                            <p class="text-gray-200 font-light leading-relaxed text-lg relative z-10"
+                            <p class="text-muted font-light leading-relaxed text-lg relative z-10"
                                 data-i18n="vision.p4.desc">
                                 Amacım; yüksek kod standartlarına sahip büyük ölçekli bir ekibe dahil olmak, deneyimli
                                 mühendislerle çalışmak ve sağlam bir mimari vizyon geliştirmek. <strong
-                                    class="text-white">Esnek akademik programım sayesinde tam zamanlı pozisyonlar için
+                                    class="text-main">Esnek akademik programım sayesinde tam zamanlı pozisyonlar için
                                     tamamen müsaitim.</strong>
                             </p>
                         </div>
@@ -303,7 +328,7 @@
             </section>
 
             <!-- Bölüm 3: BENTO BOX MİMARİSİ -->
-            <section class="py-24 px-6 md:px-20 lg:px-32 border-t border-white/5" id="bento">
+            <section class="py-24 px-6 md:px-20 lg:px-32 border-t border-border" id="bento">
                 <h2
                     class="text-3xl md:text-5xl font-black mb-12 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 fade-up">
                     <span data-i18n="bento.title">Akademik &<br>Teknik Ekosistem.</span>
@@ -320,25 +345,23 @@
                         <div>
                             <div
                                 class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
                                 <span data-i18n="bento.bbt.role">Kurucu Ortak & Lider</span>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-2">BBT İzmir</h3>
-                            <p class="text-gray-300 font-light" data-i18n="bento.bbt.desc">Teknoloji Topluluğu Yönetimi
+                            <h3 class="text-3xl font-black text-main mb-2">BBT İzmir</h3>
+                            <p class="text-muted font-light" data-i18n="bento.bbt.desc">Teknoloji Topluluğu Yönetimi
                             </p>
                         </div>
 
                         <div>
-                            <div class="text-5xl font-black text-white mb-2 cyan-glow">2,500+</div>
-                            <p class="text-gray-200 font-medium mb-4" data-i18n="bento.bbt.stat">Etkinlik Katılımcısı
+                            <div class="text-5xl font-black text-main mb-2 cyan-glow">2,500+</div>
+                            <p class="text-muted font-medium mb-4" data-i18n="bento.bbt.stat">Etkinlik Katılımcısı
                             </p>
                             <div class="flex flex-wrap gap-3 text-sm">
-                                <span
-                                    class="px-4 py-2 bg-white/5 rounded-full border border-white/10 text-gray-200"><span
+                                <span class="px-4 py-2 bg-card rounded-full border border-border text-muted"><span
                                         data-i18n="bento.bbt.org">60+
                                         Organizasyon</span></span>
-                                <span
-                                    class="px-4 py-2 bg-cyan-500/10 rounded-full border border-cyan-500/20 text-cyan-400"
+                                <span class="px-4 py-2 bg-cyan/10 rounded-full border border-cyan-500/20 text-cyan"
                                     data-i18n="bento.bbt.event">İzmir
                                     Blockchain Zirvesi</span>
                             </div>
@@ -351,9 +374,9 @@
                         <div>
                             <div class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest"
                                 data-i18n="bento.edu.label">Akademik</div>
-                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="bento.edu.title">Bilgisayar
+                            <h3 class="text-xl font-bold text-main mb-1" data-i18n="bento.edu.title">Bilgisayar
                                 Mühendisliği (B.Sc.)</h3>
-                            <p class="text-gray-300 font-light text-sm" data-i18n="bento.edu.school">Dokuz Eylül
+                            <p class="text-muted font-light text-sm" data-i18n="bento.edu.school">Dokuz Eylül
                                 Üniversitesi, İzmir</p>
                         </div>
                         <div class="flex justify-between items-end mt-4">
@@ -361,7 +384,7 @@
                                 class="text-xs text-green-400 font-semibold border border-green-500/30 bg-green-500/10 px-3 py-1 rounded-lg"
                                 data-i18n="bento.edu.status">Esnek Program (Tam Zamanlıya Uygun)</span>
                             <span
-                                class="px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold tracking-widest text-white border border-white/20">2021
+                                class="px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold tracking-widest text-main border border-border">2021
                                 — 2025</span>
                         </div>
                     </div>
@@ -370,19 +393,19 @@
                     <div
                         class="bento-card p-8 flex flex-col justify-between fade-up md:col-span-1 lg:col-span-2 row-span-1 border-cyan-500/20 bg-cyan-500/5">
                         <div class="relative z-10">
-                            <div class="text-xs font-bold text-cyan-400 mb-2 uppercase tracking-widest"
+                            <div class="text-xs font-bold text-cyan mb-2 uppercase tracking-widest"
                                 data-i18n="bento.work.label">PROFESYONEL DENEYİM</div>
-                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="bento.work.title">MaviPiksel
+                            <h3 class="text-xl font-bold text-main mb-1" data-i18n="bento.work.title">MaviPiksel
                                 İnternet Çözümleri</h3>
-                            <p class="text-cyan-400/80 font-medium text-sm mb-2" data-i18n="bento.work.role">Mobile
+                            <p class="text-cyan/80 font-medium text-sm mb-2" data-i18n="bento.work.role">Mobile
                                 Software Developer</p>
-                            <p class="text-gray-300 font-light text-xs leading-relaxed line-clamp-2"
+                            <p class="text-muted font-light text-xs leading-relaxed line-clamp-2"
                                 data-i18n="bento.work.desc">Sano AI projesini uçtan uca (Flutter/Firebase/GCP) canlıya
                                 aldım. %99.9+ crash-free oranını yakaladım.</p>
                         </div>
                         <div class="flex justify-end mt-4 relative z-10">
                             <span
-                                class="px-4 py-1.5 bg-cyan-500/10 rounded-full text-xs font-bold tracking-widest text-cyan-400 border border-cyan-500/20"
+                                class="px-4 py-1.5 bg-cyan/10 rounded-full text-xs font-bold tracking-widest text-cyan border border-cyan-500/20"
                                 data-i18n="bento.work.duration">Tem 2025 — Halen</span>
                         </div>
                     </div>
@@ -390,31 +413,29 @@
                     <!-- BENTO: TEKNİK UZMANLIK (Marquee) -->
                     <div
                         class="bento-card flex flex-col justify-center fade-up md:col-span-3 lg:col-span-4 row-span-1 overflow-hidden">
-                        <div class="px-8 pt-6 pb-2 text-xs font-bold text-cyan-400 uppercase tracking-widest"
+                        <div class="px-8 pt-6 pb-2 text-xs font-bold text-cyan uppercase tracking-widest"
                             data-i18n="bento.tech.label">Gelişmiş
                             Teknoloji Yığını</div>
                         <div class="marquee-container py-4">
-                            <!-- Dual-div approach for seamless circular animation -->
                             <div class="marquee-content text-2xl md:text-4xl font-black text-gray-600">
-                                <span class="hover:text-white transition-colors">FLUTTER</span> <span>·</span>
-                                <span class="hover:text-cyan-400 transition-colors">FIREBASE</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">NODE.JS</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">PYTHON</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">FLUTTER</span> <span>·</span>
+                                <span class="hover:text-cyan transition-colors">FIREBASE</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">NODE.JS</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">PYTHON</span> <span>·</span>
                                 <span class="hover:text-blue-400 transition-colors">GCP PUB/SUB</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">REACT VITE</span> <span>·</span>
-                                <span class="hover:text-cyan-400 transition-colors">CI/CD</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">SWIFT / MVP</span> <span>·</span>
-                            </div>
-                            <div class="marquee-content text-2xl md:text-4xl font-black text-gray-600"
-                                aria-hidden="true">
-                                <span class="hover:text-white transition-colors">FLUTTER</span> <span>·</span>
-                                <span class="hover:text-cyan-400 transition-colors">FIREBASE</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">NODE.JS</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">PYTHON</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">REACT VITE</span> <span>·</span>
+                                <span class="hover:text-cyan transition-colors">CI/CD</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">SWIFT / MVP</span> <span>·</span>
+
+                                <!-- Copies -->
+                                <span class="hover:text-main transition-colors">FLUTTER</span> <span>·</span>
+                                <span class="hover:text-cyan transition-colors">FIREBASE</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">NODE.JS</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">PYTHON</span> <span>·</span>
                                 <span class="hover:text-blue-400 transition-colors">GCP PUB/SUB</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">REACT VITE</span> <span>·</span>
-                                <span class="hover:text-cyan-400 transition-colors">CI/CD</span> <span>·</span>
-                                <span class="hover:text-white transition-colors">SWIFT / MVP</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">REACT VITE</span> <span>·</span>
+                                <span class="hover:text-cyan transition-colors">CI/CD</span> <span>·</span>
+                                <span class="hover:text-main transition-colors">SWIFT / MVP</span> <span>·</span>
                             </div>
                         </div>
                     </div>
@@ -439,7 +460,7 @@
             </section>
 
             <!-- Bölüm 5: Blog Teaser -->
-            <section class="py-20 px-6 md:px-20 lg:px-32 border-t border-white/5">
+            <section class="py-20 px-6 md:px-20 lg:px-32 border-t border-border">
                 <div class="max-w-4xl mx-auto text-center fade-up">
                     <div
                         class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold uppercase tracking-widest mb-6">
@@ -450,7 +471,7 @@
                         class="text-3xl md:text-5xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
                         <span data-i18n="blog.title">Teknik Yazılar &<br>Derinlemesine Analizler.</span>
                     </h2>
-                    <p class="text-gray-300 text-lg font-light max-w-2xl mx-auto mb-8" data-i18n="blog.desc">
+                    <p class="text-muted text-lg font-light max-w-2xl mx-auto mb-8" data-i18n="blog.desc">
                         LLM Quantization, Flutter mimari kalıpları, AI-Augmented geliştirme iş akışları ve daha fazlası
                         hakkında
                         teknik blog yazılarım çok yakında burada olacak.
@@ -459,25 +480,25 @@
                         <div class="bento-card p-6 text-left">
                             <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
                                 data-i18n="blog.topic1.tag">Yakında</div>
-                            <h3 class="text-lg font-bold text-white mb-2" data-i18n="blog.topic1.title">Lokal LLM
+                            <h3 class="text-lg font-bold text-main mb-2" data-i18n="blog.topic1.title">Lokal LLM
                                 Quantization Rehberi</h3>
-                            <p class="text-gray-300 text-sm font-light" data-i18n="blog.topic1.desc">Mistral & Qwen
+                            <p class="text-muted text-sm font-light" data-i18n="blog.topic1.desc">Mistral & Qwen
                                 modelleriyle 4-bit quantization deneyimleri.</p>
                         </div>
                         <div class="bento-card p-6 text-left">
                             <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
                                 data-i18n="blog.topic2.tag">Yakında</div>
-                            <h3 class="text-lg font-bold text-white mb-2" data-i18n="blog.topic2.title">Flutter'da Clean
+                            <h3 class="text-lg font-bold text-main mb-2" data-i18n="blog.topic2.title">Flutter'da Clean
                                 Architecture</h3>
-                            <p class="text-gray-300 text-sm font-light" data-i18n="blog.topic2.desc">Büyük ölçekli
+                            <p class="text-muted text-sm font-light" data-i18n="blog.topic2.desc">Büyük ölçekli
                                 uygulamalarda katmanlı mimari stratejileri.</p>
                         </div>
                         <div class="bento-card p-6 text-left">
                             <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
                                 data-i18n="blog.topic3.tag">Yakında</div>
-                            <h3 class="text-lg font-bold text-white mb-2" data-i18n="blog.topic3.title">AI ile 10x
+                            <h3 class="text-lg font-bold text-main mb-2" data-i18n="blog.topic3.title">AI ile 10x
                                 Geliştirici Olmak</h3>
-                            <p class="text-gray-300 text-sm font-light" data-i18n="blog.topic3.desc">Yapay zeka
+                            <p class="text-muted text-sm font-light" data-i18n="blog.topic3.desc">Yapay zeka
                                 araçlarıyla
                                 üretkenliği maksimize etme rehberi.</p>
                         </div>
@@ -491,7 +512,7 @@
 
             <!-- Bölüm 6: DEVASA CTA (İletişim) -->
             <section
-                class="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center border-t border-white/5 relative overflow-hidden">
+                class="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center border-t border-border relative overflow-hidden">
                 <div
                     class="absolute inset-0 bg-cyan-500/5 blur-[100px] rounded-full w-[800px] h-[800px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
                 </div>
@@ -500,7 +521,7 @@
                     <h2 class="text-5xl md:text-8xl font-black mb-8 tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400"
                         data-i18n="cta.title">Mimari
                         vizyonunuzu<br>birlikte kodlayalım.</h2>
-                    <p class="text-xl text-gray-300 mb-12 font-light max-w-2xl mx-auto" data-i18n="cta.desc">
+                    <p class="text-xl text-muted mb-12 font-light max-w-2xl mx-auto" data-i18n="cta.desc">
                         Büyük ölçekli ekiplere değer katmaya, tecrübelerden öğrenmeye ve en iyisini inşa etmeye hazırım.
                     </p>
 
@@ -511,7 +532,7 @@
                 </div>
             </section>
 
-            <footer class="py-12 text-center border-t border-white/5 text-gray-400 text-sm">
+            <footer class="py-12 text-center border-t border-border text-gray-400 text-sm">
                 <p data-i18n="footer.text">Tasarlayan ve Geliştiren: Recep OZGUR MIH &copy; 2026</p>
             </footer>
         </main>

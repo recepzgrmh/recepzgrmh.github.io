@@ -20,7 +20,7 @@ function prevImage(){
         imageSelector--;
     }
 
-    image.style.backgroundImage = `url(assets/${imageSelector}.jpg)`;
+    image.style.backgroundImage = `url(/assets/${imageSelector}.webp)`;
     console.log(imageSelector);
 }
 
@@ -34,7 +34,7 @@ function nextImage(){
         imageSelector++;
     }
 
-    image.style.backgroundImage = `url(assets/${imageSelector}.jpg)`;
+    image.style.backgroundImage = `url(/assets/${imageSelector}.webp)`;
 
     console.log(imageSelector);
 }

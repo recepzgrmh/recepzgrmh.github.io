@@ -34,18 +34,18 @@ Bu projedeki tüm kayda değer değişiklikler bu dosyada belgelenecektir.
 
 - IOS'da da, uygulama güncellendiğinde Android deki gibi uygulama güncelleme dialogu geliyor artık kullanıcının karşısına:
   <div style="margin: 12px 0;">
-    <img src="dialog.png" alt="Güncelleme Dialog" width="220" style="border-radius: 4%;"/>
+    <img src="dialog.webp" alt="Güncelleme Dialog" width="220" style="border-radius: 4%;"/>
   </div>
 
 - Kullanıcıya expert modda kalan soru sayısı hakkı gösteriliyor. Artık expertUsage ve normalUsage olarak ayrılıyor veritabanında:
   <div style="margin: 12px 0;">
-    <img src="Screenshot_1767023633.png" alt="Expert Usage Gösterimi" width="220" style="border-radius: 4%;"/>
+    <img src="Screenshot_1767023633.webp" alt="Expert Usage Gösterimi" width="220" style="border-radius: 4%;"/>
   </div>
 
 
 - Kullanıcıdan yorum istemek amacıyla kullanıcının karşısına şu şekilde bir dialog çıkarıyoruz;
   <div style="margin: 12px 0;">
-    <img src="rate.png" alt="Güncelleme Dialog" width="220" style="border-radius: 4%;"/>
+    <img src="rate.webp" alt="Güncelleme Dialog" width="220" style="border-radius: 4%;"/>
   </div>
 ---
 
@@ -89,8 +89,8 @@ Kullanıcının yüklemiş olduğu belgenin ismi bu ekranda:
       </div>
     </td>
     <td style="vertical-align: top; width: 30%;">
-      <a href="Screenshot_1766132504.png">
-        <img src="Screenshot_1766132504.png" alt="Belgelerim ekranı" style="width: 220px; height: auto; display:block;" />
+      <a href="Screenshot_1766132504.webp">
+        <img src="Screenshot_1766132504.webp" alt="Belgelerim ekranı" style="width: 220px; height: auto; display:block;" />
       </a>
     </td>
   </tr>
@@ -101,10 +101,10 @@ Kullanıcının yüklemiş olduğu belgenin ismi bu ekranda:
 #### PDF ve Resim Görüntüleme
 
 <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap: wrap;">
-  <img src="image copy 4.png" alt="PDF Görüntüleme 1" width="220" style="border-radius: 4%;"/>
-  <img src="image copy 2.png" alt="PDF Görüntüleme 2" width="220" style="border-radius: 4%;"/>
-  <img src="image copy.png" alt="PDF Görüntüleme 3" width="220" style="border-radius: 4%;"/>
-  <img src="image.png" alt="Resim Görüntüleme" width="220" style="border-radius: 4%;"/>
+  <img src="image copy 4.webp" alt="PDF Görüntüleme 1" width="220" style="border-radius: 4%;"/>
+  <img src="image copy 2.webp" alt="PDF Görüntüleme 2" width="220" style="border-radius: 4%;"/>
+  <img src="image copy.webp" alt="PDF Görüntüleme 3" width="220" style="border-radius: 4%;"/>
+  <img src="image.webp" alt="Resim Görüntüleme" width="220" style="border-radius: 4%;"/>
 </div>
 
 ---
@@ -135,14 +135,14 @@ Kullanıcının yüklemiş olduğu belgenin ismi bu ekranda:
 - Belirli yaştaki kullanıcıların kalori takibi yapması engellendi. Sebebi: [kaynak](https://www.quora.com/Being-under-18-restricts-my-access-to-websites-for-calculating-caloric-maintenance-Can-the-Shofield-equation-x-1-26-be-relied-upon-as-a-valid-method-for-determining-caloric-maintenance-for-a-15-year-old-like-me)
 
 <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap: wrap; margin: 12px 0;">
-  <img src="image copy 6.png" alt="Kalori Takibi Yaş Uyarısı 1" width="220" style="border-radius: 4%;"/>
-  <img src="image copy 7.png" alt="Kalori Takibi Yaş Uyarısı 2" width="220" style="border-radius: 4%;"/>
+  <img src="image copy 6.webp" alt="Kalori Takibi Yaş Uyarısı 1" width="220" style="border-radius: 4%;"/>
+  <img src="image copy 7.webp" alt="Kalori Takibi Yaş Uyarısı 2" width="220" style="border-radius: 4%;"/>
 </div>
 
 
 - Tüm kullanıcılar artık anonim bir şekilde trackerları kullanabiliyor ancak 3 kez herhangi bir işlem yaparsa karşısına hesabını yedeklemesi için bir dialog çıkıyor:
   <div style="margin: 12px 0;">
-    <img src="Screenshot_1766132504.png" alt="Hesap Yedekleme Dialog" style="width: 220px; height: auto; display:block;" />
+    <img src="Screenshot_1766132504.webp" alt="Hesap Yedekleme Dialog" style="width: 220px; height: auto; display:block;" />
   </div>
 
 ---
@@ -161,8 +161,8 @@ Kullanıcının yüklemiş olduğu belgenin ismi bu ekranda:
       </div>
     </td>
     <td style="vertical-align: top; width: 30%;">
-      <a href="Screenshot_1766133905.png">
-        <img src="Screenshot_1766133905.png" alt="PDF Analiz Düzeltmesi" style="width: 220px; height: auto; display:block;" />
+      <a href="Screenshot_1766133905.webp">
+        <img src="Screenshot_1766133905.webp" alt="PDF Analiz Düzeltmesi" style="width: 220px; height: auto; display:block;" />
       </a>
     </td>
   </tr>

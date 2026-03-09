@@ -39,7 +39,7 @@ window.App.createSpotifyLiveCard = function () {
         card.innerHTML = `
             <div class="spotify-inner">
                 <div class="spotify-art-wrap">
-                    <img src="assets/logo.png" alt="Spotify unavailable" class="spotify-art grayscale">
+                    <img src="/assets/logo.webp" alt="Spotify unavailable" class="spotify-art grayscale">
                 </div>
                 <div class="spotify-info">
                     <div class="spotify-status">
@@ -59,7 +59,7 @@ window.App.createSpotifyLiveCard = function () {
 
         const title = escapeHtml(track.title || 'Unknown track');
         const artist = escapeHtml(track.artist || 'Unknown artist');
-        const albumArt = escapeHtml(track.albumArt || 'assets/logo.png');
+        const albumArt = escapeHtml(track.albumArt || 'assets/logo.webp');
         const songUrl = track.songUrl
             ? `href="${escapeHtml(track.songUrl)}" target="_blank" rel="noopener noreferrer"`
             : 'href="https://open.spotify.com" target="_blank" rel="noopener noreferrer"';
@@ -87,7 +87,7 @@ window.App.createSpotifyLiveCard = function () {
 
         const title = escapeHtml(track.title || 'Unknown track');
         const artist = escapeHtml(track.artist || 'Unknown artist');
-        const albumArt = escapeHtml(track.albumArt || 'assets/logo.png');
+        const albumArt = escapeHtml(track.albumArt || 'assets/logo.webp');
         const songUrl = track.songUrl
             ? `href="${escapeHtml(track.songUrl)}" target="_blank" rel="noopener noreferrer"`
             : 'href="https://open.spotify.com" target="_blank" rel="noopener noreferrer"';
