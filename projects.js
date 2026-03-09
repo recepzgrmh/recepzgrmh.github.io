@@ -120,7 +120,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
             title: 'Akıllı Yurt Bulma Sistemi',
             label: 'TÜBİTAK 2209-A (2024)',
             desc: 'Öğrenciler için yurt arama ve filtreleme MVP\'si. Haversine mesafesi ve ağırlıklı puanlama ile öneri motoru.',
-            img: 'https://media.licdn.com/dms/image/v2/D4D2DAQF9hwywInbw9w/profile-treasury-image-shrink_800_800/B4DZd.b.ixHkAc-/0/1750172954795?e=1772719200&v=beta&t=iIn7jJf3V8CIX6PHAO6pEJoNjQCLLlm8VWl_FodLl2M',
+            img: 'https://picsum.photos/seed/tubitak/600/340',
             fallback: 'https://picsum.photos/seed/tubitak/600/340',
             tech: ['React Native', 'Node.js', 'Firebase', 'Firestore', 'TypeScript', 'Storage'],
             onclick: 'openTubitakModal()'
@@ -130,7 +130,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
             title: 'Moneo',
             label: 'Open Source · Vibe Coded (2025)',
             desc: 'Privacy-first kişisel finans dashboard\'u. Ekstre PDF parse, 18 grafik, AI asistan, 19 tema.',
-            img: 'https://media.licdn.com/dms/image/v2/D4D1FAQGdDdYw8aj_pQ/feedshare-document-images_1280/B4DZwt2RojHwA4-/1/1770295735687?e=1773273600&v=beta&t=S4FRlhWwJxWHuYMUzAr8t3BdoaJE4Js7oHgNMN11ueE',
+            img: 'https://picsum.photos/seed/moneo/600/340',
             fallback: 'https://picsum.photos/seed/moneo/600/340',
             tech: ['React', 'Vite', 'AI-Powered', 'Chart.js'],
             onclick: 'openMoneoModal()'
