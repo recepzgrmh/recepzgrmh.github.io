@@ -254,7 +254,7 @@ function injectTubitakModal() {
     });
 
     const linkedInBtn = document.createElement('a');
-    linkedInBtn.href = 'https://www.linkedin.com/posts/recepozgurmih_dokuz-eyl%C3%BCl-%C3%BCniversitesi-bilgisayar-bilimleri-activity-7339369307300081665-EkjX?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADgF4_0B5b3bVm1hzC7HK8Ng4cMTag3D_yg';
+    linkedInBtn.href = 'https://www.linkedin.com/posts/recepozgurMIH_dokuz-eyl%C3%BCl-%C3%BCniversitesi-bilgisayar-bilimleri-activity-7339369307300081665-EkjX?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADgF4_0B5b3bVm1hzC7HK8Ng4cMTag3D_yg';
     linkedInBtn.target = '_blank';
     linkedInBtn.rel = 'noopener noreferrer';
     linkedInBtn.innerHTML = `

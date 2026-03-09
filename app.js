@@ -1,5 +1,5 @@
 /**
- * RECEP ÖZGÜR MIH - Portfolio Core Engine
+ * RECEP OZGUR MIH - Portfolio Core Engine
  * --------------------------------------
  * Architecture: Event-driven initialization with spatial-grid optimized particles.
  * Performance: O(n) proximity calculation using uniform grid partitioning.
@@ -8,7 +8,7 @@
 
 // --- DEVELOPER EASTER EGG ---
 console.log(
-    "%c  RECEP ÖZGÜR MIH  ",
+    "%c  RECEP OZGUR MIH  ",
     "background: #06b6d4; color: #fff; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 5px;"
 );
 console.log(
@@ -103,13 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------
     const translations = {
         tr: {
-            'meta.title': 'Recep Özgür Mih | AI-Driven Mobil Mühendis',
+            'meta.title': 'Recep OZGUR MIH | AI-Driven Mobil Mühendis',
             'meta.desc': 'AI destekli üretkenlik ve ölçeklenebilir mimari ile ürünler inşa eden yazılım mühendisi.',
             'contact.meta.title': 'İletişim',
-            'contact.meta.desc': 'Recep Özgür Mih ile iletişime geçin.',
-            'apps.meta.title': 'Uygulamalar | Recep Özgür Mih',
-            'apps.meta.desc': 'Recep Özgür Mih tarafından geliştirilen mobil uygulamalar.',
-            'blog.meta.title': 'Blog | Recep Özgür Mih',
+            'contact.meta.desc': 'Recep OZGUR MIH ile iletişime geçin.',
+            'apps.meta.title': 'Uygulamalar | Recep OZGUR MIH',
+            'apps.meta.desc': 'Recep OZGUR MIH tarafından geliştirilen mobil uygulamalar.',
+            'blog.meta.title': 'Blog | Recep OZGUR MIH',
             'blog.meta.desc': 'Teknik blog yazıları ve derinlemesine analizler.',
 
             'nav.vision': 'VİZYON',
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             'hero.available': 'Tam Zamanlı Çalışmaya Açık',
             'hero.subtitle': 'Mobil Geliştirici & Ürün Odaklı Mühendis',
-            'hero.name': 'RECEP<br>ÖZGÜR.',
+            'hero.name': 'RECEP<br>OZGUR.',
             'hero.desc': 'Fikirleri uçtan uca ölçeklenebilir ürünlere dönüştürüyorum. Otonom problem çözme becerisi ve <span class="text-white font-medium">AI destekli modern mühendislik iş akışlarıyla</span> tam donanımlı mobil deneyimler inşa ediyorum.',
             'hero.cta': 'Hikayemi Keşfet',
 
@@ -157,6 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'bento.edu.title': 'Bilgisayar Mühendisi',
             'bento.edu.school': 'Dokuz Eylül Üniversitesi',
             'bento.edu.status': 'Esnek Program (Tam Zamanlıya Uygun)',
+            'bento.work.label': 'Profesyonel Deneyim',
+            'bento.work.title': 'MaviPiksel İnternet Çözümleri',
+            'bento.work.role': 'Mobile Software Developer',
+            'bento.work.desc': 'Şub 2025\'te stajyer olarak başlayıp Temmuz\'dan itibaren tam zamanlı devam ediyorum. Sano AI projesini uçtan uca (Flutter/Firebase/GCP) canlıya aldım, %99.9+ crash-free oranını yakaladım.',
+            'bento.work.duration': 'Şub 2025 — Halen',
             'bento.tech.label': 'Gelişmiş Teknoloji Yığını',
 
             'projects.title': 'Ürünler &<br>Çözümler.',
@@ -197,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'cta.desc': 'Büyük ölçekli ekiplere değer katmaya, tecrübelerden öğrenmeye ve en iyisini inşa etmeye hazırım.',
             'cta.button': 'Ekibe Hazırım →',
 
-            'footer.text': 'Recep Özgür Mih &copy; 2026',
+            'footer.text': 'Recep OZGUR MIH &copy; 2026',
 
             'apps.subtitle': 'Yayındaki Uygulamalar',
             'apps.title': 'Apps.',
@@ -251,13 +256,13 @@ document.addEventListener('DOMContentLoaded', () => {
             '404.button': 'Ana Sayfaya Dön &rarr;'
         },
         en: {
-            'meta.title': 'Recep Özgür Mih | AI-Driven Mobile Engineer',
+            'meta.title': 'Recep OZGUR MIH | AI-Driven Mobile Engineer',
             'meta.desc': 'Software engineer building products with AI.',
             'contact.meta.title': 'Contact',
-            'contact.meta.desc': 'Get in touch with Recep Özgür Mih.',
-            'apps.meta.title': 'Apps | Recep Özgür Mih',
-            'apps.meta.desc': 'Mobile applications by Recep Özgür Mih.',
-            'blog.meta.title': 'Blog | Recep Özgür Mih',
+            'contact.meta.desc': 'Get in touch with Recep OZGUR MIH.',
+            'apps.meta.title': 'Apps | Recep OZGUR MIH',
+            'apps.meta.desc': 'Mobile applications by Recep OZGUR MIH.',
+            'blog.meta.title': 'Blog | Recep OZGUR MIH',
             'blog.meta.desc': 'Technical blog posts.',
 
             'nav.vision': 'VISION',
@@ -267,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             'hero.available': 'Available for Full-Time',
             'hero.subtitle': 'Mobile Developer & Builder',
-            'hero.name': 'RECEP<br>ÖZGÜR.',
+            'hero.name': 'RECEP<br>OZGUR.',
             'hero.desc': 'I build scalable mobile experiences with <span class="text-white font-medium">AI-augmented workflows</span>.',
             'hero.cta': 'Discover My Story',
 
@@ -305,6 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'bento.edu.title': 'Computer Engineer',
             'bento.edu.school': 'Dokuz Eylul University',
             'bento.edu.status': 'Flexible Schedule (Full-Time Ready)',
+            'bento.work.label': 'Professional Experience',
+            'bento.work.title': 'MaviPiksel Internet Solutions',
+            'bento.work.role': 'Mobile Software Developer',
+            'bento.work.desc': 'Started as an intern in Feb 2025, continuing full-time since July. Shipped Sano AI end-to-end (Flutter/Firebase/GCP) and maintained a 99.9%+ crash-free rate.',
+            'bento.work.duration': 'Feb 2025 — Present',
             'bento.tech.label': 'Advanced Tech Stack',
 
             'projects.title': 'Products & Solutions.',
@@ -345,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'cta.desc': 'Ready to add value to large-scale teams, learn from experience, and build the best.',
             'cta.button': 'Ready to Join →',
 
-            'footer.text': 'Recep Özgür Mih &copy; 2026',
+            'footer.text': 'Recep OZGUR MIH &copy; 2026',
 
             'apps.subtitle': 'Published Apps',
             'apps.title': 'Apps.',

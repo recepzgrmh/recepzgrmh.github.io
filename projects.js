@@ -144,6 +144,16 @@ function renderOtherProjects(containerId, isAppPage = false) {
             fallback: 'https://picsum.photos/seed/astro/600/340',
             tech: ['Flutter', 'Firebase'],
             onclick: ''
+        },
+        {
+            id: 'html-css-projects',
+            title: 'HTML & CSS Projeleri',
+            label: 'Web Deneyimleri',
+            desc: 'Öğrenme sürecimde geliştirdiğim 20+ mini HTML/CSS/JS projesi ve arayüz denemeleri.',
+            img: 'https://picsum.photos/seed/web/600/340',
+            fallback: 'https://picsum.photos/seed/web/600/340',
+            tech: ['HTML5', 'CSS3', 'Vanilla JS'],
+            url: 'https://github.com/recepzgrmh/recepzgrmh.github.io'
         }
     ];
 
@@ -152,15 +162,20 @@ function renderOtherProjects(containerId, isAppPage = false) {
     content += `<div class="grid md:grid-cols-2 gap-8">`;
 
     projects.forEach(p => {
-        const interactiveClass = p.onclick ? 'cursor-pointer hover:border-cyan-500/40 transition-colors group relative' : 'group relative';
+        const isExternal = !!p.url;
+        const interactiveClass = (p.onclick || isExternal) ? 'cursor-pointer hover:border-cyan-500/40 transition-colors group relative' : 'group relative';
+
+        const actionAttr = isExternal
+            ? `onclick="window.open('${p.url}', '_blank')"`
+            : (p.onclick ? `onclick="${p.onclick}"` : '');
 
         content += `
-        <div class="bento-card p-8 fade-up ${interactiveClass}" ${p.onclick ? `onclick="${p.onclick}"` : ''}>
+        <div class="bento-card p-8 fade-up ${interactiveClass}" ${actionAttr}>
             <div class="flex justify-between items-start mb-3">
                 <div class="text-xs font-bold text-gray-500 uppercase tracking-widest" ${p.id === 'astro' ? `data-i18n="projects.astro.label"` : ''}>
                     ${p.label}
                 </div>
-                ${p.onclick ? `
+                ${(p.onclick || isExternal) ? `
                 <span class="text-white/30 group-hover:text-cyan-400 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -168,17 +183,17 @@ function renderOtherProjects(containerId, isAppPage = false) {
                 </span>` : ''}
             </div>
 
-            <h3 class="text-xl font-bold text-white mb-4 ${p.onclick ? 'group-hover:text-cyan-400 transition-colors' : ''}" data-i18n="projects.${p.id}.title">${p.title}</h3>
+            <h3 class="text-xl font-bold text-white mb-4 ${(p.onclick || isExternal) ? 'group-hover:text-cyan-400 transition-colors' : ''}" data-i18n="projects.${p.id}.title">${p.title}</h3>
 
             <div class="mb-5 overflow-hidden rounded-xl border border-white/10 w-full relative">
                 <img src="${p.img}" alt="${p.title}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${p.fallback}'">
-                ${p.onclick ? `
+                ${(p.onclick || isExternal) ? `
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span class="bg-cyan-500 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider" data-i18n="projects.details">Detayları Gör</span>
                 </div>` : ''}
             </div>
 
-            <p class="text-gray-300 font-light text-sm leading-relaxed mb-6 ${p.onclick ? 'line-clamp-2' : ''}" data-i18n="projects.${p.id}.desc">
+            <p class="text-gray-300 font-light text-sm leading-relaxed mb-6 ${(p.onclick || isExternal) ? 'line-clamp-2' : ''}" data-i18n="projects.${p.id}.desc">
                 ${p.desc}
             </p>
 
@@ -186,7 +201,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
                 ${p.tech.map(t => `<span>${t}</span>`).join(' • ')}
             </div>
 
-            ${p.onclick ? `
+            ${(p.onclick || isExternal) ? `
             <!-- Mini indicator -->
             <div class="absolute bottom-6 right-8 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 text-sm font-semibold flex items-center gap-1" data-i18n="projects.inspect">
                 İncele &rarr;

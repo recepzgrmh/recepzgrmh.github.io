@@ -1,7 +1,7 @@
 /**
  * cursor.js — Premium Custom Cursor
  * Dot + Ring + Magnetic + Cyan Trail
- * Recep Özgür Mih portfolio sitesine özel
+ * Recep OZGUR MIH portfolio sitesine özel
  */
 
 (function () {
@@ -94,14 +94,14 @@
   document.head.appendChild(style);
 
   // ─── Elementler ───────────────────────────────────────────────────
-  const dot  = document.createElement('div'); dot.id  = 'c-dot';
+  const dot = document.createElement('div'); dot.id = 'c-dot';
   const ring = document.createElement('div'); ring.id = 'c-ring';
   document.body.appendChild(dot);
   document.body.appendChild(ring);
 
   // ─── State ────────────────────────────────────────────────────────
   let mouseX = -100, mouseY = -100;
-  let ringX  = -100, ringY  = -100;
+  let ringX = -100, ringY = -100;
   let trailTimer = 0;
   let trailIndex = 0;
 
@@ -141,14 +141,14 @@
   // ─── Ring smooth follow (rAF) ─────────────────────────────────────
   function animate() {
     // Dot — anlık
-    dot.style.left  = mouseX + 'px';
-    dot.style.top   = mouseY + 'px';
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
 
     // Ring — geride lerp ile takip
     ringX += (mouseX - ringX) * 0.12;
     ringY += (mouseY - ringY) * 0.12;
     ring.style.left = ringX + 'px';
-    ring.style.top  = ringY + 'px';
+    ring.style.top = ringY + 'px';
 
     requestAnimationFrame(animate);
   }
@@ -184,12 +184,12 @@
 
   // ─── Sayfa dışına çıkınca gizle ──────────────────────────────────
   document.addEventListener('mouseleave', () => {
-    dot.style.opacity  = '0';
+    dot.style.opacity = '0';
     ring.style.opacity = '0';
   });
 
   document.addEventListener('mouseenter', () => {
-    dot.style.opacity  = '1';
+    dot.style.opacity = '1';
     ring.style.opacity = '1';
   });
 
