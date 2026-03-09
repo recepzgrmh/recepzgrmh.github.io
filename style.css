@@ -26,6 +26,11 @@
     --scrollbar-thumb: #cbd5e1;
 }
 
+.light-mode .bg-black\/60 {
+    background-color: transparent !important;
+}
+
+
 /* Semantic Tailwind-like Utilities */
 .text-main {
     color: var(--text-main);
@@ -89,7 +94,16 @@ body {
     line-height: inherit
 }
 
-body, html { margin: 0; padding: 0; background-color: transparent !important; color: var(--text-main); font-family: "Plus Jakarta Sans", sans-serif; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: transparent !important;
+    color: var(--text-main);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
 
 hr {
     height: 0;
@@ -357,7 +371,8 @@ body {
     user-select: none;
 }
 
-input, textarea {
+input,
+textarea {
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
@@ -449,10 +464,10 @@ input, textarea {
 }
 
 /* Titles & Glows Fix for Light Mode */
-.light-mode .text-huge, 
+.light-mode .text-huge,
 .light-mode .cyan-glow,
-.light-mode h1, 
-.light-mode h2, 
+.light-mode h1,
+.light-mode h2,
 .light-mode h3 {
     color: var(--text-main) !important;
     text-shadow: 0 0 15px rgba(8, 145, 178, 0.1) !important;
