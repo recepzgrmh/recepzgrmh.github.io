@@ -436,7 +436,8 @@ textarea {
 .light-mode .text-muted,
 .light-mode .premium-card p,
 .light-mode .bento-card p {
-    color: var(--text-muted) !important;
+    color: #1e293b !important;
+    /* Higher contrast for light mode */
 }
 
 .light-mode .bg-white\/5,
@@ -475,8 +476,10 @@ textarea {
 
 .light-mode .gradient-text,
 .light-mode .text-transparent.bg-clip-text {
-    background-image: linear-gradient(135deg, #0f172a, #475569) !important;
+    background-image: linear-gradient(135deg, #020617, #334155) !important;
+    /* Much darker gradient for light mode */
     -webkit-background-clip: text !important;
+    background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
 
