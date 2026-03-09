@@ -55,8 +55,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Call it
+        window.App.initWeatherCard = function () {
+            const anchor = document.getElementById('weather-card-anchor');
+            if (!anchor) return;
+
+            if (document.getElementById('weather-live-card')) return;
+
+            if (typeof window.App.createWeatherCard === 'function') {
+                const weatherCard = window.App.createWeatherCard();
+                anchor.appendChild(weatherCard);
+                console.log('[App] Weather card mounted.');
+            }
+        };
+
+        // Call them
         window.App.initSpotifyCard();
+        window.App.initWeatherCard();
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1373,13 +1387,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // ═══════════════════════════════════════
             let lineIdx = 0;
             let vertexCount = 0;
+            const cyanR = 6 / 255, cyanG = 182 / 255, cyanB = 212 / 255;
             
             if (!isExploded) {
                 rebuildGrid();
 
                 const connDist2 = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
                 const glowRad2 = MOUSE_GLOW_RADIUS * MOUSE_GLOW_RADIUS;
-                const cyanR = 6 / 255, cyanG = 182 / 255, cyanB = 212 / 255;
 
                 // Track which pairs we've already checked to avoid duplicates
                 for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -1407,73 +1421,73 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const cellIdx = ngx + ngy * GRID_W + ngz * GRID_W * GRID_H;
                                 const count = gridCounts[cellIdx];
 
-                            for (let c = 0; c < count; c++) {
-                                const j = grid[cellIdx][c];
-                                if (j <= i) continue; // avoid duplicate pairs
+                                for (let c = 0; c < count; c++) {
+                                    const j = grid[cellIdx][c];
+                                    if (j <= i) continue; // avoid duplicate pairs
 
-                                const j3 = j * 3;
-                                const ddx = px - positions[j3];
-                                const ddy = py - positions[j3 + 1];
-                                const ddz = pz - positions[j3 + 2];
-                                const distSq = ddx * ddx + ddy * ddy + ddz * ddz;
+                                    const j3 = j * 3;
+                                    const ddx = px - positions[j3];
+                                    const ddy = py - positions[j3 + 1];
+                                    const ddz = pz - positions[j3 + 2];
+                                    const distSq = ddx * ddx + ddy * ddy + ddz * ddz;
 
-                                if (distSq < connDist2) {
-                                    if (lineIdx >= MAX_CONNECTIONS) break;
+                                    if (distSq < connDist2) {
+                                        if (lineIdx >= MAX_CONNECTIONS) break;
 
-                                    const dist = Math.sqrt(distSq);
-                                    let alpha = 1.0 - dist / CONNECTION_DISTANCE;
+                                        const dist = Math.sqrt(distSq);
+                                        let alpha = 1.0 - dist / CONNECTION_DISTANCE;
 
-                                    const actBoost = Math.max(particlesData[i].activation, particlesData[j].activation);
-                                    alpha = alpha * (0.3 + actBoost * 0.7);
+                                        const actBoost = Math.max(particlesData[i].activation, particlesData[j].activation);
+                                        alpha = alpha * (0.3 + actBoost * 0.7);
 
-                                    let glowFactor = 0;
-                                    if (mouseActive && mouseWorld.x < 5000) {
-                                        const mx = (px + positions[j3]) * 0.5;
-                                        const my = (py + positions[j3 + 1]) * 0.5;
-                                        const mdx = mx - mouseWorld.x;
-                                        const mdy = my - mouseWorld.y;
-                                        const mDistSq = mdx * mdx + mdy * mdy;
-                                        if (mDistSq < glowRad2) {
-                                            glowFactor = 1.0 - Math.sqrt(mDistSq) / MOUSE_GLOW_RADIUS;
-                                            glowFactor = glowFactor * glowFactor;
-                                            alpha = Math.min(alpha + glowFactor * 0.6, 1.0);
+                                        let glowFactor = 0;
+                                        if (mouseActive && mouseWorld.x < 5000) {
+                                            const mx = (px + positions[j3]) * 0.5;
+                                            const my = (py + positions[j3 + 1]) * 0.5;
+                                            const mdx = mx - mouseWorld.x;
+                                            const mdy = my - mouseWorld.y;
+                                            const mDistSq = mdx * mdx + mdy * mdy;
+                                            if (mDistSq < glowRad2) {
+                                                glowFactor = 1.0 - Math.sqrt(mDistSq) / MOUSE_GLOW_RADIUS;
+                                                glowFactor = glowFactor * glowFactor;
+                                                alpha = Math.min(alpha + glowFactor * 0.6, 1.0);
+                                            }
                                         }
+
+                                        const colorMix = Math.min(glowFactor * 0.8 + actBoost * 0.5, 1.0);
+                                        const baseR = 1.0 * (1 - scrollColorMix) + scrollR * scrollColorMix;
+                                        const baseG = 1.0 * (1 - scrollColorMix) + scrollG * scrollColorMix;
+                                        const baseB = 1.0 * (1 - scrollColorMix) + scrollB * scrollColorMix;
+
+                                        const finalAlpha = alpha * globalIntensity;
+                                        const r = finalAlpha * (baseR * (1 - colorMix) + cyanR * colorMix);
+                                        const g = finalAlpha * (baseG * (1 - colorMix) + cyanG * colorMix);
+                                        const b = finalAlpha * (baseB * (1 - colorMix) + cyanB * colorMix);
+
+                                        const li = lineIdx * 6;
+                                        linePositions[li] = px;
+                                        linePositions[li + 1] = py;
+                                        linePositions[li + 2] = pz;
+                                        linePositions[li + 3] = positions[j3];
+                                        linePositions[li + 4] = positions[j3 + 1];
+                                        linePositions[li + 5] = positions[j3 + 2];
+
+                                        lineColors[li] = r;
+                                        lineColors[li + 1] = g;
+                                        lineColors[li + 2] = b;
+                                        lineColors[li + 3] = r;
+                                        lineColors[li + 4] = g;
+                                        lineColors[li + 5] = b;
+
+                                        lineIdx++;
+                                        vertexCount += 2;
                                     }
-
-                                    const colorMix = Math.min(glowFactor * 0.8 + actBoost * 0.5, 1.0);
-                                    const baseR = 1.0 * (1 - scrollColorMix) + scrollR * scrollColorMix;
-                                    const baseG = 1.0 * (1 - scrollColorMix) + scrollG * scrollColorMix;
-                                    const baseB = 1.0 * (1 - scrollColorMix) + scrollB * scrollColorMix;
-
-                                    const finalAlpha = alpha * globalIntensity;
-                                    const r = finalAlpha * (baseR * (1 - colorMix) + cyanR * colorMix);
-                                    const g = finalAlpha * (baseG * (1 - colorMix) + cyanG * colorMix);
-                                    const b = finalAlpha * (baseB * (1 - colorMix) + cyanB * colorMix);
-
-                                    const li = lineIdx * 6;
-                                    linePositions[li] = px;
-                                    linePositions[li + 1] = py;
-                                    linePositions[li + 2] = pz;
-                                    linePositions[li + 3] = positions[j3];
-                                    linePositions[li + 4] = positions[j3 + 1];
-                                    linePositions[li + 5] = positions[j3 + 2];
-
-                                    lineColors[li] = r;
-                                    lineColors[li + 1] = g;
-                                    lineColors[li + 2] = b;
-                                    lineColors[li + 3] = r;
-                                    lineColors[li + 4] = g;
-                                    lineColors[li + 5] = b;
-
-                                    lineIdx++;
-                                    vertexCount += 2;
                                 }
                             }
                         }
                     }
                 }
-            } // end of for (let i = 0...
-            } // end of if (!isExploded)
+            }
 
             lineGeometry.setDrawRange(0, vertexCount);
             lineGeometry.attributes.position.needsUpdate = true;
