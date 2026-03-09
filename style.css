@@ -1836,6 +1836,10 @@ nav.fixed {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     border-bottom: 1px solid transparent;
+    left: 0;
+    right: 0;
+    width: auto;
+    box-sizing: border-box;
 }
 
 nav.fixed.scrolled {
