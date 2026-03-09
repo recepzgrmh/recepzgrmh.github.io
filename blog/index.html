@@ -1,221 +1,35 @@
-<!-- 
-  ██████╗  ██████╗ ███╗   ███╗
-  ██╔══██╗██╔═══██╗████╗ ████║
-  ██████╔╝██║   ██║██╔████╔██║
-  ██╔══██╗██║   ██║██║╚██╔╝██║
-  ██║  ██║╚██████╔╝██║ ╚═╝ ██║
-  ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
-  RECEP ÖZGÜR MIH | AI-DRIVEN ENGINEER
-  github.com/recepzgrmh
-
-  "Software is a combination of artistry and engineering."
--->
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Recep Özgür Mih</title>
-    <meta name="description"
-        content="Recep Özgür Mih - Teknik blog yazıları, LLM, Flutter ve AI konularında derinlemesine analizler.">
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/logo.png">
-    <!-- Open Graph -->
-    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://recepozgur.com/assets/logo.png">
 
-    <!-- SEO: Multi-language -->
-    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/blog/" />
-    <link rel="alternate" hreflang="en" href="https://recepozgur.com/blog/" />
+    <!-- SEO: x-default and Hreflang -->
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/blog/" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/blog/" />
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/blog/" />
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/custom.css">
-    <link rel="stylesheet" href="/contact.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
-        rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="canonical" href="https://recepozgur.com/blog/" />
+
+    <script>
+        (function () {
+            var lang = localStorage.getItem('portfolio-lang');
+            if (!lang) {
+                var browserLang = navigator.language || navigator.userLanguage;
+                lang = browserLang.split('-')[0];
+            }
+            if (lang !== 'tr' && lang !== 'en') lang = 'tr';
+            window.location.replace('/' + lang + '/blog/');
+        })();
+    </script>
 </head>
 
-<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-
-    <div class="relative z-10">
-
-        <!-- Header / Nav -->
-        <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
-            role="navigation" aria-label="Ana navigasyon">
-            <a href="/" aria-label="Ana sayfaya git">
-                <img src="/assets/logo.png" alt="RÖM Logo"
-                    style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
-                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            </a>
-            </a>
-            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
-                <button id="lang-toggle"
-                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
-                    aria-label="Dili değiştir / Switch language">
-                    EN
-                </button>
-                <a href="/#vision" class="hover:text-white transition-colors"><span
-                        data-i18n="nav.vision">VİZYON</span></a>
-                <a href="/apps/" class="hover:text-white transition-colors"><span data-i18n="nav.apps">APPS</span></a>
-                <a href="/blog/" class="text-white"><span data-i18n="nav.blog">BLOG</span></a>
-                <a href="/contact/" class="hover:text-cyan-400 transition-colors"><span
-                        data-i18n="nav.contact">İletişim</span></a>
-            </div>
-        </nav>
-
-        <!-- Page Header -->
-        <main id="page-content" class="page-transition">
-            <section class="min-h-[60vh] flex flex-col justify-center px-6 md:px-20 lg:px-32 pt-24">
-                <div class="max-w-4xl mx-auto text-center fade-up">
-                    <h1 class="text-5xl md:text-8xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400"
-                        data-i18n="blog.page.title">
-                        Blog</h1>
-                    <p class="text-gray-300 text-lg md:text-xl max-w-2xl font-light leading-relaxed"
-                        data-i18n="blog.page.desc">
-                        LLM Quantization, Flutter mimari kalıpları, AI-Augmented geliştirme iş akışları ve
-                        daha fazlası hakkında teknik derinlemesine analizler.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Blog Posts — Coming Soon -->
-            <section class="py-20 px-6 md:px-20 lg:px-32">
-                <div class="max-w-4xl mx-auto">
-
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <!-- Post 1 -->
-                        <div
-                            class="bento-card p-8 fade-up group hover:border-purple-500/30 transition-all opacity-70 hover:opacity-100">
-                            <div class="mb-4 overflow-hidden rounded-xl border border-white/10">
-                                <img src="https://picsum.photos/seed/blog1/600/340" alt="LLM Quantization"
-                                    class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
-                                data-i18n="blog.topic1.tag">Yakında</div>
-                            <h3 class="text-xl font-bold text-white mb-3" data-i18n="blog.topic1.title">Lokal LLM
-                                Quantization Rehberi</h3>
-                            <p class="text-gray-400 text-sm font-light leading-relaxed" data-i18n="blog.topic1.desc">
-                                Mistral & Qwen modelleriyle 4-bit quantization deneyimleri.
-                            </p>
-                            <div class="flex gap-2 mt-4">
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">LLM</span>
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">AI</span>
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Python</span>
-                            </div>
-                        </div>
-
-                        <!-- Post 2 -->
-                        <div
-                            class="bento-card p-8 fade-up group hover:border-purple-500/30 transition-all opacity-70 hover:opacity-100">
-                            <div class="mb-4 overflow-hidden rounded-xl border border-white/10">
-                                <img src="https://picsum.photos/seed/blog2/600/340" alt="Flutter Clean Architecture"
-                                    class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
-                                data-i18n="blog.topic2.tag">Yakında</div>
-                            <h3 class="text-xl font-bold text-white mb-3" data-i18n="blog.topic2.title">Flutter'da Clean
-                                Architecture</h3>
-                            <p class="text-gray-400 text-sm font-light leading-relaxed" data-i18n="blog.topic2.desc">
-                                Büyük ölçekli uygulamalarda katmanlı mimari stratejileri.
-                            </p>
-                            <div class="flex gap-2 mt-4">
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Flutter</span>
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Architecture</span>
-                            </div>
-                        </div>
-
-                        <!-- Post 3 -->
-                        <div
-                            class="bento-card p-8 fade-up group hover:border-purple-500/30 transition-all opacity-70 hover:opacity-100">
-                            <div class="mb-4 overflow-hidden rounded-xl border border-white/10">
-                                <img src="https://picsum.photos/seed/blog3/600/340" alt="AI Developer"
-                                    class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
-                                data-i18n="blog.topic3.tag">Yakında</div>
-                            <h3 class="text-xl font-bold text-white mb-3" data-i18n="blog.topic3.title">AI ile 10x
-                                Geliştirici Olmak</h3>
-                            <p class="text-gray-400 text-sm font-light leading-relaxed" data-i18n="blog.topic3.desc">
-                                Yapay zeka araçlarıyla üretkenliği maksimize etme rehberi.
-                            </p>
-                            <div class="flex gap-2 mt-4">
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Productivity</span>
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">AI
-                                    Tools</span>
-                            </div>
-                        </div>
-
-                        <!-- Post 4 -->
-                        <div
-                            class="bento-card p-8 fade-up group hover:border-purple-500/30 transition-all opacity-70 hover:opacity-100">
-                            <div class="mb-4 overflow-hidden rounded-xl border border-white/10">
-                                <img src="https://picsum.photos/seed/blog4/600/340" alt="IAP Systems"
-                                    class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3"
-                                data-i18n="blog.topic4.tag">Yakında</div>
-                            <h3 class="text-xl font-bold text-white mb-3" data-i18n="blog.topic4.title">IAP & Abonelik
-                                Sistemleri</h3>
-                            <p class="text-gray-400 text-sm font-light leading-relaxed" data-i18n="blog.topic4.desc">
-                                Google Play RTDN ve App Store Server Notifications ile güvenli abonelik yönetimi.
-                            </p>
-                            <div class="flex gap-2 mt-4">
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Flutter</span>
-                                <span
-                                    class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-gray-400 text-xs">Backend</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Newsletter Teaser -->
-                    <div class="mt-16 text-center fade-up">
-                        <div class="bento-card p-10 md:p-14 max-w-2xl mx-auto">
-                            <h3 class="text-2xl font-bold text-white mb-4" data-i18n="blog.notify.title">Yazılar
-                                yayınlandığında haber al</h3>
-                            <p class="text-gray-400 font-light mb-6" data-i18n="blog.notify.desc">İlk teknik yazılarım
-                                çok
-                                yakında burada olacak. Takipte kal!</p>
-                            <div class="flex gap-4 justify-center">
-                                <a href="https://github.com/recepzgrmh" target="_blank" rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-full text-gray-200 font-bold hover:bg-white/10 transition-all">
-                                    GitHub
-                                </a>
-                                <a href="https://linkedin.com/in/recepozgurmih" target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-full text-gray-200 font-bold hover:bg-white/10 transition-all">
-                                    LinkedIn
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <footer class="py-12 text-center border-t border-white/5 text-gray-500 text-sm">
-                <p data-i18n="footer.text">Tasarlayan ve Geliştiren: Recep Özgür Mih &copy; 2026</p>
-            </footer>
-        </main>
+<body
+    style="background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center;">
+        <p>Redirecting / Yönlendiriliyor...</p>
     </div>
-
-    <script src="/contact-bg.js"></script>
-    <script src="/app.js"></script>
-    <script src="/router.js"></script>
-    <script src="/scroll.js"></script>
-    <script src="/cursor.js"></script>
 </body>
 
 </html>

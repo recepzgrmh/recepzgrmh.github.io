@@ -400,7 +400,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    let currentLang = localStorage.getItem('portfolio-lang') || 'tr';
+    const pathSegments = window.location.pathname.split('/');
+    const pathLang = pathSegments[1];
+    let currentLang = (pathLang === 'tr' || pathLang === 'en') ? pathLang : (localStorage.getItem('portfolio-lang') || 'tr');
 
     // --- i18n HELPERS ---
     window.getTranslation = function (key) {
@@ -428,12 +430,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Update metadata
-        const titleKey = window.location.pathname.includes('contact') ? 'contact.meta.title' :
-            window.location.pathname.includes('apps') ? 'apps.meta.title' :
-                window.location.pathname.includes('blog') ? 'blog.meta.title' : 'meta.title';
-        const descKey = window.location.pathname.includes('contact') ? 'contact.meta.desc' :
-            window.location.pathname.includes('apps') ? 'apps.meta.desc' :
-                window.location.pathname.includes('blog') ? 'blog.meta.desc' : 'meta.desc';
+        const path = window.location.pathname;
+        const titleKey = path.includes('contact') ? 'contact.meta.title' :
+            path.includes('apps') ? 'apps.meta.title' :
+                path.includes('blog') ? 'blog.meta.title' : 'meta.title';
+        const descKey = path.includes('contact') ? 'contact.meta.desc' :
+            path.includes('apps') ? 'apps.meta.desc' :
+                path.includes('blog') ? 'blog.meta.desc' : 'meta.desc';
 
         if (translations[lang][titleKey]) document.title = translations[lang][titleKey];
         const metaDesc = document.querySelector('meta[name="description"]');
@@ -453,7 +456,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const langToggle = document.getElementById('lang-toggle');
     if (langToggle) {
         langToggle.addEventListener('click', () => {
-            setLanguage(currentLang === 'tr' ? 'en' : 'tr');
+            const nextLang = currentLang === 'tr' ? 'en' : 'tr';
+            const currentPath = window.location.pathname;
+
+            // Normalize path for replacement
+            let nextPath;
+            if (currentPath.startsWith(`/${currentLang}/`)) {
+                nextPath = currentPath.replace(`/${currentLang}/`, `/${nextLang}/`);
+            } else if (currentPath === `/${currentLang}`) {
+                nextPath = `/${nextLang}/`;
+            } else {
+                // Fallback if somehow not in a lang path
+                nextPath = `/${nextLang}/`;
+            }
+
+            if (typeof window.navigateTo === 'function') {
+                window.navigateTo(nextPath);
+            } else {
+                window.location.href = nextPath;
+            }
         });
     }
 

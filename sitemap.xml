@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home Page -->
+  <url>
+    <loc>https://recepozgur.com/tr/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://recepozgur.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Apps Page -->
+  <url>
+    <loc>https://recepozgur.com/tr/apps/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/apps/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/apps/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/apps/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://recepozgur.com/en/apps/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/apps/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/apps/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/apps/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog Page -->
+  <url>
+    <loc>https://recepozgur.com/tr/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/blog/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://recepozgur.com/en/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/blog/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact Page -->
+  <url>
+    <loc>https://recepozgur.com/tr/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/contact/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://recepozgur.com/en/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://recepozgur.com/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://recepozgur.com/contact/"/>
+    <lastmod>2026-03-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

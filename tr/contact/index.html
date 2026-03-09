@@ -1,0 +1,344 @@
+<!-- 
+  ██████╗  ██████╗ ███╗   ███╗
+  ██╔══██╗██╔═══██╗████╗ ████║
+  ██████╔╝██║   ██║██╔████╔██║
+  ██╔══██╗██║   ██║██║╚██╔╝██║
+  ██║  ██║╚██████╔╝██║ ╚═╝ ██║
+  ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+  RECEP ÖZGÜR MIH | AI-DRIVEN ENGINEER
+  github.com/recepzgrmh
+
+  "Software is a combination of artistry and engineering."
+-->
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim</title>
+    <meta name="description"
+        content="Recep Özgür Mih ile iletişime geçin. İş fırsatları, proje teklifleri veya işbirliği için.">
+
+    <!-- Meta -->
+    <meta property="og:title" content="İletişim">
+    <meta property="og:description" content="Mobil mühendis Recep Özgür Mih ile iletişime geçin.">
+    <meta property="og:url" content="https://recepozgur.com/contact/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
+
+    <!-- SEO: Multi-language -->
+    <link rel="canonical" href="https://recepozgur.com/tr/contact/" />
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/contact/" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/contact/" />
+    <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/contact/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/logo.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/custom.css">
+    <link rel="stylesheet" href="/contact.css">
+
+    <!-- Google Fonts: Inter -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+</head>
+
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <div class="relative z-10">
+
+        <!-- Header / Nav -->
+        <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
+            role="navigation" aria-label="Ana navigasyon">
+            <a href="/tr/" aria-label="Ana sayfaya git">
+                <img src="/assets/logo.png" alt="RÖM Logo"
+                    style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            </a>
+            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
+                <!-- Language Toggle -->
+                <button id="lang-toggle"
+                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
+                    aria-label="Dili değiştir / Switch language">
+                    EN
+                </button>
+                <a href="/tr/#vision" class="hover:text-white transition-colors"><span
+                        data-i18n="nav.vision">VİZYON</span></a>
+                <a href="/tr/apps/" class="hover:text-white transition-colors"><span
+                        data-i18n="nav.apps">APPS</span></a>
+                <a href="/tr/blog/" class="hover:text-white transition-colors"><span
+                        data-i18n="nav.blog">BLOG</span></a>
+                <a href="/tr/contact/" class="text-cyan-400"><span data-i18n="nav.contact">İLETİŞİM</span></a>
+            </div>
+        </nav>
+
+        <main id="page-content" class="page-transition">
+
+            <!-- Custom Background for Contact Page -->
+            <div class="fixed inset-0 z-[-1] pointer-events-none">
+                <canvas id="contact-canvas" aria-hidden="true" class="w-full h-full"></canvas>
+            </div>
+
+            <!-- Hero Header -->
+            <section class="min-h-[55vh] flex flex-col justify-center px-6 pt-24 mt-12">
+                <div class="max-w-6xl mx-auto w-full text-center">
+                    <div class="fade-up">
+                        <h1 class="text-5xl md:text-8xl font-black text-white mb-6 cyan-glow drop-shadow-2xl"
+                            data-i18n="contact.meta.title">İletişim.
+                        </h1>
+                        <p class="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed drop-shadow-lg"
+                            data-i18n="contact.form.cta.bottom.desc">
+                            İş teklifleri, işbirliği fırsatları veya sadece merhaba demek için — her mesajı
+                            değerlendiriyorum.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="py-20 px-6 border-t border-white/5 relative z-10">
+                <div class="max-w-6xl mx-auto">
+                    <div class="contact-grid">
+
+                        <!-- LEFT: Contact Form -->
+                        <div class="fade-up h-full">
+                            <div
+                                class="bento-card p-8 md:p-10 h-full flex flex-col bg-black/60 backdrop-blur-md shadow-2xl border border-white/10">
+                                <div
+                                    class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                    <span class="w-4 h-[1px] bg-cyan-400 inline-block"></span>
+                                    <span data-i18n="contact.form.title">Mesaj Gönder</span>
+                                </div>
+
+                                <form id="contact-form" class="flex flex-col flex-grow" novalidate>
+                                    <!-- Name + Email row -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label class="form-label" for="contact-name"
+                                                data-i18n="contact.form.label.name">Adın</label>
+                                            <input id="contact-name" name="from_name" type="text" class="form-input"
+                                                placeholder="Recep" required autocomplete="given-name">
+                                        </div>
+                                        <div>
+                                            <label class="form-label" for="contact-email"
+                                                data-i18n="contact.form.label.email">E-posta</label>
+                                            <input id="contact-email" name="reply_to" type="email" class="form-input"
+                                                placeholder="recep@şirket.com" required autocomplete="email">
+                                        </div>
+                                    </div>
+
+                                    <!-- Subject -->
+                                    <div class="mb-4">
+                                        <label class="form-label" for="contact-subject"
+                                            data-i18n="contact.form.label.subject">Konu</label>
+                                        <input id="contact-subject" name="subject" type="text" class="form-input"
+                                            placeholder="İş Teklifi / Proje / Merhaba" autocomplete="off">
+                                    </div>
+
+                                    <!-- Message -->
+                                    <div class="mb-6 flex-grow flex flex-col">
+                                        <label class="form-label" for="contact-message"
+                                            data-i18n="contact.form.label.message">Mesajın</label>
+                                        <textarea id="contact-message" name="message" class="form-input flex-grow"
+                                            rows="6"
+                                            placeholder="Projen, pozisyon veya işbirliği hakkında birkaç satır yaz..."
+                                            required maxlength="1000"></textarea>
+                                        <div class="char-counter" id="char-counter">0 / 1000</div>
+                                    </div>
+
+                                    <button type="submit" class="btn-premium btn-premium-cyan btn-premium-sm mt-auto"
+                                        id="submit-btn" style="padding: 0.7rem 1.75rem; font-size: 0.8rem;">
+                                        <span id="btn-text" data-i18n="blog.cta">İletişime Geç &rarr;</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Info Panel -->
+                        <div class="fade-up h-full" style="transition-delay: 150ms;">
+                            <div
+                                class="bento-card p-8 md:p-10 h-full flex flex-col gap-0 justify-between bg-black/60 backdrop-blur-md shadow-2xl border border-white/10">
+
+                                <!-- Direct contact -->
+                                <div class="mb-8">
+                                    <div
+                                        class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5 flex items-center gap-2">
+                                        <span class="w-4 h-[1px] bg-gray-600 inline-block"></span>
+                                        <span data-i18n="contact.form.info.direct">Direkt İletişim</span>
+                                    </div>
+
+                                    <div class="flex flex-col gap-3">
+                                        <!-- Email -->
+                                        <a href="mailto:recepzgrmh@gmail.com" class="social-link group"
+                                            aria-label="E-posta gönder">
+                                            <div class="social-icon bg-cyan-500/10 border border-cyan-500/20">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="#06b6d4" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5"
+                                                    data-i18n="contact.form.info.email">
+                                                    E-posta</div>
+                                                <div
+                                                    class="text-white font-semibold text-sm group-hover:text-cyan-400 transition-colors">
+                                                    recepzgrmh@gmail.com</div>
+                                            </div>
+                                            <svg class="ml-auto text-gray-600 group-hover:text-cyan-400 transition-all group-hover:translate-x-1"
+                                                width="16" height="16" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path d="M5 12h14M12 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+
+                                        <!-- LinkedIn -->
+                                        <a href="https://linkedin.com/in/recepozgurmih" target="_blank"
+                                            rel="noopener noreferrer" class="social-link group"
+                                            aria-label="LinkedIn profili">
+                                            <div class="social-icon bg-blue-500/10 border border-blue-500/20">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#3b82f6">
+                                                    <path
+                                                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                                    <rect x="2" y="9" width="4" height="12" />
+                                                    <circle cx="4" cy="4" r="2" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5">
+                                                    LinkedIn</div>
+                                                <div
+                                                    class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
+                                                    recepozgurmih</div>
+                                            </div>
+                                            <svg class="ml-auto text-gray-600 group-hover:text-blue-400 transition-all group-hover:translate-x-1"
+                                                width="16" height="16" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path d="M5 12h14M12 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+
+                                        <!-- GitHub -->
+                                        <a href="https://github.com/recepzgrmh" target="_blank"
+                                            rel="noopener noreferrer" class="social-link group"
+                                            aria-label="GitHub profili">
+                                            <div class="social-icon bg-white/5 border border-white/10">
+                                                <svg width="18" height="18" viewBox="0 0 24 24"
+                                                    fill="rgba(255,255,255,0.7)">
+                                                    <path
+                                                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-xs text-gray-500 font-medium uppercase tracking-widest mb-0.5">
+                                                    GitHub</div>
+                                                <div
+                                                    class="text-white font-semibold text-sm group-hover:text-white transition-colors">
+                                                    recepzgrmh</div>
+                                            </div>
+                                            <svg class="ml-auto text-gray-600 group-hover:text-white transition-all group-hover:translate-x-1"
+                                                width="16" height="16" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path d="M5 12h14M12 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="contact-divider"></div>
+
+
+
+                                <!-- Stack summary -->
+                                <div>
+                                    <div
+                                        class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <span class="w-4 h-[1px] bg-gray-600 inline-block"></span>
+                                        <span data-i18n="contact.form.info.stack">Çalıştığım Teknolojiler</span>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span
+                                            class="px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-xs font-semibold">Flutter</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Firebase</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Node.js</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Python</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-300 text-xs font-semibold">GCP</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">React
+                                            Vite</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-300 text-xs font-semibold">AI
+                                            / LLM</span>
+                                        <span
+                                            class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 text-xs font-semibold">Swift</span>
+                                    </div>
+                                </div>
+
+                            </div><!-- /bento-card -->
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom CTA -->
+            <section class="py-24 px-6 text-center border-t border-white/5 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-cyan-500/5 blur-[120px] rounded-full w-[600px] h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                </div>
+                <div class="relative z-10 fade-up">
+                    <p class="text-gray-500 text-sm font-medium uppercase tracking-widest mb-4"
+                        data-i18n="contact.form.cta.bottom.label">Hadi başlayalım</p>
+                    <h2 class="text-4xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400"
+                        data-i18n="contact.form.cta.bottom.title">
+                        Birlikte bir<br><span class="text-cyan-400 cyan-glow">şeyler üretelim.</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg font-light max-w-xl mx-auto"
+                        data-i18n="contact.form.cta.bottom.desc">
+                        İster iş teklifi, ister proje fikri olsun — seninle konuşmaktan mutluluk duyarım.
+                    </p>
+                </div>
+            </section>
+
+            <footer class="py-12 text-center border-t border-white/5 text-gray-500 text-sm">
+                <p data-i18n="footer.text">Tasarlayan ve Geliştiren: Recep Özgür Mih &copy; 2026</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="/contact-bg.js"></script>
+    <script src="/app.js"></script>
+    <script src="/router.js"></script>
+    <script src="/scroll.js"></script>
+    <script src="/cursor.js"></script>
+    <script src="/contact-form.js"></script>
+
+</body>
+
+</html>

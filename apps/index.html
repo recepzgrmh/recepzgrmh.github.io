@@ -1,276 +1,35 @@
-<!-- 
-  ██████╗  ██████╗ ███╗   ███╗
-  ██╔══██╗██╔═══██╗████╗ ████║
-  ██████╔╝██║   ██║██╔████╔██║
-  ██╔══██╗██║   ██║██║╚██╔╝██║
-  ██║  ██║╚██████╔╝██║ ╚═╝ ██║
-  ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
-  RECEP ÖZGÜR MIH | AI-DRIVEN ENGINEER
-  github.com/recepzgrmh
-
-  "Software is a combination of artistry and engineering."
--->
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apps | Recep Özgür Mih</title>
-    <meta name="description" content="Recep Özgür Mih tarafından geliştirilen uygulamalar.">
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/logo.png">
-    <!-- Open Graph -->
-    <meta property="og:image" content="https://recepozgur.com/assets/logo.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://recepozgur.com/assets/logo.png">
 
-    <!-- SEO: Multi-language -->
-    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/apps/" />
-    <link rel="alternate" hreflang="en" href="https://recepozgur.com/apps/" />
+    <!-- SEO: x-default and Hreflang -->
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/apps/" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/apps/" />
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/apps/" />
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/custom.css">
-    <link rel="stylesheet" href="/contact.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
-        rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="canonical" href="https://recepozgur.com/apps/" />
+
+    <script>
+        (function () {
+            var lang = localStorage.getItem('portfolio-lang');
+            if (!lang) {
+                var browserLang = navigator.language || navigator.userLanguage;
+                lang = browserLang.split('-')[0];
+            }
+            if (lang !== 'tr' && lang !== 'en') lang = 'tr';
+            window.location.replace('/' + lang + '/apps/');
+        })();
+    </script>
 </head>
 
-<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-
-    <div class="relative z-10">
-
-        <!-- Header / Nav -->
-        <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
-            role="navigation" aria-label="Ana navigasyon">
-            <a href="/" aria-label="Ana sayfaya git">
-                <img src="/assets/logo.png" alt="RÖM Logo"
-                    style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
-                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            </a>
-            </a>
-            <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
-                <button id="lang-toggle"
-                    class="px-3 py-1.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all text-xs font-bold tracking-wider"
-                    aria-label="Dili değiştir / Switch language">
-                    EN
-                </button>
-                <a href="/#vision" class="hover:text-white transition-colors"><span
-                        data-i18n="nav.vision">VİZYON</span></a>
-                <a href="/apps/" class="text-white"><span data-i18n="nav.apps">APPS</span></a>
-                <a href="/blog/" class="hover:text-white transition-colors"><span data-i18n="nav.blog">BLOG</span></a>
-                <a href="/contact/" class="hover:text-cyan-400 transition-colors" data-i18n="nav.contact">İletişim</a>
-            </div>
-        </nav>
-
-        <!-- Page Header -->
-        <main id="page-content" class="page-transition">
-            <section class="min-h-[60vh] flex flex-col justify-center px-6 md:px-20 lg:px-32 pt-24">
-                <div class="fade-up">
-                    <p
-                        class="text-cyan-400 font-semibold tracking-widest mb-4 text-sm uppercase flex items-center gap-3">
-                        <span class="w-8 h-[2px] bg-cyan-400 inline-block"></span>
-                        <span data-i18n="apps.subtitle">Yayındaki Uygulamalar</span>
-                    </p>
-                    <h1 class="text-5xl md:text-8xl font-black text-white mb-6 cyan-glow" data-i18n="apps.title">Apps.
-                    </h1>
-                    <p class="text-gray-300 text-lg md:text-xl max-w-2xl font-light leading-relaxed"
-                        data-i18n="apps.desc">
-                        Sıfırdan geliştirdiğim, canlıda olan uygulamalar. Her biri bir problemi çözmek için tasarlandı.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Sano AI — Full Feature -->
-            <section class="py-20 px-6 md:px-20 lg:px-32">
-                <div class="max-w-5xl mx-auto">
-
-                    <!-- Projects rendered via projects.js to eliminate duplication and ensure consistency -->
-                    <div id="featured-project-container" class="max-w-5xl mx-auto space-y-10"></div>
-                    <div id="other-projects-container" class="max-w-5xl mx-auto space-y-10"></div>
-
-                    <!-- Web Experiments / Mini Projects -->
-                    <div class="mt-20 border-t border-white/5 pt-16">
-                        <h3 class="text-2xl font-bold text-gray-300 mb-4 fade-up" data-i18n="exp.title">Web Deneyimleri
-                        </h3>
-                        <p class="text-gray-400 text-sm font-light leading-relaxed mb-10 max-w-2xl fade-up"
-                            data-i18n="exp.desc">
-                            Öğrenme sürecimde geliştirdiğim, GitHub Pages üzerinde barındırılan mini HTML/CSS/JS
-                            projeleri.
-                        </p>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-up">
-                            <!-- Category 1: Copy Paste -->
-                            <div
-                                class="bento-card p-8 flex flex-col h-full group hover:border-cyan-500/40 transition-colors relative overflow-hidden">
-                                <div
-                                    class="absolute -right-20 -top-20 w-40 h-40 bg-cyan-500/10 blur-3xl rounded-full group-hover:bg-cyan-500/20 transition-all">
-                                </div>
-                                <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
-                                    <span class="text-cyan-400 text-sm font-mono tracking-widest">01.</span> Copy Paste
-                                </h4>
-                                <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="../tindog/" target="_blank"
-                                        class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Tindog</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../drum/" target="_blank"
-                                        class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Drum Kit</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../expanding cards/" target="_blank"
-                                        class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Expanding Cards</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Progress Steps/" target="_blank"
-                                        class="text-gray-400 hover:text-cyan-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Progress Steps</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Category 2: HTML/CSS -->
-                            <div
-                                class="bento-card p-8 flex flex-col h-full group hover:border-blue-500/40 transition-colors relative overflow-hidden">
-                                <div
-                                    class="absolute -right-20 -top-20 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full group-hover:bg-blue-500/20 transition-all">
-                                </div>
-                                <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
-                                    <span class="text-blue-400 text-sm font-mono tracking-widest">02.</span> HTML / CSS
-                                </h4>
-                                <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="../portfolio/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Old Portfolio</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../cv/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Old CV</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Dilan-polat/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Dilan-Polat</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Ferrari/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Ferrari</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Shopping-website/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Shopping Website</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../samsung/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Samsung</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../solar-system/" target="_blank"
-                                        class="text-gray-400 hover:text-blue-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Solar System</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Category 3: JavaScript -->
-                            <div
-                                class="bento-card p-8 flex flex-col h-full group hover:border-purple-500/40 transition-colors relative overflow-hidden">
-                                <div
-                                    class="absolute -right-20 -top-20 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-all">
-                                </div>
-                                <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
-                                    <span class="text-purple-400 text-sm font-mono tracking-widest">03.</span>
-                                    JAVASCRIPT
-                                </h4>
-                                <div class="flex flex-col gap-4 flex-grow relative z-10">
-                                    <a href="../pomodoro/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Pomodoro Timer</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Background-color/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Background Color</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../clock/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Clock</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../dicee/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Dicee Game</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../car/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Car - Expanding Cards</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../image slide/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Image Slide</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Predict-number/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Predict Number</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../to-do/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>To-Do App</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../Random-number/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Random Number</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../tic-tac-toe/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Tic-Tac-Toe</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                    <a href="../troll/" target="_blank"
-                                        class="text-gray-400 hover:text-purple-400 transition-colors flex justify-between items-center group/link text-sm font-medium">
-                                        <span>Troll Sounds</span><span
-                                            class="opacity-0 group-hover/link:opacity-100 transition-all transform group-hover/link:translate-x-1">&rarr;</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <footer class="py-12 text-center border-t border-white/5 text-gray-500 text-sm">
-                <p data-i18n="footer.text">Tasarlayan ve Geliştiren: Recep Özgür Mih &copy; 2026</p>
-            </footer>
-        </main>
+<body
+    style="background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center;">
+        <p>Redirecting / Yönlendiriliyor...</p>
     </div>
-
-    <script src="/projects.js"></script>
-    <script src="/modal.js"></script>
-    <script src="/contact-bg.js"></script>
-    <script src="/app.js"></script>
-    <script src="/router.js"></script>
-    <script src="/scroll.js"></script>
-    <script src="/cursor.js"></script>
 </body>
 
 </html>
