@@ -452,9 +452,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize theme based on saved preference
     updateThemeUI(currentTheme);
 
+    // --- i18n INIT ---
     const pathSegments = window.location.pathname.split('/');
-    const pathLang = pathSegments[1];
-    let currentLang = (pathLang === 'tr' || pathLang === 'en') ? pathLang : (localStorage.getItem('portfolio-lang') || 'tr');
+    let pathLang = pathSegments[1];
+    
+    // Validate pathLang
+    if (pathLang !== 'tr' && pathLang !== 'en') {
+        pathLang = null;
+    }
+
+    // Determine initial language: URL takes precedence, then Storage, then default 'tr'
+    let currentLang = pathLang || localStorage.getItem('portfolio-lang') || 'tr';
+
+    // Ensure storage is in sync with our choice
+    localStorage.setItem('portfolio-lang', currentLang);
+
+    // If we are on a language-specific path but it's different from currentLang, 
+    // it means the user manually changed URL or we need to align.
+    // However, pathLang being present should usually dictate the language.
+    if (pathLang && pathLang !== currentLang) {
+        currentLang = pathLang;
+        localStorage.setItem('portfolio-lang', currentLang);
+    }
 
     // --- i18n HELPERS ---
     window.getTranslation = function (key) {
@@ -464,6 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLanguage(lang) {
         currentLang = lang;
         localStorage.setItem('portfolio-lang', lang);
+        document.documentElement.lang = lang;
 
         // Update all data-i18n elements
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -481,52 +501,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update metadata
-        const path = window.location.pathname;
-        const titleKey = path.includes('contact') ? 'contact.meta.title' :
-            path.includes('apps') ? 'apps.meta.title' :
-                path.includes('blog') ? 'blog.meta.title' : 'meta.title';
-        const descKey = path.includes('contact') ? 'contact.meta.desc' :
-            path.includes('apps') ? 'apps.meta.desc' :
-                path.includes('blog') ? 'blog.meta.desc' : 'meta.desc';
-
-        if (translations[lang][titleKey]) document.title = translations[lang][titleKey];
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc && translations[lang][descKey]) metaDesc.content = translations[lang][descKey];
-
-        // Update toggle button text
+        // Update metadata and toggle button
         const toggleBtn = document.getElementById('lang-toggle');
         if (toggleBtn) {
             toggleBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
         }
-
-        // Update html lang attribute
-        document.documentElement.lang = lang;
     }
 
-    // Language toggle button
+    // Language toggle button listener
     const langToggle = document.getElementById('lang-toggle');
     if (langToggle) {
-        langToggle.addEventListener('click', () => {
+        langToggle.addEventListener('click', (e) => {
+            e.preventDefault();
             const nextLang = currentLang === 'tr' ? 'en' : 'tr';
             const currentPath = window.location.pathname;
 
-            // Normalize path for replacement
             let nextPath;
-            if (currentPath.startsWith(`/${currentLang}/`)) {
+            if (currentPath.includes(`/${currentLang}/`)) {
                 nextPath = currentPath.replace(`/${currentLang}/`, `/${nextLang}/`);
-            } else if (currentPath === `/${currentLang}`) {
-                nextPath = `/${nextLang}/`;
+            } else if (currentPath.endsWith(`/${currentLang}`)) {
+                nextPath = currentPath.replace(`/${currentLang}`, `/${nextLang}/`);
             } else {
-                // Fallback if somehow not in a lang path
                 nextPath = `/${nextLang}/`;
             }
 
-            if (typeof window.navigateTo === 'function') {
-                window.navigateTo(nextPath);
-            } else {
-                window.location.href = nextPath;
-            }
+            localStorage.setItem('portfolio-lang', nextLang);
+            window.location.href = nextPath;
         });
     }
 
@@ -847,18 +847,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Expose update function - defined here after materials are ready
         window.App = window.App || {};
+        const tempColor = new THREE.Color();
         window.App.updateBackground = (theme) => {
             const isLight = theme === 'light';
             const targetColor = isLight ? 0xf1f5f9 : 0x0f0f0f;
             const particleColor = isLight ? 0x475569 : 0xcccccc;
 
             if (typeof gsap !== 'undefined') {
-                gsap.to(renderer.getClearColor(), {
+                renderer.getClearColor(tempColor);
+                gsap.to(tempColor, {
                     r: (targetColor >> 16 & 255) / 255,
                     g: (targetColor >> 8 & 255) / 255,
                     b: (targetColor & 255) / 255,
                     duration: 0.8,
-                    onUpdate: () => renderer.setClearColor(renderer.getClearColor())
+                    onUpdate: () => renderer.setClearColor(tempColor)
                 });
 
                 gsap.to(particleMaterial.uniforms.uColor.value, {
