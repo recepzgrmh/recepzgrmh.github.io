@@ -56,7 +56,7 @@ function renderFeaturedProject(containerId, isAppPage = false) {
             <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin">
                 ${[1, 2, 3, 4, 5, 6].map(i => `
                 <div class="flex-shrink-0 snap-center">
-                    <img src="/assets/sano-${i}.webp" alt="Sano AI Ekran ${i}" width="245" height="533" class="w-[140px] md:w-[${isAppPage ? '200' : '180'}px] h-auto rounded-2xl border border-white/10 hover:border-cyan-500/40 transition-all hover:scale-105 duration-300 shadow-lg">
+                    <img src="/assets/sano-${i}.webp" alt="Sano AI Ekran ${i}" width="245" height="533" loading="lazy" decoding="async" class="w-[140px] md:w-[${isAppPage ? '200' : '180'}px] h-auto rounded-2xl border border-white/10 hover:border-cyan-500/40 transition-all hover:scale-105 duration-300 shadow-lg">
                 </div>`).join('')}
             </div>
         </div>
@@ -171,7 +171,7 @@ function renderOtherProjects(containerId, isAppPage = false) {
             <h3 class="text-xl font-bold text-white mb-4 ${p.onclick ? 'group-hover:text-cyan-400 transition-colors' : ''}" data-i18n="projects.${p.id}.title">${p.title}</h3>
 
             <div class="mb-5 overflow-hidden rounded-xl border border-white/10 w-full relative">
-                <img src="${p.img}" alt="${p.title}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${p.fallback}'">
+                <img src="${p.img}" alt="${p.title}" width="600" height="340" loading="lazy" decoding="async" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${p.fallback}'">
                 ${p.onclick ? `
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span class="bg-cyan-500 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider" data-i18n="projects.details">Detayları Gör</span>

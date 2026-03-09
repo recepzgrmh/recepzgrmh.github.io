@@ -39,20 +39,150 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/assets/logo.webp">
 
-    <!-- Preconnect to Fonts -->
+    <!-- Preconnect to Fonts and APIs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://weather-api.recepzgrmh.workers.dev">
+    <link rel="preconnect" href="https://spotify-worker.recepzgrmh.workers.dev">
+    <link rel="dns-prefetch" href="https://weather-api.recepzgrmh.workers.dev">
+    <link rel="dns-prefetch" href="https://spotify-worker.recepzgrmh.workers.dev">
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/style.css">
+    <!-- Critical CSS (Inlined for Performance) -->
+    <style>
+        :root {
+            --bg-body: #000000;
+            --bg-canvas: #000000;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent-cyan: #06b6d4;
+            --nav-bg: rgba(0, 0, 0, 0.5);
+            --card-bg: rgba(20, 20, 20, 0.4);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+
+        .light-mode {
+            --bg-body: #f8fafc;
+            --bg-canvas: #f1f5f9;
+            --text-main: #020617;
+            --text-muted: #334155;
+            --accent-cyan: #0891b2;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.1);
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000 !important;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .light-mode body {
+            background-color: #f8fafc !important;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background-color: #000;
+        }
+
+        .light-mode #bg-canvas {
+            background-color: #f1f5f9;
+        }
+
+        .text-main {
+            color: var(--text-main);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-cyan {
+            color: var(--accent-cyan);
+        }
+
+        .fixed {
+            position: fixed;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .z-10 {
+            z-index: 10;
+        }
+
+        .z-50 {
+            z-index: 50;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .text-huge {
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: .9;
+            letter-spacing: -.05em;
+            font-weight: 900;
+        }
+
+        .cyan-glow {
+            text-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+
+        nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+
+    <!-- Deferred Styles -->
+    <link rel="stylesheet" href="/style.css" media="print" onload="this.media='all'">
     <link rel="preload" as="style" href="/custom.css" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="style" href="/contact.css" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
+        <link rel="stylesheet" href="/style.css">
         <link rel="stylesheet" href="/custom.css">
         <link rel="stylesheet" href="/contact.css">
     </noscript>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
 
     <!-- 
         Core Technologies & Orchestration:
@@ -80,8 +210,7 @@
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 transition-all duration-300"
             role="navigation" aria-label="Ana navigasyon">
             <a href="/en/" aria-label="Go to home">
-                <img src="/assets/logo.webp" alt="RÖM Logo" width="78" height="72"
-                    fetchpriority="high"
+                <img src="/assets/logo.webp" alt="RÖM Logo" width="78" height="72" fetchpriority="high"
                     style="height:72px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>

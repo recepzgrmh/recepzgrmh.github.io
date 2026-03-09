@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.App.createSpotifyLiveCard === 'function') {
                 const spotifyCard = window.App.createSpotifyLiveCard();
                 anchor.appendChild(spotifyCard);
-                console.log('[App] Spotify card mounted.');
             }
         };
 
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.App.createWeatherCard === 'function') {
                 const weatherCard = window.App.createWeatherCard();
                 anchor.appendChild(weatherCard);
-                console.log('[App] Weather card mounted.');
             }
         };
 
@@ -478,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- i18n INIT ---
     const pathSegments = window.location.pathname.split('/');
     let pathLang = pathSegments[1];
-    
+
     // Validate pathLang
     if (pathLang !== 'tr' && pathLang !== 'en') {
         pathLang = null;
@@ -959,7 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isInteractive && mouseActive) {
                 mouseHeld = true;
                 mouseHoldTime = performance.now();
-                
+
                 if (currentLayout === 'SPHERE' && !isExploded) {
                     easterEggTimer = setTimeout(() => {
                         triggerEasterEgg();
@@ -981,7 +979,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 easterEggTimer = null;
             }
         });
-        
+
         document.addEventListener('mouseleave', () => {
             if (easterEggTimer) {
                 clearTimeout(easterEggTimer);
@@ -991,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function triggerEasterEgg() {
             isExploded = true;
-            
+
             // Give particles huge outward velocity
             const positions = particleGeometry.attributes.position.array;
             for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -999,12 +997,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const x = positions[i3];
                 const y = positions[i3 + 1];
                 const z = positions[i3 + 2];
-                const len = Math.sqrt(x*x + y*y + z*z) || 1;
+                const len = Math.sqrt(x * x + y * y + z * z) || 1;
                 particlesData[i].vx = (x / len) * (Math.random() * 40 + 20);
                 particlesData[i].vy = (y / len) * (Math.random() * 40 + 20);
                 particlesData[i].vz = (z / len) * (Math.random() * 40 + 20);
             }
-            
+
             triggerDOMGravity();
         }
 
@@ -1017,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isSpotify = el.closest('#spotify-live-card');
                 const isCanvas = el.tagName === 'CANVAS';
                 const isSmall = rect.width < 5 || rect.height < 5;
-                
+
                 // If it's a child of another falling element, don't drop it separately
                 // to keep containers intact
                 let parent = el.parentElement;
@@ -1025,10 +1023,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (parent.matches && parent.matches(selectors) && !parent.closest('nav')) return false;
                     parent = parent.parentElement;
                 }
-                
+
                 return !isSmall && !isNav && !isSpotify && !isCanvas;
             });
-            
+
             const scrollY = window.scrollY;
             const physicsObjects = elementsToDrop.map(el => {
                 const rect = el.getBoundingClientRect();
@@ -1045,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     active: true
                 };
             });
-            
+
             physicsObjects.forEach(obj => {
                 obj.el.style.position = 'absolute';
                 obj.el.style.left = obj.x + 'px';
@@ -1055,28 +1053,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 obj.el.style.zIndex = '10000';
                 obj.el.style.transition = 'none'; // Stop CSS transitions
             });
-            
+
             const gravity = 0.6;
             const bounce = 0.5;
-            
+
             function physicsLoop() {
                 let active = false;
                 const ground = document.documentElement.scrollHeight;
-                
+
                 physicsObjects.forEach(obj => {
                     if (!obj.active) return;
-                    
+
                     obj.vy += gravity;
                     obj.x += obj.vx;
                     obj.y += obj.vy;
                     obj.rotation += obj.vr;
-                    
+
                     if (obj.y + obj.h > ground) {
                         obj.y = ground - obj.h;
                         obj.vy *= -bounce;
                         obj.vx *= 0.8;
                         obj.vr *= 0.8;
-                        
+
                         if (Math.abs(obj.vy) < 1.5 && Math.abs(obj.vx) < 0.5) {
                             obj.active = false;
                         } else {
@@ -1085,10 +1083,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         active = true;
                     }
-                    
+
                     obj.el.style.transform = `translate(${obj.x - parseFloat(obj.el.style.left)}px, ${obj.y - parseFloat(obj.el.style.top)}px) rotate(${obj.rotation}deg)`;
                 });
-                
+
                 if (active) {
                     requestAnimationFrame(physicsLoop);
                 }
@@ -1397,7 +1395,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let lineIdx = 0;
             let vertexCount = 0;
             const cyanR = 6 / 255, cyanG = 182 / 255, cyanB = 212 / 255;
-            
+
             if (!isExploded) {
                 rebuildGrid();
 
