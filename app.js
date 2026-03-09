@@ -926,12 +926,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let shockwaveOrigin = { x: 0, y: 0 };
         let shockwaveTime = 0;
 
+        // Easter Egg State
+        let easterEggTimer = null;
+        let isExploded = false;
+
         document.addEventListener('mousedown', (e) => {
             const tag = e.target.tagName;
             const isInteractive = (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA');
             if (!isInteractive && mouseActive) {
                 mouseHeld = true;
                 mouseHoldTime = performance.now();
+                
+                if (currentLayout === 'SPHERE' && !isExploded) {
+                    easterEggTimer = setTimeout(() => {
+                        triggerEasterEgg();
+                    }, 8000);
+                }
             }
         });
 
@@ -943,7 +953,125 @@ document.addEventListener('DOMContentLoaded', () => {
                 shockwaveTime = performance.now();
             }
             mouseHeld = false;
+            if (easterEggTimer) {
+                clearTimeout(easterEggTimer);
+                easterEggTimer = null;
+            }
         });
+        
+        document.addEventListener('mouseleave', () => {
+            if (easterEggTimer) {
+                clearTimeout(easterEggTimer);
+                easterEggTimer = null;
+            }
+        });
+
+        function triggerEasterEgg() {
+            isExploded = true;
+            
+            // Give particles huge outward velocity
+            const positions = particleGeometry.attributes.position.array;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const i3 = i * 3;
+                const x = positions[i3];
+                const y = positions[i3 + 1];
+                const z = positions[i3 + 2];
+                const len = Math.sqrt(x*x + y*y + z*z) || 1;
+                particlesData[i].vx = (x / len) * (Math.random() * 40 + 20);
+                particlesData[i].vy = (y / len) * (Math.random() * 40 + 20);
+                particlesData[i].vz = (z / len) * (Math.random() * 40 + 20);
+            }
+            
+            triggerDOMGravity();
+        }
+
+        function triggerDOMGravity() {
+            // Find all elements to drop, including cards and major containers
+            const selectors = 'h1, h2, h3, p, span, a, button, img, .project-card, .glass-card, .card, .stat-card, .skill-tag';
+            const elementsToDrop = Array.from(document.querySelectorAll(selectors)).filter(el => {
+                const rect = el.getBoundingClientRect();
+                const isNav = el.closest('nav');
+                const isSpotify = el.closest('#spotify-live-card');
+                const isCanvas = el.tagName === 'CANVAS';
+                const isSmall = rect.width < 5 || rect.height < 5;
+                
+                // If it's a child of another falling element, don't drop it separately
+                // to keep containers intact
+                let parent = el.parentElement;
+                while (parent) {
+                    if (parent.matches && parent.matches(selectors) && !parent.closest('nav')) return false;
+                    parent = parent.parentElement;
+                }
+                
+                return !isSmall && !isNav && !isSpotify && !isCanvas;
+            });
+            
+            const scrollY = window.scrollY;
+            const physicsObjects = elementsToDrop.map(el => {
+                const rect = el.getBoundingClientRect();
+                return {
+                    el: el,
+                    x: rect.left,
+                    y: rect.top + scrollY,
+                    w: rect.width,
+                    h: rect.height,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 1) * 20,
+                    rotation: 0,
+                    vr: (Math.random() - 0.5) * 20,
+                    active: true
+                };
+            });
+            
+            physicsObjects.forEach(obj => {
+                obj.el.style.position = 'absolute';
+                obj.el.style.left = obj.x + 'px';
+                obj.el.style.top = obj.y + 'px';
+                obj.el.style.width = obj.w + 'px';
+                obj.el.style.margin = '0';
+                obj.el.style.zIndex = '10000';
+                obj.el.style.transition = 'none'; // Stop CSS transitions
+            });
+            
+            const gravity = 0.6;
+            const bounce = 0.5;
+            
+            function physicsLoop() {
+                let active = false;
+                const ground = document.documentElement.scrollHeight;
+                
+                physicsObjects.forEach(obj => {
+                    if (!obj.active) return;
+                    
+                    obj.vy += gravity;
+                    obj.x += obj.vx;
+                    obj.y += obj.vy;
+                    obj.rotation += obj.vr;
+                    
+                    if (obj.y + obj.h > ground) {
+                        obj.y = ground - obj.h;
+                        obj.vy *= -bounce;
+                        obj.vx *= 0.8;
+                        obj.vr *= 0.8;
+                        
+                        if (Math.abs(obj.vy) < 1.5 && Math.abs(obj.vx) < 0.5) {
+                            obj.active = false;
+                        } else {
+                            active = true;
+                        }
+                    } else {
+                        active = true;
+                    }
+                    
+                    obj.el.style.transform = `translate(${obj.x - parseFloat(obj.el.style.left)}px, ${obj.y - parseFloat(obj.el.style.top)}px) rotate(${obj.rotation}deg)`;
+                });
+                
+                if (active) {
+                    requestAnimationFrame(physicsLoop);
+                }
+            }
+            requestAnimationFrame(physicsLoop);
+        }
 
         // ═══════════════════════════════════════
         // IDLE ENERGY PULSES
@@ -1085,9 +1213,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 const i3 = i * 3;
                 const pd = particlesData[i];
 
+                if (isExploded) {
+                    positions[i3] += pd.vx;
+                    positions[i3 + 1] += pd.vy;
+                    positions[i3 + 2] += pd.vz;
+                    pd.vx *= 0.98;
+                    pd.vy *= 0.98;
+                    pd.vz *= 0.98;
+                    sizes[i] = Math.max(0.1, sizes[i] * 0.95);
+                    continue;
+                }
+
+                let shakeX = 0;
+                let shakeY = 0;
+                if (easterEggTimer && currentLayout === 'SPHERE') {
+                    const progress = Math.min((now - mouseHoldTime) / 8000, 1.0);
+                    const shakeAmount = progress * 15;
+                    shakeX = (Math.random() - 0.5) * shakeAmount;
+                    shakeY = (Math.random() - 0.5) * shakeAmount;
+                    pd.activation = Math.max(pd.activation, progress);
+                }
+
                 const warpBoost = warp * pd.vx * WARP_SPEED_MULT;
-                positions[i3] += pd.vx + warpBoost;
-                positions[i3 + 1] += pd.vy;
+                positions[i3] += pd.vx + warpBoost + shakeX;
+                positions[i3 + 1] += pd.vy + shakeY;
                 positions[i3 + 2] += pd.vz;
 
                 let mouseProximity = 0;
@@ -1222,39 +1371,41 @@ document.addEventListener('DOMContentLoaded', () => {
             // ═══════════════════════════════════════
             // CONNECTION LINES — SPATIAL GRID METHOD
             // ═══════════════════════════════════════
-            rebuildGrid();
-
             let lineIdx = 0;
             let vertexCount = 0;
-            const connDist2 = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
-            const glowRad2 = MOUSE_GLOW_RADIUS * MOUSE_GLOW_RADIUS;
-            const cyanR = 6 / 255, cyanG = 182 / 255, cyanB = 212 / 255;
+            
+            if (!isExploded) {
+                rebuildGrid();
 
-            // Track which pairs we've already checked to avoid duplicates
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                if (lineIdx >= MAX_CONNECTIONS) break;
+                const connDist2 = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
+                const glowRad2 = MOUSE_GLOW_RADIUS * MOUSE_GLOW_RADIUS;
+                const cyanR = 6 / 255, cyanG = 182 / 255, cyanB = 212 / 255;
 
-                const i3 = i * 3;
-                const px = positions[i3], py = positions[i3 + 1], pz = positions[i3 + 2];
+                // Track which pairs we've already checked to avoid duplicates
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    if (lineIdx >= MAX_CONNECTIONS) break;
 
-                // Get grid cell for this particle
-                const gx = Math.max(0, Math.min(GRID_W - 1, Math.floor((px + BOUNDS.x) / GRID_CELL_SIZE)));
-                const gy = Math.max(0, Math.min(GRID_H - 1, Math.floor((py + BOUNDS.y) / GRID_CELL_SIZE)));
-                const gz = Math.max(0, Math.min(GRID_D - 1, Math.floor((pz + BOUNDS.z) / GRID_CELL_SIZE)));
+                    const i3 = i * 3;
+                    const px = positions[i3], py = positions[i3 + 1], pz = positions[i3 + 2];
 
-                // Check 3x3x3 neighborhood
-                for (let dx = -1; dx <= 1; dx++) {
-                    const ngx = gx + dx;
-                    if (ngx < 0 || ngx >= GRID_W) continue;
-                    for (let dy = -1; dy <= 1; dy++) {
-                        const ngy = gy + dy;
-                        if (ngy < 0 || ngy >= GRID_H) continue;
-                        for (let dz = -1; dz <= 1; dz++) {
-                            const ngz = gz + dz;
-                            if (ngz < 0 || ngz >= GRID_D) continue;
+                    // Get grid cell for this particle
+                    const gx = Math.max(0, Math.min(GRID_W - 1, Math.floor((px + BOUNDS.x) / GRID_CELL_SIZE)));
+                    const gy = Math.max(0, Math.min(GRID_H - 1, Math.floor((py + BOUNDS.y) / GRID_CELL_SIZE)));
+                    const gz = Math.max(0, Math.min(GRID_D - 1, Math.floor((pz + BOUNDS.z) / GRID_CELL_SIZE)));
 
-                            const cellIdx = ngx + ngy * GRID_W + ngz * GRID_W * GRID_H;
-                            const count = gridCounts[cellIdx];
+                    // Check 3x3x3 neighborhood
+                    for (let dx = -1; dx <= 1; dx++) {
+                        const ngx = gx + dx;
+                        if (ngx < 0 || ngx >= GRID_W) continue;
+                        for (let dy = -1; dy <= 1; dy++) {
+                            const ngy = gy + dy;
+                            if (ngy < 0 || ngy >= GRID_H) continue;
+                            for (let dz = -1; dz <= 1; dz++) {
+                                const ngz = gz + dz;
+                                if (ngz < 0 || ngz >= GRID_D) continue;
+
+                                const cellIdx = ngx + ngy * GRID_W + ngz * GRID_W * GRID_H;
+                                const count = gridCounts[cellIdx];
 
                             for (let c = 0; c < count; c++) {
                                 const j = grid[cellIdx][c];
@@ -1321,7 +1472,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 }
-            }
+            } // end of for (let i = 0...
+            } // end of if (!isExploded)
 
             lineGeometry.setDrawRange(0, vertexCount);
             lineGeometry.attributes.position.needsUpdate = true;
