@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DYNAMIC HEADER SCROLL EFFECT ---
     const nav = document.querySelector('nav.fixed');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 20) {
+        if (window.scrollY > 80) {
             nav.classList.add('scrolled');
         } else {
             nav.classList.remove('scrolled');
