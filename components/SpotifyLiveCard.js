@@ -46,7 +46,7 @@ window.App.createSpotifyLiveCard = function () {
                         <span class="spotify-icon">!</span>
                         <span>UNAVAILABLE</span>
                     </div>
-                    <h4 class="spotify-title">No status found</h4>
+                    <p class="spotify-title">No status found</p>
                     <p class="spotify-artist">Offline</p>
                 </div>
             </div>
@@ -74,7 +74,7 @@ window.App.createSpotifyLiveCard = function () {
                         <span class="spotify-icon">⌛</span>
                         <span>RECENTLY PLAYED</span>
                     </div>
-                    <h4 class="spotify-title">${title}</h4>
+                    <p class="spotify-title">${title}</p>
                     <p class="spotify-artist">${artist}</p>
                 </div>
             </a>
@@ -103,7 +103,7 @@ window.App.createSpotifyLiveCard = function () {
                         <span class="spotify-icon">♫</span>
                         <span>NOW PLAYING</span>
                     </div>
-                    <h4 class="spotify-title">${title}</h4>
+                    <p class="spotify-title">${title}</p>
                     <p class="spotify-artist">${artist}</p>
                 </div>
             </a>
