@@ -2032,17 +2032,17 @@ nav.fixed.scrolled .gap-6 {
 }
 
 .cta-glass-card {
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 48px;
     padding: 80px 48px;
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.3);
 }
 
 .light-mode .cta-glass-card {
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 100%);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.1);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.03);
 }
