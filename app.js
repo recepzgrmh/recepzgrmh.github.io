@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.cta': 'İletişime Geç &rarr;',
 
             'cta.title': 'Birlikte kodlayalım.',
-            'cta.desc': 'Büyük ölçekli ekiplere değer katmaya, tecrübelerden öğrenmeye ve en iyisini inşa etmeye hazırım.',
+            'cta.desc': 'Hedefim milyonlarca insanın hayatına dokunan global ürünlerin mutfağında olmak. Sahip olduğum ürün geliştirme vizyonunu ve otonom problem çözme yeteneğimi büyük ölçekli organizasyonlara taşımaya hazırım.',
             'cta.button': 'Ekibe Hazırım →',
 
             'footer.text': 'Recep Ozgur MIH &copy; 2026',
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'blog.cta': 'Get in Touch &rarr;',
 
             'cta.title': 'Let\'s code together.',
-            'cta.desc': 'Ready to add value to large-scale teams, learn from experience, and build the best.',
+            'cta.desc': 'My goal is to be in the kitchen of global products that touch millions of lives. I am ready to bring my product development vision and autonomous problem-solving skills to large-scale organizations.',
             'cta.button': 'Ready to Join →',
 
             'footer.text': 'Recep Ozgur MIH &copy; 2026',
