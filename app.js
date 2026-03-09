@@ -444,7 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.addEventListener('click', () => {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('portfolio-theme', currentTheme);
-            updateThemeUI(currentTheme);
+            // Force reload to pick up all theme changes perfectly
+            window.location.reload();
         });
     }
 

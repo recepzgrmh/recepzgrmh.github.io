@@ -380,6 +380,26 @@ body {
     background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
+.light-mode .text-white,
+.light-mode .text-gray-100,
+.light-mode .text-gray-200,
+.light-mode .text-gray-300,
+.light-mode .text-gray-400 {
+    color: var(--text-main) !important;
+}
+
+.light-mode .text-gray-500,
+.light-mode .text-muted,
+.light-mode .premium-card p,
+.light-mode .bento-card p {
+    color: var(--text-muted) !important;
+}
+
+.light-mode .bg-white\/5,
+.light-mode .bg-white\/10 {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
 .light-mode .border-white\/10,
 .light-mode .border-white\/20,
 .light-mode .border-white\/5 {
@@ -392,16 +412,47 @@ body {
     border-color: var(--card-border) !important;
 }
 
-.light-mode .premium-card p,
-.light-mode .bento-card p {
-    color: var(--text-muted) !important;
-}
-
 .light-mode .premium-card h2,
 .light-mode .premium-card h3,
 .light-mode .bento-card h2,
 .light-mode .bento-card h3 {
     color: var(--text-main) !important;
+}
+
+/* Titles & Glows Fix for Light Mode */
+.light-mode .text-huge, 
+.light-mode .cyan-glow,
+.light-mode h1, 
+.light-mode h2, 
+.light-mode h3 {
+    color: var(--text-main) !important;
+    text-shadow: 0 0 15px rgba(8, 145, 178, 0.1) !important;
+}
+
+.light-mode .gradient-text,
+.light-mode .text-transparent.bg-clip-text {
+    background-image: linear-gradient(135deg, #0f172a, #475569) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* Spotify Card Light Mode */
+.light-mode .spotify-inner {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-mode .spotify-title {
+    color: #0f172a !important;
+}
+
+.light-mode .spotify-artist {
+    color: #64748b !important;
+}
+
+.light-mode .spotify-status {
+    color: #16a34a !important;
 }
 
 .light-mode .btn-premium-cyan {
@@ -414,16 +465,6 @@ body {
     border-top-color: var(--card-border) !important;
 }
 
-.light-mode .text-transparent.bg-clip-text {
-    background-image: linear-gradient(to bottom right, var(--text-main), var(--text-muted)) !important;
-}
-
-#theme-toggle:hover {
-    background: var(--card-hover-bg);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 15px var(--accent-cyan-glow);
-}
-
 .light-mode nav img {
     filter: invert(1) brightness(0.2);
 }
@@ -431,7 +472,7 @@ body {
 .light-mode nav a,
 .light-mode nav span,
 .light-mode nav div {
-    color: var(--text-main);
+    color: var(--text-main) !important;
 }
 
 #bg-canvas {
