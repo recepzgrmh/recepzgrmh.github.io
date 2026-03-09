@@ -189,7 +189,7 @@ function injectTubitakModal() {
 
     // Description
     const desc = document.createElement('p');
-    desc.textContent = 'Üniversite öğrencilerinin barınma problemine akıllı bir çözüm getirmeyi hedefleyen bu MVP, öğrencilerin kriterlerine en uygun yurtları ağırlıklı puanlama ve Haversine formülüyle hesaplanan mesafe algoritması sayesinde saniyeler içinde önermektedir.';
+    desc.textContent = 'Öğrencilerin barınma problemine matematiksel bir yaklaşım sunduğumuz TÜBİTAK destekli bitirme projesi. İzmir genelindeki yurt verilerini 2 aylık bir saha çalışmasıyla toplayıp Firebase\'e entegre ettik. Sonrasında React Native kullanarak geliştirdiğimiz bu MVP\'de, Haversine formülü ve ağırlıklı matris normalizasyonu çalıştıran özel bir algoritma ile nokta atışı yurt öneri sistemi kurduk.';
     Object.assign(desc.style, {
         color: '#d1d5db',
         fontWeight: '300',
