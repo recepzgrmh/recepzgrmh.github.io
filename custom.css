@@ -390,6 +390,33 @@ body {
     pointer-events: auto;
 }
 
+@media (max-width: 1200px) and (min-width: 769px) {
+    .missions-panel-wrapper {
+        top: auto;
+        bottom: 2rem;
+        right: 2rem;
+        transform: none;
+    }
+
+    .visible-home {
+        animation: islandAppearBottom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+}
+
+@keyframes islandAppearBottom {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
 @media (max-width: 768px) {
     .missions-panel-wrapper {
         display: none !important;
