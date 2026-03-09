@@ -119,6 +119,9 @@ async function navigateTo(url, isPopState = false) {
 
         updateNavLinks(url);
 
+        // Notify Mission Manager
+        window.dispatchEvent(new CustomEvent('route_changed', { detail: { url } }));
+
         if (typeof window.reinitDynamicContent === "function") {
             window.reinitDynamicContent();
         }

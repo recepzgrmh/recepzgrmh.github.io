@@ -86,6 +86,8 @@ window.initContactForm = function () {
                     }
                     form.reset();
                     if (counter) counter.textContent = '0 / 1000';
+                    // Trigger mission completion
+                    window.dispatchEvent(new CustomEvent('message_sent'));
                 }
             } catch (err) {
                 console.error('EmailJS error:', err);

@@ -102,7 +102,7 @@
     t.className = 'c-trail';
     const color = TRAIL_COLORS[trailIndex % TRAIL_COLORS.length];
     trailIndex++;
-    
+
     // Minimal style changes to avoid reflow
     const size = (3 + Math.random() * 4).toFixed(1);
     t.style.cssText = `
@@ -111,18 +111,41 @@
       width: ${size}px; height: ${size}px;
       transform: translate3d(${x}px, ${y}px, 0) translate3d(-50%, -50%, 0);
     `;
-    
+
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 600);
   }
 
   // 7. RequestAnimationFrame Animation Loop
   function animate() {
+    // 5. Magnetic "Lean" Logic
+    let targetX = mouseX;
+    let targetY = mouseY;
+
+    const hoverSelectors = 'a, button, [role="button"], input, textarea, select, label, .bento-card, .premium-card';
+    const activeHover = document.querySelectorAll(hoverSelectors);
+
+    activeHover.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dist = Math.hypot(mouseX - centerX, mouseY - centerY);
+
+      const threshold = 60; // Pulling radius
+      if (dist < threshold) {
+        // Calculate pull power (0 at threshold, 1 at center)
+        const power = 1 - (dist / threshold);
+        // Gravity effect: lean towards center but don't lose mouse completely
+        targetX = mouseX + (centerX - mouseX) * (power * 0.8);
+        targetY = mouseY + (centerY - mouseY) * (power * 0.8);
+      }
+    });
+
     // Smooth Lerp Calculations
-    dotX += (mouseX - dotX) * 0.45; // Faster follow
-    dotY += (mouseY - dotY) * 0.45;
-    ringX += (mouseX - ringX) * 0.15; // Smooth ring
-    ringY += (mouseY - ringY) * 0.15;
+    dotX += (targetX - dotX) * 0.45; // Follow target (snapped or mouse)
+    dotY += (targetY - dotY) * 0.45;
+    ringX += (targetX - ringX) * 0.15;
+    ringY += (targetY - ringY) * 0.15;
 
     // Apply Styles (DOM Writes)
     dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate3d(-50%, -50%, 0)`;
