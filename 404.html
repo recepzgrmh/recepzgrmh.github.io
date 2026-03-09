@@ -23,7 +23,10 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="custom.css">
+    <link rel="preload" as="style" href="custom.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="custom.css">
+    </noscript>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">

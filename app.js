@@ -97,8 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // run initially
-    window.reinitDynamicContent();
+    // run initially with a slight defer for performance
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => window.reinitDynamicContent());
+    } else {
+        setTimeout(() => window.reinitDynamicContent(), 100);
+    }
 
     // --- DYNAMIC HEADER SCROLL EFFECT ---
     const nav = document.querySelector('nav.fixed');

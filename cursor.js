@@ -114,10 +114,6 @@
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-
-    // Trail parçacığı — her 3 frame'de bir
-    trailTimer++;
-    if (trailTimer % 3 === 0) spawnTrail(mouseX, mouseY);
   });
 
   // ─── Trail spawn ─────────────────────────────────────────────────
@@ -149,6 +145,10 @@
     ringY += (mouseY - ringY) * 0.12;
     ring.style.left = ringX + 'px';
     ring.style.top = ringY + 'px';
+
+    // Trail parçacığı — her 3 frame'de bir (Performans için rAF içinde)
+    trailTimer++;
+    if (trailTimer % 3 === 0 && mouseX > 0) spawnTrail(mouseX, mouseY);
 
     requestAnimationFrame(animate);
   }

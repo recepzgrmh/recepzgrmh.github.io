@@ -36,10 +36,18 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/assets/logo.webp">
 
+    <!-- Preconnect to Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- Styles -->
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/custom.css">
-    <link rel="stylesheet" href="/contact.css">
+    <link rel="preload" as="style" href="/custom.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/contact.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="/custom.css">
+        <link rel="stylesheet" href="/contact.css">
+    </noscript>
 
     <!-- Google Fonts: Inter -->
     <link
@@ -65,8 +73,9 @@
         <nav class="fixed top-0 w-full p-6 md:p-10 flex justify-between items-center mix-blend-difference z-50"
             role="navigation" aria-label="Ana navigasyon">
             <a href="/en/" aria-label="Go to home">
-                <img src="/assets/logo.webp" alt="RÖM Logo"
-                    style="height:64px;width:auto;object-fit:contain;transition:opacity .2s;"
+                <img src="/assets/logo.webp" alt="RÖM Logo" width="78" height="72"
+                    fetchpriority="high"
+                    style="height:72px;width:auto;object-fit:contain;transition:opacity .2s;"
                     onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             </a>
             <div class="flex gap-4 md:gap-6 items-center text-sm font-semibold text-gray-300">
