@@ -596,33 +596,74 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[220px]">
 
                     <!-- BENTO: BBT İZMİR -->
+                    <!-- BENTO: BBT İZMİR -->
                     <div
-                        class="bento-card p-8 md:p-10 flex flex-col justify-between fade-up md:col-span-2 lg:col-span-2 row-span-2 group">
+                        class="bento-card p-8 md:p-10 flex flex-col justify-between fade-up md:col-span-2 lg:col-span-2 row-span-2 group relative overflow-hidden">
                         <div
                             class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                         </div>
-                        <div>
-                            <div
-                                class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
-                                <span data-i18n="bento.bbt.role">Kurucu Ortak & Lider</span>
+
+                        <div class="relative z-10 w-full">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div
+                                        class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+                                        <span data-i18n="bento.bbt.role">Kurucu Ortak & Lider</span>
+                                    </div>
+                                    <h3 class="text-3xl font-black text-main flex items-center gap-3">
+                                        BBT İzmir
+                                    </h3>
+                                </div>
+                                <a href="https://www.instagram.com/bbtizmir/" target="_blank" rel="noopener"
+                                    class="p-3 bg-white/5 rounded-2xl border border-white/10 hover:bg-cyan/10 hover:border-cyan-500/30 transition-all group/insta"
+                                    title="Instagram'da Takip Et">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="text-muted group-hover/insta:text-cyan group-hover/insta:scale-110 transition-all">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                    </svg>
+                                </a>
                             </div>
-                            <h3 class="text-3xl font-black text-main mb-2">BBT İzmir</h3>
-                            <p class="text-muted font-light" data-i18n="bento.bbt.desc">Teknoloji Topluluğu Yönetimi
-                            </p>
+
+                            <ul class="space-y-4 mb-8">
+                                <li class="flex items-start gap-3">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan shrink-0"></span>
+                                    <span class="text-muted text-sm leading-relaxed" data-i18n="bento.bbt.h1">Cyber
+                                        Workshop Day Serisi (EgeSiber, OWASP, GDG)</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                                    <span class="text-muted text-sm leading-relaxed" data-i18n="bento.bbt.h2">İzmir
+                                        Blockchain Zirvesi & IT Buluşmaları</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
+                                    <span class="text-muted text-sm leading-relaxed" data-i18n="bento.bbt.h4">Üniversite
+                                        Sempozyum & Yapay Zeka Oturumları</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-400 shrink-0"></span>
+                                    <span class="text-muted text-sm leading-relaxed" data-i18n="bento.bbt.h3">Teknik
+                                        Eğitimler (Unity 101, OOP, Web)</span>
+                                </li>
+                            </ul>
                         </div>
 
-                        <div>
-                            <div class="text-5xl font-black text-main mb-2 cyan-glow">2,500+</div>
-                            <p class="text-muted font-medium mb-4" data-i18n="bento.bbt.stat">Etkinlik Katılımcısı
-                            </p>
-                            <div class="flex flex-wrap gap-3 text-sm">
-                                <span class="px-4 py-2 bg-card rounded-full border border-border text-muted"><span
-                                        data-i18n="bento.bbt.org">60+
-                                        Organizasyon</span></span>
-                                <span class="px-4 py-2 bg-cyan/10 rounded-full border border-cyan-500/20 text-cyan"
-                                    data-i18n="bento.bbt.event">İzmir
-                                    Blockchain Zirvesi</span>
+                        <div class="relative z-10">
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <div class="text-5xl font-black text-main mb-1 cyan-glow">2,500+</div>
+                                    <p class="text-muted font-medium" data-i18n="bento.bbt.stat">Etkinlik Katılımcısı
+                                    </p>
+                                </div>
+                                <div
+                                    class="flex gap-2 text-[10px] font-bold uppercase tracking-tighter opacity-50 group-hover:opacity-100 transition-opacity">
+                                    <span class="px-2 py-1 bg-card rounded border border-border"
+                                        data-i18n="bento.bbt.org">60+ Organizasyon</span>
+                                </div>
                             </div>
                         </div>
                     </div>
