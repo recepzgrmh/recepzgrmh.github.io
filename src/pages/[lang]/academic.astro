@@ -1,0 +1,11 @@
+---
+import type { Lang } from "../../i18n/content";
+import { LANGS } from "../../i18n/content";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+return Astro.redirect(`/${lang}/academic-life/`, 301);
+---

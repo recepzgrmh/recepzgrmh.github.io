@@ -1,0 +1,65 @@
+---
+import type { Lang } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+  active?: "work" | "skills" | "about" | "academic" | "contact" | "chat" | null;
+}
+const { lang, active = null } = Astro.props;
+const t = CONTENT[lang];
+const alt: Lang = lang === "en" ? "tr" : "en";
+const base = `/${lang}`;
+
+const items = [
+  { key: "work", href: `${base}/work/`, label: t.nav.work },
+  { key: "skills", href: `${base}/skills/`, label: t.nav.skills },
+  { key: "about", href: `${base}/about/`, label: t.nav.about },
+  { key: "academic", href: `${base}/academic-life/`, label: t.nav.academic },
+  { key: "chat", href: `${base}/chat/`, label: t.nav.chat },
+] as const;
+---
+
+<header class="sticky top-0 z-50 border-b border-border/70 bg-page/80 backdrop-blur-xl">
+  <nav class="wrap flex h-[76px] items-center justify-between">
+    <a href={`${base}/`} class="group flex items-center gap-2.5 text-[15px] font-extrabold tracking-tight text-fg">
+      <span class="grid h-7 w-7 place-items-center rounded-full bg-fg text-[13px] font-black text-page transition-transform group-hover:rotate-12">R</span>
+      recepozgur
+    </a>
+
+    <div class="flex items-center gap-2 sm:gap-5">
+      <div class="hidden items-center gap-5 md:flex lg:gap-6">
+        {
+          items.map((it) => (
+            <a
+              href={it.href}
+              aria-current={active === it.key ? "page" : undefined}
+              class="ul text-sm font-semibold text-fg-2 transition-colors hover:text-fg aria-[current=page]:text-fg"
+            >
+              {it.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <a
+        href={`/${alt}/`}
+        data-mascot="lang"
+        class="rounded-full border border-border px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-fg-2 transition hover:border-fg/30 hover:text-fg"
+        aria-label={alt === "tr" ? "Türkçe'ye geç" : "Switch to English"}
+      >
+        {alt}
+      </a>
+
+      <a
+        href={`${base}/contact/`}
+        data-mascot="contact"
+        data-magnetic
+        class="hidden rounded-full bg-fg px-4 py-2 text-sm font-bold text-page transition hover:bg-amber hover:text-fg sm:inline-flex"
+      >
+        {t.nav.contact}
+      </a>
+    </div>
+  </nav>
+  <div class="scroll-progress" aria-hidden="true"></div>
+</header>

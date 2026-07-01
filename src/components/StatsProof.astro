@@ -1,0 +1,60 @@
+---
+import type { Lang, StatTone } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = CONTENT[lang].stats;
+
+const card: Record<StatTone, string> = {
+  amber: "bg-amber text-fg",
+  coral: "bg-coral text-white",
+  blue: "bg-blue text-white",
+  lime: "bg-lime text-fg",
+  purple: "bg-purple text-fg",
+  white: "bg-surface text-fg border border-border",
+  soft: "bg-soft text-fg",
+};
+// give the grid some rhythm: a couple of wider cards
+const span = ["sm:col-span-2", "", "", "sm:col-span-2", "", ""];
+---
+
+<section class="sect-sm">
+  <div class="wrap">
+    <header data-reveal class="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="kicker mb-3 text-amber">{s.kicker}</p>
+        <h2 class="h-sec max-w-xl">{s.title}</h2>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
+      {
+        s.items.map((it, i) => (
+          <div
+            data-reveal
+            data-tilt
+            data-spotlight
+            style={`--d:${i * 70}ms`}
+            class:list={[
+              "flex flex-col justify-between rounded-hero p-6 sm:p-8",
+              "min-h-[140px] sm:min-h-[180px] transition-transform",
+              card[it.tone],
+              span[i],
+            ]}
+          >
+            <span class="font-mono text-xs font-semibold uppercase tracking-widest opacity-70">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <div data-count class="display text-4xl leading-none sm:text-6xl">{it.value}</div>
+              <div class="mt-2 text-sm font-semibold opacity-80">{it.label}</div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

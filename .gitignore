@@ -1,0 +1,32 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# env
+.env
+.env.production
+.env.*.local
+
+# macOS
+.DS_Store
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ai — RAW private chat exports + built datasets must NEVER be committed
+ai/whatsapp_raw/
+ai/data/
+ai/.venv/
+*.jsonl
+
+# private: fine-tuning workflow + prompts (this repo is public)
+ai/
+mascot-prompts.md

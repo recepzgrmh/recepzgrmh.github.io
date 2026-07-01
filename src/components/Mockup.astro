@@ -1,0 +1,203 @@
+---
+import { workImage } from "../lib/workImages";
+
+interface Props {
+  variant: "phone" | "browser";
+  image?: string;
+  placeholder?: string;
+  soon?: string;
+  url?: string;
+  tilt?: boolean;
+  class?: string;
+}
+const {
+  variant,
+  image,
+  placeholder = "Preview",
+  soon = "",
+  url = "recepozgur.com",
+  tilt = false,
+  class: cls = "",
+} = Astro.props;
+
+const img = image ? workImage(image) : null;
+---
+
+{
+  variant === "phone" ? (
+    <div class:list={["mockup-phone", cls]} data-tilt={tilt ? "" : undefined}>
+      <div class="phone-frame">
+        <span class="phone-notch" />
+        <div class="phone-screen">
+          {img ? (
+            <img src={img.src} alt={placeholder} loading="lazy" decoding="async" />
+          ) : (
+            <div class="ph">
+              <span class="ph-ic">▢</span>
+              <span class="ph-t">{placeholder}</span>
+              {soon && <span class="ph-s">{soon}</span>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class:list={["mockup-browser", cls]} data-tilt={tilt ? "" : undefined}>
+      <div class="br-frame">
+        <div class="br-bar">
+          <span class="br-dot" />
+          <span class="br-dot" />
+          <span class="br-dot" />
+          <span class="br-url">{url}</span>
+        </div>
+        <div class="br-screen">
+          {img ? (
+            <img src={img.src} alt={placeholder} loading="lazy" decoding="async" />
+          ) : (
+            <div class="ph">
+              <span class="ph-ic">▢</span>
+              <span class="ph-t">{placeholder}</span>
+              {soon && <span class="ph-s">{soon}</span>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  /* placeholder */
+  .ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    height: 100%;
+    width: 100%;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        rgba(255, 159, 28, 0.09) 0,
+        rgba(255, 159, 28, 0.09) 1px,
+        transparent 1px,
+        transparent 12px
+      ),
+      var(--color-soft);
+    color: var(--color-fg-2);
+  }
+  .ph-ic {
+    font-size: 1.6rem;
+    color: var(--color-amber);
+  }
+  .ph-t {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-fg-2);
+  }
+  .ph-s {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-muted);
+  }
+  .ph img,
+  .phone-screen img,
+  .br-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: media-in 0.8s var(--ease-out-soft) both;
+  }
+  @keyframes media-in {
+    from {
+      opacity: 0;
+      transform: scale(1.025);
+    }
+  }
+
+  /* phone — dark premium bezel for contrast on the light page */
+  .mockup-phone {
+    width: 100%;
+    max-width: 250px;
+    margin-inline: auto;
+    transform-style: preserve-3d;
+  }
+  .phone-frame {
+    position: relative;
+    aspect-ratio: 9 / 19;
+    border-radius: 2.4rem;
+    padding: 0.5rem;
+    background: linear-gradient(160deg, #232329, #111114);
+    box-shadow:
+      0 40px 70px -30px rgba(17, 17, 20, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .phone-notch {
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34%;
+    height: 1.05rem;
+    background: #111114;
+    border-radius: 0 0 0.8rem 0.8rem;
+    z-index: 2;
+  }
+  .phone-screen {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 1.9rem;
+    overflow: hidden;
+    background: var(--color-soft);
+  }
+
+  /* browser — light */
+  .mockup-browser {
+    width: 100%;
+    transform-style: preserve-3d;
+  }
+  .br-frame {
+    border-radius: 1.1rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: 0 40px 70px -34px rgba(17, 17, 20, 0.35);
+  }
+  .br-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--color-soft);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .br-dot {
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 99px;
+    background: var(--color-border);
+  }
+  .br-url {
+    margin-left: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-muted);
+  }
+  .br-screen {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--color-soft);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .phone-screen img,
+    .br-screen img {
+      animation: none;
+    }
+  }
+</style>

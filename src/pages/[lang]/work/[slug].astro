@@ -1,0 +1,337 @@
+---
+import type { Lang } from "../../../i18n/content";
+import { CONTENT, LANGS } from "../../../i18n/content";
+import Base from "../../../layouts/Base.astro";
+import Nav from "../../../components/Nav.astro";
+import Footer from "../../../components/Footer.astro";
+import Mockup from "../../../components/Mockup.astro";
+
+export function getStaticPaths() {
+  return LANGS.flatMap((lang) =>
+    CONTENT[lang].projects.map((p) => ({ params: { lang, slug: p.slug } })),
+  );
+}
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+const t = CONTENT[lang];
+const ui = t.projectUI;
+const projects = t.projects;
+const idx = projects.findIndex((p) => p.slug === slug);
+const p = projects[idx];
+const next = projects[(idx + 1) % projects.length];
+const base = `/${lang}`;
+const url = slug === "chat-sanoapp-ai" ? "chat.sanoapp.ai" : "recepozgur.com";
+const title = `${p.name} — ${p.tagline}`;
+const panel = ["bg-amber/12", "bg-purple/40", "bg-blue/10"][idx % 3];
+const isPhone = p.preview.variant === "phone";
+// a browser project with several shots becomes a pinned, scroll-through deck
+// (falls back to a stacked feature list when JS/animation is off)
+const webDeck = !isPhone && p.preview.images.length > 1;
+const caps = p.preview.captions ?? [];
+const shotCount = p.preview.images.length;
+---
+
+<Base lang={lang} page={`project:${slug}`} title={title} description={p.blurb}>
+  <Nav lang={lang} active="work" />
+  <main>
+    <article>
+      <!-- header -->
+      <section>
+        <div class="wrap pt-12 sm:pt-16">
+          <a href={`${base}/work/`} class="ul text-sm font-semibold text-fg-2 transition hover:text-amber">← {ui.back}</a>
+
+          <div data-reveal="title" class="mt-8 flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <h1 class="h-hero">{p.name}</h1>
+              <p class="mt-3 text-xl text-fg-2">{p.tagline}</p>
+              <p class="mt-2 font-mono text-xs font-semibold text-muted">{ui.role}: {p.role} · {p.year}</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                {p.tags.map((tag, i) => (
+                  <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-soft px-3 py-1 text-xs font-bold text-fg">
+                    <span class={`h-1.5 w-1.5 rounded-full ${["bg-amber", "bg-blue", "bg-coral"][i % 3]}`} />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {p.stores.length > 0 && (
+              <div class="max-w-xl">
+                <p class="kicker mb-3 text-amber">{ui.stores}</p>
+                <div class="flex flex-wrap gap-2">
+                  {p.stores.map((st) => (
+                    <a
+                      href={st.href}
+                      target="_blank"
+                      rel="noopener"
+                      data-magnetic
+                      class="btn-amber inline-flex items-center gap-2 rounded-pill bg-fg px-4 py-2.5 text-sm font-bold text-page transition hover:bg-amber hover:text-fg"
+                    >
+                      {st.label} ↗
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <!-- big media -->
+      {webDeck ? (
+        <section data-shots class="sect-sm pt-10">
+          <div data-shots-pin class="wrap">
+            <div class:list={["band relative overflow-hidden px-6 py-12 sm:px-16 sm:py-16", panel]}>
+              <div aria-hidden="true" class="shape h-72 w-72 bg-white/40 -left-16 -top-16" data-parallax="0.16"></div>
+              <div aria-hidden="true" class="shape h-32 w-32 bg-amber/60 -right-6 bottom-6" data-parallax="-0.2"></div>
+
+              <div class="relative z-10">
+                <div data-shots-stage class="shots-stage mx-auto">
+                  {p.preview.images.map((img, i) => (
+                    <div data-shots-frame class="shots-frame">
+                      <div class="shots-row">
+                        {caps[i] && (
+                          <div class="shots-copy">
+                            <span class="shots-index">{String(i + 1).padStart(2, "0")} <span class="text-fg/35">/ {String(shotCount).padStart(2, "0")}</span></span>
+                            <h3 class="shots-title">{caps[i].title}</h3>
+                            <p class="shots-desc">{caps[i].desc}</p>
+                          </div>
+                        )}
+                        <div class="shots-media">
+                          <Mockup
+                            variant={p.preview.variant}
+                            image={img}
+                            placeholder={ui.webPreview}
+                            soon={ui.soon}
+                            url={url}
+                            tilt
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div class="shots-controls mx-auto mt-10 max-w-2xl items-center gap-4">
+                  <div class="h-1 flex-1 overflow-hidden rounded-full bg-fg/10">
+                    <div data-shots-progress class="h-full w-full origin-left bg-amber"></div>
+                  </div>
+                  <div class="flex gap-1.5">
+                    {p.preview.images.map(() => <span data-shots-dot class="shots-dot"></span>)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section class="sect-sm pt-10">
+          <div class="wrap">
+            <div data-reveal="scale" class:list={["band px-6 py-14 sm:px-16 sm:py-20", panel]}>
+              <div aria-hidden="true" class="shape h-72 w-72 bg-white/40 -left-16 -top-16" data-parallax="0.16"></div>
+              <div aria-hidden="true" class="shape h-32 w-32 bg-amber/60 -right-6 bottom-6" data-parallax="-0.2"></div>
+
+              <div class:list={[
+                "relative z-10",
+                isPhone
+                  ? "flex flex-wrap items-center justify-center gap-8 sm:gap-12"
+                  : "mx-auto max-w-4xl",
+              ]}>
+                {p.preview.images.map((img) => (
+                  <div class:list={[isPhone ? "w-44 sm:w-56" : "w-full"]}>
+                    <Mockup
+                      variant={p.preview.variant}
+                      image={img}
+                      placeholder={isPhone ? ui.appPreview : ui.webPreview}
+                      soon={ui.soon}
+                      url={url}
+                      tilt
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- overview + features -->
+      <section class="sect-sm pt-0">
+        <div class="wrap grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+          <h2 data-reveal class="kicker text-amber">{ui.overview}</h2>
+          <p data-reveal class="text-2xl font-semibold leading-snug text-fg">{p.summary}</p>
+        </div>
+
+        <div class="wrap mt-14">
+          <h2 data-reveal class="kicker mb-6 text-amber">{ui.features}</h2>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {
+              p.features.map((f, i) => (
+                <div data-reveal="scale" data-spotlight style={`--d:${i * 60}ms`} class="rounded-card2 border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-fg/15 hover:shadow-[0_24px_50px_-30px_rgba(17,17,20,0.3)]">
+                  <h3 class="text-lg font-bold text-fg">{f.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-fg-2">{f.desc}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- engineering body -->
+      <section class="sect-sm pt-0">
+        <div class="wrap grid gap-12 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+          <!-- meta -->
+          <aside class="flex flex-col gap-8" data-reveal>
+            <div>
+              <h2 class="kicker mb-4 text-amber">{ui.metrics}</h2>
+              <div class="flex flex-wrap gap-x-8 gap-y-4">
+                {p.metrics.map((m) => (
+                  <div>
+                    <div data-count class="display text-3xl text-fg">{m.value}</div>
+                    <div class="font-mono text-[0.62rem] uppercase tracking-wider text-muted">{m.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 class="kicker mb-4 text-amber">{ui.stack}</h2>
+              <div class="flex flex-wrap gap-1.5">
+                {p.stack.map((st) => (
+                  <span class="rounded-pill border border-border bg-soft px-3 py-1.5 font-mono text-[0.7rem] font-medium text-fg-2">{st}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 class="kicker mb-4 text-amber">{ui.architecture}</h2>
+              <ul class="flex flex-col gap-2 border-l-2 border-border pl-4">
+                {p.architecture.map((a) => (
+                  <li class="relative font-mono text-xs leading-relaxed text-fg-2">
+                    <span class="absolute -left-[1.2rem] top-1.5 h-1.5 w-1.5 rounded-full bg-amber"></span>
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+
+          <!-- narrative -->
+          <div class="flex flex-col gap-10">
+            <div data-reveal>
+              <h2 class="kicker mb-3 text-amber">{ui.problem}</h2>
+              <p class="text-2xl font-semibold leading-snug text-fg">{p.problem}</p>
+            </div>
+            <div data-reveal>
+              <h2 class="kicker mb-4 text-amber">{ui.build}</h2>
+              <ul class="flex flex-col gap-3">
+                {p.build.map((b) => (
+                  <li class="flex items-start gap-3 text-lg text-fg-2">
+                    <span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber"></span>
+                    <span class="leading-relaxed">{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <blockquote data-reveal class="rounded-card2 bg-soft p-7">
+              <h2 class="kicker mb-3 text-amber">{ui.learnings}</h2>
+              <p class="text-xl font-semibold italic leading-relaxed text-fg">{p.learnings}</p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- next -->
+      <section class="border-t border-border">
+        <a href={`${base}/work/${next.slug}/`} data-mascot={next.mascot} class="group block">
+          <div class="wrap flex items-center justify-between py-12">
+            <div>
+              <p class="font-mono text-xs font-semibold text-muted">{ui.next}</p>
+              <p class="display mt-1 text-3xl text-fg transition-colors group-hover:text-amber sm:text-4xl">{next.name}</p>
+            </div>
+            <span class="arrow-nudge text-3xl text-fg-2 transition-colors group-hover:text-amber">→</span>
+          </div>
+        </a>
+      </section>
+    </article>
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  /* Pinned browser-shot deck with synced side-text.
+     Fallback (no JS / reduced-motion / mobile): a stacked feature list — every
+     shot + its copy visible. Enhanced by scroll.ts on ≥768px: frames stack and
+     cross-fade (copy + shot together) as the stage is pinned. */
+  .shots-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .shots-row {
+    display: grid;
+    gap: 1.75rem;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .shots-row {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 3rem;
+    }
+  }
+
+  .shots-index {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-amber);
+  }
+  .shots-title {
+    margin-top: 0.6rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-fg);
+  }
+  .shots-desc {
+    margin-top: 0.85rem;
+    max-width: 34ch;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--color-fg-2);
+  }
+
+  .shots-controls {
+    display: none;
+  }
+  .shots-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-fg) 20%, transparent);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  /* enhanced: overlay frames + cross-fade */
+  [data-shots].is-shots-enhanced .shots-stage {
+    display: block;
+    position: relative;
+    max-width: 64rem;
+  }
+  [data-shots].is-shots-enhanced .shots-frame {
+    position: absolute;
+    inset: 0;
+  }
+  [data-shots].is-shots-enhanced .shots-frame:first-child {
+    position: relative;
+  }
+  [data-shots].is-shots-enhanced .shots-row {
+    height: 100%;
+  }
+  [data-shots].is-shots-enhanced .shots-controls {
+    display: flex;
+  }
+  [data-shots].is-shots-enhanced .shots-dot.is-on {
+    background: var(--color-amber);
+    transform: scale(1.15);
+  }
+</style>

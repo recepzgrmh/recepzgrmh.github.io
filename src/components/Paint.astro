@@ -1,0 +1,227 @@
+---
+interface Step {
+  k: string;
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  sub: string;
+  steps: Step[];
+  nextKicker: string;
+  nextTitle: string;
+}
+
+const { kicker, title, sub, steps, nextKicker, nextTitle } = Astro.props;
+---
+
+<section data-paint class="paint-zone" aria-label={kicker}>
+  <div class="paint-stick">
+    <!-- The color field starts as this circle, covers the viewport, then recedes. -->
+    <div class="paint-blob bg-signal" aria-hidden="true">
+      <span data-paint-arrow class="paint-arrow">↓</span>
+    </div>
+
+    <!-- Main message shown only while the viewport is fully painted. -->
+    <div class="paint-content text-white">
+      <div class="paint-inner">
+        <header class="mx-auto max-w-4xl text-center">
+          <p data-paint-copy class="kicker mb-4 text-white/65">{kicker}</p>
+          <h2 data-paint-copy class="h-sec text-white">{title}</h2>
+          <p data-paint-copy class="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-white/78">{sub}</p>
+        </header>
+
+        <div class="paint-steps">
+          {
+            steps.map((step) => (
+              <article data-paint-step class="paint-step">
+                <span class="font-mono text-[0.68rem] font-bold tracking-widest text-white/55">{step.k}</span>
+                <h3 class="display mt-3 text-xl text-white">{step.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-white/68">{step.desc}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Revealed behind the shrinking circle: introduction to the next section. -->
+    <div class="paint-exit">
+      <div class="max-w-4xl px-6 text-center">
+        <p data-paint-exit-part class="kicker mb-4 text-amber">{nextKicker}</p>
+        <h2 data-paint-exit-part id="home-skills-heading" class="h-sec text-fg">{nextTitle}</h2>
+        <span data-paint-exit-part class="mt-7 inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface font-mono text-sm text-fg-2">↓</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paint-zone {
+    position: relative;
+    z-index: 55;
+  }
+
+  .paint-stick {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    background: var(--color-page);
+  }
+
+  .paint-blob {
+    position: absolute;
+    z-index: 10;
+    top: 44%;
+    left: 50%;
+    display: grid;
+    width: clamp(132px, 14vw, 205px);
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 9999px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 28px 65px -35px rgba(17, 17, 20, 0.4);
+    will-change: top, transform;
+  }
+
+  .paint-arrow {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 999px;
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    will-change: opacity, transform;
+  }
+
+  .paint-content,
+  .paint-exit {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .paint-content {
+    z-index: 20;
+    align-items: flex-start;
+    padding-top: clamp(2.5rem, 6vh, 4.5rem);
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  .paint-content .kicker {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .paint-inner {
+    width: min(100%, 1280px);
+    padding: 0 clamp(2rem, 6vw, 5rem) clamp(2rem, 6vw, 5rem);
+  }
+
+  .paint-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 1120px;
+    margin: clamp(2.4rem, 6vh, 4.5rem) auto 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .paint-step {
+    min-height: 9rem;
+    padding: 1.5rem 1.3rem 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .paint-step:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .paint-exit {
+    z-index: 1;
+    padding-top: 2vh;
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  @media (max-width: 767px) {
+    .paint-blob {
+      top: 36%;
+    }
+
+    .paint-inner {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .paint-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 2rem;
+      border-top: 0;
+    }
+
+    .paint-step {
+      min-height: 7.2rem;
+      padding: 1rem 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .paint-step:nth-child(odd) {
+      border-left: 0;
+    }
+
+    .paint-step:last-child {
+      border-right: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .paint-zone {
+      z-index: 0;
+    }
+
+    .paint-stick {
+      height: auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .paint-blob {
+      display: none;
+    }
+
+    .paint-content,
+    .paint-exit {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .paint-content {
+      min-height: 72svh;
+      background: var(--color-signal);
+    }
+
+    .paint-exit {
+      min-height: 46svh;
+      padding-top: 0;
+    }
+
+    .paint-step,
+    [data-paint-copy],
+    [data-paint-exit-part] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>

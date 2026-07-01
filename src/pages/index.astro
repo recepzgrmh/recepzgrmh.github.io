@@ -1,0 +1,72 @@
+---
+// Root → language gateway. Static-friendly client redirect with language sniff.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recep Özgür Mıh</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex" />
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/" />
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/" />
+    <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/en/" />
+    <script is:inline>
+      (function () {
+        var lang = (navigator.language || "en").toLowerCase().startsWith("tr")
+          ? "tr"
+          : "en";
+        window.location.replace("/" + lang + "/");
+      })();
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/en/" />
+    </noscript>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #fafaf7;
+        color: #667085;
+        font-family: ui-monospace, monospace;
+      }
+      .c {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        gap: 1rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+      }
+      .d {
+        width: 8px;
+        height: 8px;
+        border-radius: 99px;
+        background: #f59e0b;
+        animation: p 1s ease-in-out infinite;
+      }
+      @keyframes p {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="c">
+      <span class="d"></span>
+      <span>Redirecting · Yönlendiriliyor…</span>
+      <noscript>
+        <a href="/en/" style="color:#f59e0b">English</a> ·
+        <a href="/tr/" style="color:#f59e0b">Türkçe</a>
+      </noscript>
+    </div>
+  </body>
+</html>

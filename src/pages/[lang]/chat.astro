@@ -1,0 +1,31 @@
+---
+import type { Lang } from "../../i18n/content";
+import { CONTENT, LANGS } from "../../i18n/content";
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import MascotChat from "../../components/mascot/MascotChat.tsx";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Lang };
+const t = CONTENT[lang];
+const c = t.chat;
+const title = `${c.title} — Recep Özgür Mıh`;
+---
+
+<Base lang={lang} page="chat" title={title} description={c.lead}>
+  <Nav lang={lang} active="chat" />
+  <main class="wrap flex h-[calc(100dvh-76px)] flex-col py-5 sm:py-7">
+    <header data-reveal class="mb-4 shrink-0 text-center sm:mb-6">
+      <p class="kicker mb-2 text-amber">{c.kicker}</p>
+      <h1 class="display text-3xl leading-tight sm:text-4xl">{c.title}</h1>
+    </header>
+
+    <div data-reveal="scale" style="--d:80ms" class="flex min-h-0 flex-1">
+      <MascotChat client:only="react" variant="page" lang={lang} />
+    </div>
+  </main>
+  <Footer lang={lang} />
+</Base>

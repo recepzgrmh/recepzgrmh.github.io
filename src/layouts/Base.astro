@@ -1,0 +1,52 @@
+---
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import MascotIsland from "../components/mascot/MascotIsland.tsx";
+import type { Lang } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+  page: string; // data-page key (home | work | about | contact | project:<slug>)
+  title?: string;
+  description?: string;
+}
+const { lang, page, title, description } = Astro.props;
+const t = CONTENT[lang];
+const pageTitle = title ?? t.meta.title;
+const pageDesc = description ?? t.meta.description;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <meta name="author" content="Recep Özgür Mıh" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:locale" content={lang === "tr" ? "tr_TR" : "en_US"} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/" />
+    <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/" />
+    <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/en/" />
+
+    <ClientRouter />
+  </head>
+  <body data-page={page}>
+    <slot />
+    <MascotIsland lang={lang} client:only="react" transition:persist="mascot" />
+    <script>
+      import "../scripts/ui.ts";
+      import "../scripts/scroll.ts";
+    </script>
+  </body>
+</html>

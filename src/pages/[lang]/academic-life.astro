@@ -1,0 +1,664 @@
+---
+import type { Lang, StatTone } from "../../i18n/content";
+import { LANGS } from "../../i18n/content";
+import { ACADEMIC } from "../../i18n/academic";
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const a = ACADEMIC[lang];
+const base = `/${lang}`;
+
+const tone: Record<StatTone, string> = {
+  amber: "bg-amber text-fg",
+  coral: "bg-coral text-white",
+  blue: "bg-blue text-white",
+  lime: "bg-lime text-fg",
+  purple: "bg-purple text-fg",
+  white: "bg-surface text-fg border border-border",
+  soft: "bg-soft text-fg",
+};
+
+const criterionTone = ["bg-coral/15 text-coral", "bg-blue/15 text-blue", "bg-lime text-fg", "bg-purple text-fg"];
+const storyShapes = [
+  { color: "#e9d5ff", x: "58", y: "8", scale: "1" },
+  { color: "#e7ff3c", x: "68", y: "48", scale: "0.78" },
+  { color: "#ff9f1c", x: "52", y: "18", scale: "1.18" },
+  { color: "#ff3b4a", x: "72", y: "10", scale: "0.92" },
+  { color: "#5551ff", x: "60", y: "45", scale: "1.22" },
+  { color: "#e9d5ff", x: "75", y: "24", scale: "0.72" },
+];
+---
+
+<Base lang={lang} page="academic-life" title={a.metaTitle} description={a.metaDescription}>
+  <Nav lang={lang} active="academic" />
+
+  <main>
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+      <div aria-hidden="true" class="shape -right-28 -top-20 h-[25rem] w-[25rem] bg-purple/55" data-parallax="0.16"></div>
+      <div aria-hidden="true" class="shape left-[48%] top-24 h-28 w-28 bg-lime/80" data-parallax="-0.14"></div>
+
+      <div class="wrap relative z-10 pt-20 pb-8 sm:pt-28 sm:pb-14">
+        <header class="max-w-5xl">
+          <p data-reveal class="kicker mb-4 text-amber">{a.kicker}</p>
+          <h1 data-reveal="title" style="--d:70ms" class="h-hero max-w-4xl">{a.title}</h1>
+          <p data-reveal style="--d:150ms" class="mt-7 max-w-3xl text-xl leading-relaxed text-fg-2">{a.lead}</p>
+        </header>
+
+        <div class="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {
+            a.facts.map((fact, i) => (
+              <div
+                data-reveal="scale"
+                style={`--d:${220 + i * 65}ms`}
+                class:list={["min-h-36 rounded-card2 p-5 sm:min-h-44 sm:p-6", tone[fact.tone]]}
+              >
+                <span class="font-mono text-[0.65rem] font-bold uppercase tracking-widest opacity-60">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div class="mt-8">
+                  <div class="display text-2xl leading-none sm:text-3xl">{fact.value}</div>
+                  <p class="mt-2 text-sm font-semibold opacity-75">{fact.label}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- PINNED SCROLLYTELLING TIMELINE
+         Without JS / with reduced motion, the same frames remain a normal stack. -->
+    <section data-academic-story class="academic-story">
+      <div class="wrap sect-sm">
+        <header data-reveal class="max-w-3xl">
+          <p class="kicker mb-3 text-amber">{a.story.kicker}</p>
+          <h2 class="h-sec">{a.story.title}</h2>
+          <p class="mt-4 max-w-2xl text-lg leading-relaxed text-fg-2">{a.story.note}</p>
+        </header>
+      </div>
+
+      <div data-story-pin class="story-pin">
+        <div
+          data-story-shape
+          aria-hidden="true"
+          class="story-shape"
+          style={`--shape-color:${storyShapes[0].color};--shape-x:${storyShapes[0].x}%;--shape-y:${storyShapes[0].y}%`}
+        ></div>
+
+        <div class="story-stage wrap">
+          <div data-story-frames class="story-frames">
+            {
+              a.story.items.map((item, i) => (
+                <article
+                  data-story-frame
+                  data-story-mascot={item.mascot}
+                  data-story-pose={item.pose}
+                  data-story-color={storyShapes[i].color}
+                  data-story-x={storyShapes[i].x}
+                  data-story-y={storyShapes[i].y}
+                  data-story-scale={storyShapes[i].scale}
+                  class="story-frame"
+                >
+                  <div
+                    data-story-year
+                    class:list={["story-year", item.year.includes("–") && "is-range"]}
+                    aria-hidden="true"
+                  >
+                    {
+                      item.year.includes("–")
+                        ? item.year.split("–").map((part, partIndex) => (
+                            <span>{partIndex === 1 ? "—" : ""}{part}</span>
+                          ))
+                        : item.year
+                    }
+                  </div>
+
+                  <div class="story-card">
+                    <div data-story-part class="flex items-center justify-between gap-5">
+                      <span class="font-mono text-xs font-bold tracking-widest text-amber">
+                        {String(i + 1).padStart(2, "0")} / {String(a.story.items.length).padStart(2, "0")}
+                      </span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-amber"></span>
+                    </div>
+                    <h3 data-story-part class="display mt-9 text-3xl leading-tight text-fg sm:text-5xl">{item.title}</h3>
+                    <p data-story-part class="mt-5 max-w-2xl text-lg leading-relaxed text-fg-2 sm:text-xl">{item.copy}</p>
+                    <div data-story-part class="mt-8 flex flex-wrap gap-2">
+                      {item.chips.map((chip) => (
+                        <span class="rounded-pill border border-border bg-soft px-3.5 py-2 font-mono text-[0.7rem] font-bold text-fg-2">
+                          {chip}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+
+          <div class="story-progress" aria-hidden="true">
+            <div class="story-progress-track">
+              <div data-story-progress class="story-progress-fill"></div>
+            </div>
+            <div class="story-dots">
+              {a.story.items.map((item, i) => (
+                <span data-story-dot class:list={["story-dot", i === 0 && "is-active"]}>
+                  <i></i>
+                  <b>{item.year}</b>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="story-scroll-cue" aria-hidden="true">
+          <span>{lang === "tr" ? "kaydır" : "scroll"}</span>
+          <i></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACADEMIC THEMES -->
+    <section class="sect-sm">
+      <div class="full bg-night py-20 text-white sm:py-28">
+        <div class="wrap">
+          <header data-reveal class="mb-12 max-w-3xl">
+            <p class="kicker mb-3 text-amber">{a.themes.kicker}</p>
+            <h2 class="h-sec text-white">{a.themes.title}</h2>
+            <p class="mt-4 max-w-2xl text-lg leading-relaxed text-white/60">{a.themes.note}</p>
+          </header>
+
+          <div class="grid gap-5 lg:grid-cols-3">
+            {
+              a.themes.items.map((theme, i) => (
+                <article
+                  data-reveal="scale"
+                  style={`--d:${i * 70}ms`}
+                  class="group rounded-card2 border border-white/10 bg-white/[0.055] p-7 transition-colors duration-300 hover:border-amber/40 hover:bg-white/[0.08]"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs font-bold text-amber">{theme.no}</span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-white/20 transition-colors group-hover:bg-amber"></span>
+                  </div>
+                  <h3 class="display mt-8 text-2xl text-white">{theme.title}</h3>
+                  <p class="mt-3 leading-relaxed text-white/60">{theme.copy}</p>
+                  <ul class="mt-6 flex flex-col gap-3 border-t border-white/10 pt-5">
+                    {theme.courses.map((course) => (
+                      <li class="flex items-center gap-3 text-sm font-semibold text-white/80">
+                        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-amber"></span>
+                        {course}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DORMIFY -->
+    <section class="sect-sm" data-mascot="academic">
+      <div class="wrap">
+        <div class="relative overflow-hidden rounded-show bg-[#21091f] px-6 py-12 text-white sm:px-10 sm:py-16 lg:px-16">
+          <div aria-hidden="true" class="shape -right-28 -top-32 h-96 w-96 bg-[#5b1555]" data-parallax="0.15"></div>
+          <div aria-hidden="true" class="shape -bottom-28 left-[38%] h-60 w-60 bg-blue/35" data-parallax="-0.18"></div>
+
+          <div class="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+            <div>
+              <p data-reveal class="kicker mb-4 text-[#ff4cc6]">{a.dormify.kicker}</p>
+              <h2 data-reveal="title" style="--d:70ms" class="h-sec text-white">{a.dormify.title}</h2>
+              <p data-reveal style="--d:120ms" class="mt-3 text-xl font-bold text-white/85">{a.dormify.subtitle}</p>
+              <p data-reveal style="--d:170ms" class="mt-6 max-w-2xl text-lg leading-relaxed text-white/65">{a.dormify.summary}</p>
+              <p data-reveal style="--d:210ms" class="mt-5 font-mono text-xs leading-relaxed text-white/45">{a.dormify.role}</p>
+
+              <div class="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {
+                  a.dormify.metrics.map((metric, i) => (
+                    <div data-reveal="scale" style={`--d:${260 + i * 55}ms`} class="rounded-card border border-white/10 bg-white/[0.07] p-4">
+                      <div data-count class="display text-2xl text-white">{metric.value}</div>
+                      <p class="mt-1 text-xs font-semibold text-white/50">{metric.label}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+
+            <!-- Code-native visual based on the Dormify preference flow -->
+            <div data-reveal="scale" style="--d:160ms" class="relative mx-auto w-full max-w-[390px]">
+              <div aria-hidden="true" class="absolute -inset-6 rounded-full bg-blue/20 blur-3xl"></div>
+              <div data-tilt class="relative rounded-[3rem] border-[9px] border-[#111114] bg-[#dcedff] p-5 text-fg shadow-[0_50px_90px_-35px_rgba(0,0,0,0.7)]">
+                <div class="absolute top-0 left-1/2 h-6 w-28 -translate-x-1/2 rounded-b-2xl bg-[#111114]"></div>
+                <div class="pt-8 text-center">
+                  <p class="display text-2xl text-[#2078d4]">Dormify</p>
+                  <h3 class="mt-5 text-lg font-extrabold">{a.dormify.visual.title}</h3>
+                  <span class="mt-3 inline-flex rounded-pill bg-white px-4 py-2 font-mono text-[0.65rem] font-bold text-[#2078d4] shadow-sm">
+                    ★ {a.dormify.visual.credit}
+                  </span>
+                </div>
+
+                <div class="mt-5 flex flex-col gap-3">
+                  {
+                    a.dormify.visual.criteria.map((criterion, i) => (
+                      <div class="rounded-card bg-white p-3.5 shadow-[0_9px_24px_-18px_rgba(17,17,20,0.45)]">
+                        <div class="flex items-center gap-3">
+                          <span class:list={["grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-black", criterionTone[i]]}>
+                            {i + 1}
+                          </span>
+                          <span class="flex-1 text-sm font-extrabold">{criterion}</span>
+                          <span class="grid h-7 w-7 place-items-center rounded-full bg-[#2078d4] text-sm font-bold text-white">+</span>
+                        </div>
+                        <div class="mt-3 ml-12 h-1.5 overflow-hidden rounded-full bg-soft">
+                          <div class:list={["h-full rounded-full", i === 0 ? "w-4/5 bg-coral" : i === 1 ? "w-1/2 bg-blue" : i === 2 ? "w-3/5 bg-amber" : "w-2/3 bg-[#2078d4]"]}></div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+
+                <div class="mt-5 rounded-pill bg-[#2078d4] px-5 py-3.5 text-center text-sm font-extrabold text-white shadow-[0_12px_25px_-12px_rgba(32,120,212,0.75)]">
+                  {a.dormify.visual.result} →
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            a.dormify.steps.map((step, i) => (
+              <article
+                data-reveal="scale"
+                data-spotlight
+                style={`--d:${i * 60}ms`}
+                class="rounded-card2 border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_50px_-34px_rgba(17,17,20,0.35)]"
+              >
+                <span class="font-mono text-xs font-bold text-amber">{step.no}</span>
+                <h3 class="display mt-5 text-xl">{step.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-fg-2">{step.copy}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-6 flex flex-wrap gap-2">
+          {a.dormify.stack.map((item) => (
+            <span class="rounded-pill border border-border bg-soft px-3.5 py-2 font-mono text-[0.7rem] font-semibold text-fg-2">{item}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="sect-sm">
+      <div class="wrap">
+        <div data-reveal="scale" class="band relative overflow-hidden bg-lime px-7 py-14 text-fg sm:px-12 sm:py-20">
+          <div aria-hidden="true" class="shape -right-14 -top-16 h-56 w-56 bg-white/45" data-parallax="0.16"></div>
+          <div aria-hidden="true" class="shape right-1/3 -bottom-10 h-28 w-28 bg-amber" data-parallax="-0.2"></div>
+          <div class="relative z-10 grid gap-8 md:grid-cols-[0.38fr_1fr] md:gap-14">
+            <div>
+              <p class="kicker text-fg/55">{a.community.kicker}</p>
+              <p class="mt-4 font-mono text-xs font-bold text-fg/45">2023 — 2024</p>
+            </div>
+            <div class="max-w-3xl">
+              <h2 class="display text-3xl sm:text-5xl">{a.community.title}</h2>
+              <p class="mt-4 text-base font-extrabold sm:text-lg">{a.community.role}</p>
+              <p class="mt-5 text-lg leading-relaxed text-fg/70">{a.community.copy}</p>
+              <div class="mt-7 flex flex-wrap gap-2">
+                {a.community.tags.map((tag) => (
+                  <span class="rounded-pill border border-fg/15 bg-white/45 px-3.5 py-1.5 font-mono text-[0.68rem] font-bold">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="sect-sm">
+      <div class="wrap">
+        <div class="contact-cta band bg-blue px-8 py-20 text-center text-white sm:px-16 sm:py-28">
+          <div aria-hidden="true" class="shape -left-12 -bottom-16 h-60 w-60 bg-purple/60" data-parallax="0.2"></div>
+          <div aria-hidden="true" class="shape -right-8 top-8 h-32 w-32 bg-amber" data-parallax="-0.18"></div>
+          <p data-reveal class="kicker relative z-10 mb-4 text-white/60">{a.closing.kicker}</p>
+          <h2 data-reveal="title" style="--d:70ms" class="h-sec relative z-10 mx-auto max-w-3xl text-white">{a.closing.title}</h2>
+          <p data-reveal style="--d:130ms" class="relative z-10 mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/70">{a.closing.copy}</p>
+          <div data-reveal style="--d:190ms" class="relative z-10 mt-9 flex flex-wrap justify-center gap-3">
+            <a href={`${base}/work/`} data-magnetic class="inline-flex items-center gap-2 rounded-pill bg-white px-6 py-3.5 text-sm font-bold text-fg transition hover:bg-amber">
+              {a.closing.work} <span class="arrow-nudge">→</span>
+            </a>
+            <a href={`${base}/contact/`} data-magnetic class="inline-flex items-center gap-2 rounded-pill border border-white/30 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10">
+              {a.closing.contact}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .story-pin {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(2rem, 6vw, 5rem);
+  }
+
+  .story-shape {
+    position: absolute;
+    top: var(--shape-y);
+    left: var(--shape-x);
+    width: min(48rem, 62vw);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--shape-color);
+    opacity: 0.48;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    will-change: transform, background-color, left, top;
+  }
+
+  .story-stage {
+    position: relative;
+    z-index: 1;
+  }
+
+  .story-frames {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .story-frame {
+    display: grid;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .story-year {
+    font-family: var(--font-sans);
+    font-size: clamp(4.8rem, 13vw, 10.5rem);
+    font-weight: 850;
+    line-height: 0.82;
+    letter-spacing: -0.075em;
+    color: var(--color-fg);
+  }
+
+  .story-year.is-range {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(5.5rem, 10.5vw, 8.75rem);
+    line-height: 0.72;
+  }
+
+  .story-card {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: clamp(2rem, 4vw, 3rem);
+    background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    box-shadow: 0 42px 80px -52px rgba(17, 17, 20, 0.42);
+  }
+
+  .story-progress,
+  .story-scroll-cue {
+    display: none;
+  }
+
+  /* The class is added only when ScrollTrigger is active. This keeps the
+     unenhanced and reduced-motion version as a readable, normal stack. */
+  .academic-story.is-enhanced .story-pin {
+    height: 100svh;
+    min-height: 680px;
+    padding: 0;
+    background: var(--color-page);
+  }
+
+  .academic-story.is-enhanced .story-stage {
+    height: 100%;
+  }
+
+  .academic-story.is-enhanced .story-frames {
+    position: absolute;
+    inset: clamp(6rem, 13vh, 8.5rem) 1.5rem clamp(7rem, 15vh, 9rem);
+    display: block;
+  }
+
+  .academic-story.is-enhanced .story-frame {
+    position: absolute;
+    inset: 0;
+    grid-template-columns: minmax(16rem, 0.68fr) minmax(26rem, 1fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+  }
+
+  .academic-story.is-enhanced .story-year {
+    font-size: clamp(7.5rem, 13.5vw, 11.25rem);
+    white-space: nowrap;
+    will-change: transform, opacity;
+  }
+
+  .academic-story.is-enhanced .story-year.is-range {
+    font-size: clamp(6rem, 10.5vw, 8.75rem);
+  }
+
+  .academic-story.is-enhanced .story-card {
+    max-width: 48rem;
+    justify-self: end;
+    will-change: transform, opacity, clip-path;
+  }
+
+  .academic-story.is-enhanced [data-story-part] {
+    will-change: transform, opacity;
+  }
+
+  .academic-story.is-enhanced .story-progress {
+    position: absolute;
+    right: 1.5rem;
+    bottom: clamp(2rem, 5vh, 3.5rem);
+    left: 1.5rem;
+    display: block;
+  }
+
+  .story-progress-track {
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-border);
+  }
+
+  .story-progress-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      var(--color-amber),
+      var(--color-coral) 52%,
+      var(--color-blue)
+    );
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+  }
+
+  .story-dots {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.9rem;
+  }
+
+  .story-dot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    align-items: center;
+    color: var(--color-muted);
+  }
+
+  .story-dot i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border: 2px solid var(--color-page);
+    border-radius: 999px;
+    background: var(--color-border);
+    box-shadow: 0 0 0 1px var(--color-border);
+    transition:
+      transform 0.35s var(--ease),
+      background-color 0.35s var(--ease),
+      box-shadow 0.35s var(--ease);
+  }
+
+  .story-dot b {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .story-dot.is-active i {
+    background: var(--color-amber);
+    box-shadow: 0 0 0 1px var(--color-amber);
+    transform: scale(1.45);
+  }
+
+  .academic-story.is-enhanced .story-scroll-cue {
+    position: absolute;
+    bottom: clamp(5rem, 10vh, 6.5rem);
+    left: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transform: rotate(-90deg);
+    transform-origin: left center;
+  }
+
+  .story-scroll-cue i {
+    display: block;
+    width: 2.5rem;
+    height: 1px;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+
+  .story-scroll-cue i::after {
+    display: block;
+    width: 50%;
+    height: 100%;
+    background: var(--color-amber);
+    content: "";
+    animation: story-cue 1.8s ease-in-out infinite;
+  }
+
+  @keyframes story-cue {
+    0%,
+    100% {
+      transform: translateX(-110%);
+    }
+    55% {
+      transform: translateX(210%);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .story-frame {
+      gap: 1rem;
+    }
+
+    .story-year {
+      font-size: clamp(4.5rem, 22vw, 6.25rem);
+    }
+
+    .academic-story.is-enhanced .story-pin {
+      min-height: 650px;
+    }
+
+    .academic-story.is-enhanced .story-frames {
+      inset: 5.6rem 1.5rem 7.25rem;
+    }
+
+    .academic-story.is-enhanced .story-frame {
+      align-content: center;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+    }
+
+    .academic-story.is-enhanced .story-year {
+      font-size: clamp(4.75rem, 22vw, 6.5rem);
+    }
+
+    .academic-story.is-enhanced .story-year.is-range {
+      font-size: clamp(4rem, 18vw, 5rem);
+    }
+
+    .academic-story.is-enhanced .story-card {
+      align-self: start;
+      padding: 1.5rem;
+      border-radius: 2rem;
+    }
+
+    .academic-story.is-enhanced .story-card h3 {
+      margin-top: 1.25rem;
+      font-size: clamp(1.75rem, 8vw, 2.4rem);
+    }
+
+    .academic-story.is-enhanced .story-card p {
+      margin-top: 0.85rem;
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .academic-story.is-enhanced .story-card [data-story-part]:last-child {
+      margin-top: 1.1rem;
+    }
+
+    .academic-story.is-enhanced .story-progress {
+      right: 1.5rem;
+      bottom: 2rem;
+      left: 1.5rem;
+    }
+
+    .story-dot b {
+      display: none;
+    }
+
+    .academic-story.is-enhanced .story-scroll-cue {
+      display: none;
+    }
+
+    .story-shape {
+      width: 30rem;
+      opacity: 0.38;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .story-shape,
+    .story-scroll-cue {
+      display: none !important;
+    }
+
+    .story-frame {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+    }
+  }
+</style>

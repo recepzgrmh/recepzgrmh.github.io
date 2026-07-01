@@ -1,0 +1,49 @@
+---
+import type { Lang, StatTone } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const groups = CONTENT[lang].capabilities;
+
+const chip: Record<StatTone, string> = {
+  amber: "bg-amber text-fg",
+  coral: "bg-coral text-white",
+  blue: "bg-blue text-white",
+  lime: "bg-lime text-fg",
+  purple: "bg-purple text-fg",
+  white: "bg-fg text-page",
+  soft: "bg-soft text-fg",
+};
+---
+
+<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  {
+    groups.map((g, i) => (
+      <div
+        data-reveal="scale"
+        data-spotlight
+        style={`--d:${i * 80}ms`}
+        class="caps-card group rounded-card2 border border-border bg-surface p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-fg/15 hover:shadow-[0_24px_50px_-26px_rgba(17,17,20,0.3)]"
+      >
+        <div class="mb-6 flex items-center justify-between">
+          <span class={`grid h-10 w-10 place-items-center rounded-full font-mono text-sm font-bold ${chip[g.tone]}`}>
+            {g.k}
+          </span>
+          <span class="h-2.5 w-2.5 rounded-full bg-border transition-colors group-hover:bg-amber" />
+        </div>
+        <h3 class="display text-xl text-fg">{g.title}</h3>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {g.items.map((it) => (
+            <li class="flex items-start gap-2.5 text-sm text-fg-2">
+              <span class="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-amber" />
+              {it}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>

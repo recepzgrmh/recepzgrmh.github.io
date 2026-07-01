@@ -1,0 +1,26 @@
+---
+import type { Lang } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const items = CONTENT[lang].marquee;
+const loop = [...items, ...items]; // seamless
+---
+
+<div class="full border-y border-border bg-soft">
+  <div class="marquee">
+    <div class="marquee-track">
+      {
+        loop.map((it, i) => (
+          <span class="inline-flex items-center gap-2.5">
+            <span class="text-lg font-extrabold tracking-tight text-fg">{it}</span>
+            <span class={`h-1.5 w-1.5 rounded-full ${["bg-amber", "bg-coral", "bg-blue", "bg-lime"][i % 4]}`} />
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</div>

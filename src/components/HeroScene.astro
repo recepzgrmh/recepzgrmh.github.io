@@ -1,0 +1,135 @@
+---
+import type { Lang } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+import Mockup from "./Mockup.astro";
+import HeroMascot from "./mascot/HeroMascot.tsx";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = CONTENT[lang].projectUI;
+const all = CONTENT[lang].projects;
+
+// The hero cycles through every project — lead with Revna (real screenshots
+// today); the rest swap in automatically as their shots land in assets/work.
+const order = ["revna", "sano-ai", "chat-sanoapp-ai"];
+const slides = order
+  .map((slug) => all.find((p) => p.slug === slug))
+  .filter((p): p is (typeof all)[number] => Boolean(p));
+
+// fixed phone-fan positions, reused by every phone slide
+const fan = [
+  { cls: "left-[6%] top-16 w-[140px] -rotate-[10deg] sm:w-[160px]", par: "0.06", delay: "-1.4s" },
+  { cls: "left-1/2 top-4 z-20 w-[152px] -translate-x-1/2 sm:w-[172px]", par: "-0.04", delay: "-3.2s" },
+  { cls: "right-[6%] top-20 w-[140px] rotate-[10deg] sm:w-[160px]", par: "0.08", delay: "-4.5s" },
+];
+---
+
+<div class="relative h-[400px] select-none sm:h-[480px]" data-hero-rotator>
+  <!-- soft backdrop (constant across slides) -->
+  <div class="absolute inset-0 grid place-items-center">
+    <div class="h-[300px] w-[300px] rounded-full bg-amber/15 sm:h-[360px] sm:w-[360px]"></div>
+  </div>
+
+  {
+    slides.map((p, si) => (
+      <div
+        data-slide
+        aria-hidden={si === 0 ? undefined : "true"}
+        class:list={[
+          "hero-slide absolute inset-0 transition-opacity duration-700",
+          si === 0 ? "opacity-100" : "pointer-events-none opacity-0",
+        ]}
+      >
+        {/* which project is showing */}
+        <span class="chip left-0 top-0">
+          <span class="chip-dot bg-amber" />
+          {p.name}
+        </span>
+
+        {p.preview.variant === "phone" ? (
+          [0, 1, 2].map((i) => {
+            const img = p.preview.images[i % p.preview.images.length];
+            return (
+              <div class:list={["absolute", fan[i].cls]} data-parallax={fan[i].par}>
+                <div class="hero-device" style={`--float-delay:${fan[i].delay}`}>
+                  <Mockup variant="phone" image={img} placeholder={ui.appPreview} soon={ui.soon} />
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div class="absolute inset-0 grid place-items-center px-4">
+            <div class="hero-device w-[80%] max-w-[420px]" style="--float-delay:-2.2s" data-parallax="-0.03">
+              <Mockup
+                variant="browser"
+                image={p.preview.images[0]}
+                placeholder={ui.webPreview}
+                soon={ui.soon}
+                url="chat.sanoapp.ai"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* floating metric chips for this project */}
+        <span class="chip float-chip right-0 top-10" style="--float-delay:-1s">
+          <span class="chip-dot bg-amber" />
+          {p.metrics[0].value} {p.metrics[0].label}
+        </span>
+        {p.metrics[1] && (
+          <span class="chip float-chip bottom-14 right-6" style="--float-delay:-3.8s">
+            <span class="chip-dot bg-coral" />
+            {p.metrics[1].value} {p.metrics[1].label}
+          </span>
+        )}
+      </div>
+    ))
+  }
+
+  <!-- integrated mascot — constant, standing to the left, outside the phones -->
+  <div class="absolute -bottom-6 left-[-78px] z-30">
+    <HeroMascot lang={lang} client:only="react" />
+  </div>
+</div>
+
+<script>
+  // Cross-fade through the project slides every 5s. Pauses when the tab is
+  // hidden, and stays put for visitors who prefer reduced motion.
+  const root = document.querySelector<HTMLElement>("[data-hero-rotator]");
+  const slides = root ? Array.from(root.querySelectorAll<HTMLElement>("[data-slide]")) : [];
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (slides.length > 1 && !reduce) {
+    let i = 0;
+    let timer = 0;
+
+    const show = (n: number) => {
+      slides.forEach((s, k) => {
+        const on = k === n;
+        s.classList.toggle("opacity-100", on);
+        s.classList.toggle("opacity-0", !on);
+        s.classList.toggle("pointer-events-none", !on);
+        s.toggleAttribute("aria-hidden", !on);
+      });
+    };
+
+    const tick = () => {
+      i = (i + 1) % slides.length;
+      show(i);
+    };
+
+    const start = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(tick, 5000);
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) window.clearInterval(timer);
+      else start();
+    });
+
+    start();
+  }
+</script>

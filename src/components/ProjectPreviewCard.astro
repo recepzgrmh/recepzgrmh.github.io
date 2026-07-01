@@ -1,0 +1,124 @@
+---
+import type { Lang, Project } from "../i18n/content";
+import { CONTENT } from "../i18n/content";
+import Mockup from "./Mockup.astro";
+
+interface Props {
+  lang: Lang;
+  project: Project;
+  index: number;
+}
+const { lang, project: p, index } = Astro.props;
+const ui = CONTENT[lang].projectUI;
+const href = `/${lang}/work/${p.slug}/`;
+const flip = index % 2 === 1;
+
+const panels = ["bg-amber/[0.13]", "bg-purple/45", "bg-blue/[0.1]"];
+const panel = panels[index % panels.length];
+const tagDot = ["bg-amber", "bg-blue", "bg-coral"];
+const url = p.slug === "chat-sanoapp-ai" ? "chat.sanoapp.ai" : "recepozgur.com";
+
+const phones = p.preview.variant === "phone";
+const imgs = p.preview.images;
+const n = imgs.length;
+
+// fan positions for 1 / 2 / 3 phones
+const fan: Record<number, string[]> = {
+  1: ["left-1/2 top-3 w-[48%] -translate-x-1/2"],
+  2: [
+    "left-[12%] top-10 w-[44%] -rotate-6 z-0 transition-transform duration-500 group-hover:-translate-x-3 group-hover:-rotate-9",
+    "right-[12%] top-0 w-[46%] rotate-3 z-10 transition-transform duration-500 group-hover:translate-x-3 group-hover:-translate-y-2",
+  ],
+  3: [
+    "left-[2%] top-12 w-[37%] -rotate-8 z-0 transition-transform duration-500 group-hover:-translate-x-4 group-hover:-rotate-12",
+    "left-1/2 top-0 w-[40%] -translate-x-1/2 z-20 transition-transform duration-500 group-hover:-translate-y-3",
+    "right-[2%] top-14 w-[37%] rotate-8 z-10 transition-transform duration-500 group-hover:translate-x-4 group-hover:rotate-12",
+  ],
+};
+const pos = fan[Math.min(n, 3)] ?? fan[1];
+---
+
+<a
+  href={href}
+  data-mascot={p.mascot}
+  data-reveal="scale"
+  data-spotlight
+  class="group block rounded-show border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-fg/15 hover:shadow-[0_50px_90px_-45px_rgba(17,17,20,0.4)] sm:p-8 md:p-10"
+>
+  <div class="grid items-center gap-8 md:grid-cols-2 md:gap-14">
+    <!-- text -->
+    <div class:list={[flip ? "md:order-2" : "md:order-1"]}>
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-xs font-semibold text-muted">0{index + 1}</span>
+        <span class="h-px w-8 bg-border"></span>
+        <span class="font-mono text-xs font-semibold text-fg-2">{p.year}</span>
+      </div>
+
+      <h3 class="display mt-4 text-3xl text-fg transition-colors group-hover:text-amber sm:text-4xl md:text-5xl">
+        {p.name}
+      </h3>
+      <p class="mt-2 text-lg text-fg-2">{p.tagline}</p>
+
+      <!-- status tags -->
+      <div class="mt-5 flex flex-wrap gap-2">
+        {
+          p.tags.map((tag, i) => (
+            <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-soft px-3 py-1 text-xs font-bold text-fg">
+              <span class={`h-1.5 w-1.5 rounded-full ${tagDot[i % 3]}`} />
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-x-7 gap-y-3">
+        {
+          p.metrics.slice(0, 3).map((m) => (
+            <div>
+              <div data-count class="display text-2xl text-fg">{m.value}</div>
+              <div class="font-mono text-[0.62rem] uppercase tracking-wider text-muted">{m.label}</div>
+            </div>
+          ))
+        }
+      </div>
+
+      <span class="mt-7 inline-flex items-center gap-2 rounded-pill bg-fg px-5 py-3 text-sm font-bold text-page transition-colors group-hover:bg-amber group-hover:text-fg">
+        {ui.detail}
+        <span class="arrow-nudge">→</span>
+      </span>
+    </div>
+
+    <!-- preview scene -->
+    <div class:list={["relative", flip ? "md:order-1" : "md:order-2"]}>
+      <div class:list={["relative overflow-hidden rounded-card2", panel]}>
+        {
+          phones ? (
+            <div class="proj-scene relative h-[300px] sm:h-[360px]">
+              {imgs.slice(0, 3).map((img, i) => (
+                <div class:list={["absolute", pos[i]]}>
+                  <Mockup variant="phone" image={img} placeholder={ui.appPreview} soon={ui.soon} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="proj-scene px-6 py-12 sm:px-10">
+              <div class="transition-transform duration-500 group-hover:-translate-y-2">
+                <Mockup variant="browser" image={imgs[0]} placeholder={ui.webPreview} soon={ui.soon} url={url} />
+              </div>
+            </div>
+          )
+        }
+      </div>
+
+      <!-- floating chips -->
+      <span class="chip -top-3 right-4 transition-transform duration-500 group-hover:-translate-y-1.5 group-hover:translate-x-1">
+        <span class="chip-dot bg-amber"></span>
+        {p.metrics[0].value} {p.metrics[0].label}
+      </span>
+      <span class="chip -bottom-3 left-4 transition-transform duration-500 group-hover:translate-y-1.5 group-hover:-translate-x-1">
+        <span class="chip-dot bg-blue"></span>
+        {p.tags[0]}
+      </span>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,35 @@
+---
+import type { Lang } from "../i18n/content";
+import { CONTENT, LINKS } from "../i18n/content";
+import NowPlaying from "./NowPlaying.tsx";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = CONTENT[lang];
+const base = `/${lang}`;
+const year = 2026;
+---
+
+<footer class="border-t border-border">
+  <div class="wrap py-10">
+    <div data-reveal class="mb-8">
+      <NowPlaying client:visible lang={lang} labels={t.footer.spotify} />
+    </div>
+    <div data-reveal class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-fg-2">
+      <a href={`${base}/work/`} class="ul transition hover:text-fg">{t.footer.nav.work}</a>
+      <a href={`${base}/about/`} class="ul transition hover:text-fg">{t.footer.nav.about}</a>
+      <a href={`${base}/academic-life/`} class="ul transition hover:text-fg">{t.footer.nav.academic}</a>
+      <a href={`${base}/contact/`} class="ul transition hover:text-fg">{t.footer.nav.contact}</a>
+      <a href={LINKS.github} target="_blank" rel="noopener" class="ul transition hover:text-amber">GitHub ↗</a>
+      <a href={LINKS.linkedin} target="_blank" rel="noopener" class="ul transition hover:text-amber">LinkedIn ↗</a>
+    </div>
+    <div class="flex flex-col gap-1 font-mono text-xs text-muted sm:text-right">
+      <span>{t.footer.built}</span>
+      <span>© {year} Recep Özgür Mıh</span>
+    </div>
+    </div>
+  </div>
+</footer>
