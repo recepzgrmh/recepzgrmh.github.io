@@ -4,7 +4,7 @@ import { CONTENT } from "../i18n/content";
 
 interface Props {
   lang: Lang;
-  active?: "work" | "skills" | "about" | "academic" | "contact" | "chat" | null;
+  active?: "work" | "skills" | "about" | "academic" | "contact" | "chat" | "labs" | null;
 }
 const { lang, active = null } = Astro.props;
 const t = CONTENT[lang];
@@ -16,6 +16,7 @@ const items = [
   { key: "skills", href: `${base}/skills/`, label: t.nav.skills },
   { key: "about", href: `${base}/about/`, label: t.nav.about },
   { key: "academic", href: `${base}/academic-life/`, label: t.nav.academic },
+  { key: "labs", href: `${base}/labs/`, label: t.nav.labs },
   { key: "chat", href: `${base}/chat/`, label: t.nav.chat },
 ] as const;
 ---
@@ -23,7 +24,9 @@ const items = [
 <header class="sticky top-0 z-50 border-b border-border/70 bg-page/80 backdrop-blur-xl">
   <nav class="wrap flex h-[76px] items-center justify-between">
     <a href={`${base}/`} class="group flex items-center gap-2.5 text-[15px] font-extrabold tracking-tight text-fg">
-      <span class="grid h-7 w-7 place-items-center rounded-full bg-fg text-[13px] font-black text-page transition-transform group-hover:rotate-12">R</span>
+      <span class="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-night transition-transform group-hover:rotate-12">
+        <img src="/logo.webp" alt="RÖM" width="20" height="20" class="h-5 w-5 object-contain" />
+      </span>
       recepozgur
     </a>
 

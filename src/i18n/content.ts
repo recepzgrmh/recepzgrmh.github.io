@@ -86,7 +86,7 @@ interface Content {
     sub: string;
     steps: { k: string; title: string; desc: string }[];
   };
-  nav: { work: string; skills: string; about: string; academic: string; contact: string; chat: string };
+  nav: { work: string; skills: string; about: string; academic: string; contact: string; chat: string; labs: string };
   hero: {
     pill: string;
     status: string;
@@ -191,8 +191,18 @@ interface Content {
   projects: Project[];
   footer: {
     built: string;
-    nav: { work: string; about: string; academic: string; contact: string };
+    nav: { work: string; about: string; academic: string; contact: string; labs: string };
     spotify: { now: string; recent: string; offline: string };
+  };
+  labsPage: {
+    kicker: string;
+    title: string;
+    note: string;
+    groups: {
+      name: string;
+      tone: StatTone;
+      items: { name: string; href: string; desc: string }[];
+    }[];
   };
 }
 
@@ -226,6 +236,7 @@ const en: Content = {
     academic: "Academic",
     contact: "Contact",
     chat: "Chat",
+    labs: "Labs",
   },
   hero: {
     pill: "Mobile-first AI products",
@@ -667,8 +678,55 @@ const en: Content = {
   ],
   footer: {
     built: "Designed & built by Recep — no template under here.",
-    nav: { work: "Work", about: "About", academic: "Academic", contact: "Contact" },
+    nav: { work: "Work", about: "About", academic: "Academic", contact: "Contact", labs: "Labs" },
     spotify: { now: "Now playing", recent: "Recently played", offline: "Nothing playing" },
+  },
+  labsPage: {
+    kicker: "Labs",
+    title: "Small experiments & things I built while learning.",
+    note: "Little throwaway builds from my earlier playground — games, UI clones, course exercises. Not polished, just fun. All still live at their old URLs.",
+    groups: [
+      {
+        name: "JavaScript",
+        tone: "amber",
+        items: [
+          { name: "Pomodoro Timer", href: "/pomodoro/", desc: "Focus & break timer" },
+          { name: "Background Color", href: "/Background-color/", desc: "Random gradient generator" },
+          { name: "Clock", href: "/clock/", desc: "Live digital clock" },
+          { name: "Dicee Game", href: "/dicee/", desc: "Two dice, higher roll wins" },
+          { name: "Car Cards", href: "/car/", desc: "Expanding image cards" },
+          { name: "Image Slider", href: "/image%20slide/", desc: "Simple image carousel" },
+          { name: "Predict Number", href: "/Predict-number/", desc: "Guess-the-number game" },
+          { name: "To-Do App", href: "/to-do/", desc: "Simple task list" },
+          { name: "Random Number", href: "/Random-number/", desc: "Random number generator" },
+          { name: "Tic-Tac-Toe", href: "/tic-tac-toe/", desc: "The classic XOX" },
+          { name: "Troll Sounds", href: "/troll/", desc: "Meme soundboard" },
+        ],
+      },
+      {
+        name: "HTML & CSS",
+        tone: "blue",
+        items: [
+          { name: "Old Portfolio", href: "/portfolio/", desc: "My very first portfolio" },
+          { name: "Old CV", href: "/cv/", desc: "Earlier CV page" },
+          { name: "Dilan Polat", href: "/Dilan-polat/", desc: "A meme landing page" },
+          { name: "Ferrari", href: "/Ferrari/", desc: "Ferrari showcase page" },
+          { name: "Shopping Website", href: "/Shopping-website/", desc: "Storefront concept" },
+          { name: "Samsung", href: "/samsung/", desc: "Product showcase page" },
+          { name: "Solar System", href: "/solar-system/", desc: "Solar system in CSS" },
+        ],
+      },
+      {
+        name: "Copycat",
+        tone: "purple",
+        items: [
+          { name: "Tindog", href: "/tindog/", desc: "Bootstrap landing (course)" },
+          { name: "Drum Kit", href: "/drum/", desc: "Playable drum kit" },
+          { name: "Expanding Cards", href: "/expanding%20cards/", desc: "Hover-expand gallery" },
+          { name: "Progress Steps", href: "/Progress%20Steps/", desc: "Animated step indicator" },
+        ],
+      },
+    ],
   },
 };
 
@@ -702,6 +760,7 @@ const tr: Content = {
     academic: "Akademik",
     contact: "İletişim",
     chat: "Sohbet",
+    labs: "Labs",
   },
   hero: {
     pill: "Mobil odaklı AI ürünleri",
@@ -1143,8 +1202,55 @@ const tr: Content = {
   ],
   footer: {
     built: "Recep tasarladı & kodladı — altından şablon çıkmaz.",
-    nav: { work: "İşler", about: "Hakkımda", academic: "Akademik", contact: "İletişim" },
+    nav: { work: "İşler", about: "Hakkımda", academic: "Akademik", contact: "İletişim", labs: "Labs" },
     spotify: { now: "Şu an çalıyor", recent: "Son çalınan", offline: "Şu an bir şey çalmıyor" },
+  },
+  labsPage: {
+    kicker: "Labs",
+    title: "Küçük denemeler & öğrenirken yaptıklarım.",
+    note: "Eski playground'umdan ufak şeyler — oyunlar, arayüz klonları, kurs alıştırmaları. Cilalı değil, sadece keyif. Hepsi eski adreslerinde hâlâ canlı.",
+    groups: [
+      {
+        name: "JavaScript",
+        tone: "amber",
+        items: [
+          { name: "Pomodoro", href: "/pomodoro/", desc: "Odak & mola sayacı" },
+          { name: "Arkaplan Rengi", href: "/Background-color/", desc: "Rastgele gradyan üretici" },
+          { name: "Saat", href: "/clock/", desc: "Canlı dijital saat" },
+          { name: "Dicee", href: "/dicee/", desc: "İki zar, büyük atan kazanır" },
+          { name: "Car Cards", href: "/car/", desc: "Genişleyen görsel kartlar" },
+          { name: "Görsel Kaydırıcı", href: "/image%20slide/", desc: "Basit görsel carousel" },
+          { name: "Sayı Tahmini", href: "/Predict-number/", desc: "Sayı tahmin oyunu" },
+          { name: "Yapılacaklar", href: "/to-do/", desc: "Basit görev listesi" },
+          { name: "Rastgele Sayı", href: "/Random-number/", desc: "Rastgele sayı üreteci" },
+          { name: "XOX", href: "/tic-tac-toe/", desc: "Klasik tic-tac-toe" },
+          { name: "Troll Sesleri", href: "/troll/", desc: "Meme ses tahtası" },
+        ],
+      },
+      {
+        name: "HTML & CSS",
+        tone: "blue",
+        items: [
+          { name: "Eski Portföy", href: "/portfolio/", desc: "İlk portföyüm" },
+          { name: "Eski CV", href: "/cv/", desc: "Önceki CV sayfası" },
+          { name: "Dilan Polat", href: "/Dilan-polat/", desc: "Meme landing sayfası" },
+          { name: "Ferrari", href: "/Ferrari/", desc: "Ferrari tanıtım sayfası" },
+          { name: "Alışveriş Sitesi", href: "/Shopping-website/", desc: "Vitrin konsepti" },
+          { name: "Samsung", href: "/samsung/", desc: "Ürün tanıtım sayfası" },
+          { name: "Güneş Sistemi", href: "/solar-system/", desc: "CSS ile güneş sistemi" },
+        ],
+      },
+      {
+        name: "Kopya",
+        tone: "purple",
+        items: [
+          { name: "Tindog", href: "/tindog/", desc: "Bootstrap landing (kurs)" },
+          { name: "Drum Kit", href: "/drum/", desc: "Çalınabilir davul seti" },
+          { name: "Expanding Cards", href: "/expanding%20cards/", desc: "Hover ile açılan galeri" },
+          { name: "Progress Steps", href: "/Progress%20Steps/", desc: "Animasyonlu adım göstergesi" },
+        ],
+      },
+    ],
   },
 };
 
