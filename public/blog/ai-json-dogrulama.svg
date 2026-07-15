@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">AI JSON doğrulama katmanları</title><desc id="desc">Yapısal doğrulama, anlam kontrolü ve insan onayı katmanları.</desc>
+  <rect width="1200" height="630" fill="#111114"/><text x="80" y="90" fill="#fff" font-family="Arial,sans-serif" font-size="31" font-weight="700">GEÇERLİ JSON ≠ DOĞRU CEVAP</text>
+  <g font-family="Arial,sans-serif"><rect x="80" y="155" width="300" height="330" rx="32" fill="#5551ff"/><text x="120" y="220" fill="white" font-size="24" font-weight="700">01 · ŞEMA</text><text x="120" y="285" fill="white" font-size="48" font-weight="700">{ }</text><text x="120" y="420" fill="#dedcff" font-size="20">Türler doğru mu?</text>
+  <rect x="450" y="155" width="300" height="330" rx="32" fill="#ff9f1c"/><text x="490" y="220" fill="#111" font-size="24" font-weight="700">02 · ANLAM</text><circle cx="600" cy="320" r="70" fill="none" stroke="#111" stroke-width="14"/><path d="m650 370 55 55" stroke="#111" stroke-width="14" stroke-linecap="round"/><text x="490" y="455" fill="#111" font-size="20">İddia gerçek mi?</text>
+  <rect x="820" y="155" width="300" height="330" rx="32" fill="#e7ff3c"/><text x="860" y="220" fill="#111" font-size="24" font-weight="700">03 · ONAY</text><path d="m885 325 55 55 115-130" fill="none" stroke="#111" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/><text x="860" y="455" fill="#111" font-size="20">Yayınlanmalı mı?</text></g>
+  <text x="80" y="565" fill="#98a2b3" font-family="monospace" font-size="20">parse etmek doğrulamanın bittiği değil, başladığı andır.</text>
+</svg>

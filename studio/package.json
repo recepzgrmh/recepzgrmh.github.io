@@ -1,0 +1,27 @@
+{
+  "name": "recepozgur-content-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "deploy": "npm run build && wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply recepozgur-content-studio --local",
+    "db:migrate:remote": "wrangler d1 migrations apply recepozgur-content-studio --remote"
+  },
+  "dependencies": {
+    "@cloudflare/vite-plugin": "latest",
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "~5.8.3",
+    "wrangler": "latest"
+  }
+}

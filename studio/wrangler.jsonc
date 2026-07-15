@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "recepozgur-content-studio",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-07-10",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "ALLOWED_EMAIL": "recep.ozgur.mih@gmail.com",
+    "MAX_UPLOAD_BYTES": "10485760"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "recepozgur-content-studio",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "recepozgur-content-assets"
+    }
+  ]
+}

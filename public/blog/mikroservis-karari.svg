@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Mikroservis karar diyagramı</title><desc id="desc">Sağlam bir modüler çekirdekten yalnızca gerektiğinde ayrılan servisler.</desc>
+  <rect width="1200" height="630" fill="#111114"/><path d="M0 515 1200 390v240H0z" fill="#e7ff3c"/>
+  <g fill="none" stroke="#3c3c43" stroke-width="2"><path d="M0 110h1200M0 220h1200M0 330h1200"/><path d="M160 0v460M360 0v440M560 0v420M760 0v400M960 0v390"/></g>
+  <rect x="110" y="150" width="570" height="285" rx="34" fill="#fafaf7"/><text x="160" y="225" fill="#111114" font-family="Arial,sans-serif" font-size="26" font-weight="700">MODÜLER ÇEKİRDEK</text>
+  <g font-family="Arial,sans-serif" font-weight="700" font-size="22"><rect x="160" y="275" width="140" height="100" rx="18" fill="#e9d5ff"/><text x="190" y="335" fill="#111">ÜYE</text><rect x="325" y="275" width="140" height="100" rx="18" fill="#ff9f1c"/><text x="351" y="335" fill="#111">BİLET</text><rect x="490" y="275" width="140" height="100" rx="18" fill="#5551ff"/><text x="510" y="335" fill="white">KATALOG</text></g>
+  <path d="M680 293h106" stroke="#ff9f1c" stroke-width="5" stroke-dasharray="10 10"/><circle cx="805" cy="293" r="10" fill="#ff9f1c"/>
+  <rect x="810" y="215" width="260" height="156" rx="28" fill="#ff3b4a"/><text x="850" y="281" fill="white" font-family="Arial,sans-serif" font-size="22" font-weight="700">AYIRMAK İÇİN</text><text x="850" y="316" fill="white" font-family="Arial,sans-serif" font-size="22" font-weight="700">KANIT VAR MI?</text>
+  <text x="110" y="90" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">SERVİS SAYISI ≠ TEKNİK OLGUNLUK</text>
+</svg>
