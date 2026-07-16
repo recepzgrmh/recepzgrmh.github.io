@@ -1,0 +1,43 @@
+---
+import type { BlogPost } from "../../lib/blog";
+import { formatDate, readingMinutes } from "../../lib/blog";
+
+interface Props {
+  post: BlogPost;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+---
+
+<article class:list={["group overflow-hidden border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-fg/20 hover:shadow-xl", featured ? "rounded-show" : "rounded-card2"]}>
+  <a href={`/blog/${post.data.slug}/`} class:list={["grid h-full", featured && "lg:grid-cols-[1.08fr_0.92fr]"]}>
+    <div class:list={["overflow-hidden bg-night", featured ? "min-h-[300px] lg:min-h-[430px]" : "aspect-[16/10]"]}>
+      <img
+        src={post.data.heroImage}
+        alt={post.data.heroAlt}
+        width="1200"
+        height="630"
+        loading={featured ? "eager" : "lazy"}
+        class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.025]"
+      />
+    </div>
+    <div class:list={["flex flex-col", featured ? "p-7 sm:p-10 lg:p-12" : "p-6 sm:p-7"]}>
+      <div class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-widest text-muted">
+        <span class="text-amber">{post.data.category}</span>
+        <span>·</span>
+        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+        <span>·</span>
+        <span>{readingMinutes(post.body ?? "")} dk</span>
+      </div>
+      <h2 class:list={["display mt-5 text-balance leading-[1.05] tracking-[-0.035em]", featured ? "text-3xl sm:text-4xl lg:text-[2.75rem]" : "text-2xl"]}>
+        {post.data.title}
+      </h2>
+      <p class:list={["mt-4 leading-relaxed text-fg-2", featured ? "text-lg" : "text-base"]}>{post.data.description}</p>
+      <div class="mt-auto flex flex-wrap gap-2 pt-8">
+        {post.data.tags.slice(0, 3).map((tag) => <span class="rounded-pill bg-soft px-3 py-1.5 font-mono text-[0.68rem] font-semibold text-fg-2">#{tag}</span>)}
+      </div>
+      <span class="mt-7 inline-flex items-center gap-2 text-sm font-bold text-fg">Yazıyı oku <span class="arrow-nudge text-amber">→</span></span>
+    </div>
+  </a>
+</article>

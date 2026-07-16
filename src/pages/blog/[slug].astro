@@ -1,0 +1,129 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import BlogCard from "../../components/blog/BlogCard.astro";
+import { formatDate, readingMinutes, sortPosts } from "../../lib/blog";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.data.slug }, props: { post, allPosts: posts } }));
+}
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  allPosts: CollectionEntry<"blog">[];
+}
+
+const { post, allPosts } = Astro.props;
+const { Content, headings } = await render(post);
+const minutes = readingMinutes(post.body ?? "");
+const canonical = `https://recepozgur.com/blog/${post.data.slug}/`;
+const related = sortPosts(allPosts.filter((candidate) => candidate.id !== post.id && candidate.data.tags.some((tag) => post.data.tags.includes(tag)))).slice(0, 2);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  image: new URL(post.data.heroImage, "https://recepozgur.com").toString(),
+  datePublished: post.data.publishedAt.toISOString(),
+  dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
+  mainEntityOfPage: canonical,
+  inLanguage: "tr-TR",
+  author: {
+    "@type": "Person",
+    name: "Recep Özgür Mıh",
+    url: "https://recepozgur.com/tr/about/",
+    sameAs: ["https://www.linkedin.com/in/recepozgurmih/", "https://github.com/recepzgrmh"],
+  },
+};
+---
+
+<Base
+  lang="tr"
+  page={`blog:${post.data.slug}`}
+  title={`${post.data.title} — Recep Özgür Mıh`}
+  description={post.data.description}
+  canonical={canonical}
+  ogImage={post.data.heroImage}
+  type="article"
+  publishedTime={post.data.publishedAt.toISOString()}
+  updatedTime={(post.data.updatedAt ?? post.data.publishedAt).toISOString()}
+  alternates={[{ lang: "tr", href: canonical }, { lang: "x-default", href: canonical }]}
+  jsonLd={jsonLd}
+>
+  <Nav lang="tr" active="blog" />
+  <main>
+    <article>
+      <header class="border-b border-border">
+        <div class="wrap grid gap-10 py-16 lg:grid-cols-[minmax(0,0.86fr)_minmax(420px,1.14fr)] lg:items-center lg:py-24">
+          <div>
+            <a href="/blog/" class="mb-8 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-fg-2 transition hover:text-amber">← Tüm yazılar</a>
+            <div class="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] font-semibold uppercase tracking-widest text-muted">
+              <span class="text-amber">{post.data.category}</span><span>·</span>
+              <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time><span>·</span><span>{minutes} dk okuma</span>
+            </div>
+            <h1 class="display mt-6 text-balance text-[clamp(2.5rem,6vw,5.25rem)] leading-[0.98] tracking-[-0.045em]">{post.data.title}</h1>
+            <p class="mt-7 max-w-2xl text-lg leading-relaxed text-fg-2 sm:text-xl">{post.data.description}</p>
+            <div class="mt-8 flex flex-wrap gap-2">{post.data.tags.map((tag) => <span class="rounded-pill bg-soft px-3 py-1.5 font-mono text-[0.68rem] font-semibold text-fg-2">#{tag}</span>)}</div>
+          </div>
+          <figure class="overflow-hidden rounded-show border border-border bg-night shadow-2xl shadow-fg/10">
+            <img src={post.data.heroImage} alt={post.data.heroAlt} width="1200" height="630" class="aspect-[1200/630] h-full w-full object-cover" />
+          </figure>
+        </div>
+      </header>
+
+      <div class="wrap grid gap-12 py-14 lg:grid-cols-[220px_minmax(0,760px)] lg:justify-center lg:py-20">
+        <aside class="hidden lg:block">
+          <div class="sticky top-28">
+            <p class="kicker mb-4">Bu yazıda</p>
+            <nav aria-label="İçindekiler" class="space-y-3 border-l border-border pl-4">
+              {headings.filter((heading) => heading.depth === 2).map((heading) => <a href={`#${heading.slug}`} class="block text-sm leading-snug text-fg-2 transition hover:text-amber">{heading.text}</a>)}
+            </nav>
+          </div>
+        </aside>
+
+        <div>
+          <div class="blog-prose"><Content /></div>
+
+          <section aria-labelledby="sources-heading" class="mt-16 rounded-card2 border border-border bg-soft p-6 sm:p-8">
+            <p class="kicker mb-3 text-amber">Doğrulama</p>
+            <h2 id="sources-heading" class="display text-2xl">Kaynaklar</h2>
+            <p class="mt-3 text-sm leading-relaxed text-fg-2">Yazıdaki dış iddiaları doğrulamak ve daha derine inmek için kullandığım ana kaynaklar.</p>
+            <ol class="mt-6 space-y-4">
+              {post.data.sources.map((source, index) => (
+                <li class="grid grid-cols-[28px_1fr] gap-3 text-sm">
+                  <span class="font-mono text-xs font-bold text-amber">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <a href={source.url} target="_blank" rel="noopener noreferrer" class="font-bold text-fg underline decoration-border underline-offset-4 transition hover:decoration-amber">{source.label} ↗</a>
+                    {source.note && <p class="mt-1 leading-relaxed text-fg-2">{source.note}</p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <footer class="mt-12 flex flex-col gap-5 rounded-card2 bg-night p-7 text-white sm:flex-row sm:items-center sm:justify-between sm:p-9">
+            <div>
+              <p class="font-mono text-xs font-semibold uppercase tracking-widest text-white/55">Yazan</p>
+              <p class="display mt-2 text-2xl">Recep Özgür Mıh</p>
+              <p class="mt-2 max-w-md text-sm leading-relaxed text-white/65">Mobil, backend ve ürün geliştirme kesişiminde çalışan bir yazılım mühendisi.</p>
+            </div>
+            <a href="/tr/about/" class="inline-flex w-fit items-center gap-2 rounded-pill bg-white px-5 py-3 text-sm font-bold text-fg transition hover:bg-amber">Hakkımda <span>→</span></a>
+          </footer>
+        </div>
+      </div>
+    </article>
+
+    {related.length > 0 && (
+      <section class="border-t border-border py-20 sm:py-28">
+        <div class="wrap">
+          <header class="mb-8"><p class="kicker mb-3 text-amber">Devam et</p><h2 class="display text-3xl sm:text-4xl">İlgili yazılar</h2></header>
+          <div class="grid gap-6 lg:grid-cols-2">{related.map((item) => <BlogCard post={item} />)}</div>
+        </div>
+      </section>
+    )}
+  </main>
+  <Footer lang="tr" />
+</Base>

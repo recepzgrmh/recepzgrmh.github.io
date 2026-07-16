@@ -1,0 +1,34 @@
+# Recep Özgür İçerik Stüdyosu
+
+Cloudflare Workers üzerinde çalışan özel onay paneli. Cloudflare Access tüm uygulamayı e-posta allowlist ile kapatır; D1 içerik paketlerini ve audit kayıtlarını, R2 ise yüklenen görselleri tutar.
+
+## İlk Cloudflare kurulumu
+
+1. `npm install`
+2. `npx wrangler login`
+3. `npx wrangler d1 create recepozgur-content-studio`
+4. Dönen `database_id` değerini `wrangler.jsonc` içine yaz.
+5. `npx wrangler r2 bucket create recepozgur-content-assets`
+6. `npm run db:migrate:remote`
+7. `npm run deploy`
+8. Cloudflare Zero Trust → Access → Applications altında Worker domainini ekle.
+9. Policy: `Allow` → Emails → yalnızca kendi e-posta adresin. Başka Allow kuralı ekleme.
+
+Yerelde `npm run db:migrate:local` ardından `npm run dev` kullan. Localhost, Cloudflare Access başlığı olmadığı için geliştirme amacıyla otomatik kabul edilir; uzaktaki `/api/*` çağrıları doğru Access e-postası olmadan `403` döner.
+
+Cloudflare Access policy uygulamanın tamamını korumalıdır. Worker'daki e-posta kontrolü ikinci savunma katmanıdır; tek başına login ekranı değildir.
+
+## GitHub Actions secrets
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Secrets hazır olunca repository variable olarak `STUDIO_DEPLOY_ENABLED=true` ekle. Bu yapılana kadar deploy job’u güvenli biçimde atlanır.
+
+## Teknik referanslar
+
+- [Cloudflare — Full-stack React applications](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/)
+- [Cloudflare — Static Assets](https://developers.cloudflare.com/workers/static-assets/)
+- [Cloudflare R2 — Upload objects](https://developers.cloudflare.com/r2/objects/upload-objects/)
+- [Cloudflare Access — Application types](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/)
+- [Cloudflare Access — Policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/)

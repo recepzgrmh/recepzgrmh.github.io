@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">API hata tasarımı</title><desc id="desc">Belirsiz hata mesajlarının eyleme dönük hata sözleşmesine dönüşmesi.</desc>
+  <rect width="1200" height="630" fill="#fafaf7"/><circle cx="1080" cy="80" r="180" fill="#e9d5ff"/><circle cx="110" cy="600" r="190" fill="#ff9f1c"/>
+  <text x="90" y="100" fill="#111114" font-family="Arial,sans-serif" font-size="30" font-weight="700">“BİR HATA OLUŞTU” BİR SONRAKİ ADIM DEĞİLDİR.</text>
+  <rect x="90" y="160" width="410" height="320" rx="34" fill="#111114"/><text x="135" y="225" fill="#98a2b3" font-family="monospace" font-size="22">HTTP 400</text><text x="135" y="290" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">Bad Request</text><path d="M135 345h270M135 385h210" stroke="#3c3c43" stroke-width="18" stroke-linecap="round"/>
+  <path d="M530 320h105" stroke="#ff3b4a" stroke-width="8"/><path d="m615 288 38 32-38 32" fill="none" stroke="#ff3b4a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="680" y="160" width="430" height="320" rx="34" fill="#e7ff3c" stroke="#111114" stroke-width="3"/><g fill="#111114" font-family="monospace" font-size="21"><text x="730" y="220">code</text><text x="900" y="220" font-weight="700">EMAIL_USED</text><text x="730" y="275">action</text><text x="900" y="275" font-weight="700">SIGN_IN</text><text x="730" y="330">retry</text><text x="900" y="330" font-weight="700">false</text><text x="730" y="385">traceId</text><text x="900" y="385" font-weight="700">01J…</text></g>
+  <text x="680" y="535" fill="#667085" font-family="Arial,sans-serif" font-size="23" font-weight="700">MAKİNEYE KOD · İNSANA YOL</text>
+</svg>
