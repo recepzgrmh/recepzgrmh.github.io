@@ -153,7 +153,15 @@ export default {
         for (const [key,column] of Object.entries(editable)) if (typeof body[key] === "string") { fields.push(`${column}=?`); values.push(String(body[key]).trim()); }
         if (Array.isArray(body.tags)) { fields.push("tags_json=?"); values.push(JSON.stringify(body.tags)); }
         if (Array.isArray(body.sources)) { fields.push("sources_json=?","source_count=?"); values.push(JSON.stringify(body.sources),body.sources.length); }
-        if (typeof body.status === "string") { if (!allowedStatuses.has(body.status as Status)) return json({error:"Geçersiz durum."},400); fields.push("status=?"); values.push(body.status); }
+        if (typeof body.status === "string") {
+          if (!allowedStatuses.has(body.status as Status)) return json({error:"Geçersiz durum."},400);
+          if (body.status === "approved") {
+            const candidate = await env.DB.prepare("SELECT blog_markdown AS blogMarkdown,linkedin_post AS linkedinPost,sources_json AS sourcesJson,visual_url AS visualUrl FROM content_bundles WHERE id=?").bind(match[1]).first<Record<string,unknown>>();
+            const sourceCount = parseJson(candidate?.sourcesJson, [] as Source[]).length;
+            if (!candidate?.blogMarkdown || !candidate?.linkedinPost || !candidate?.visualUrl || sourceCount < 2) return json({error:"Onay için blog, LinkedIn metni, en az 2 kaynak ve görsel zorunlu."},409);
+          }
+          fields.push("status=?"); values.push(body.status);
+        }
         if (!fields.length) return json({error:"Güncellenecek alan yok."},400); fields.push("updated_at=?"); values.push(now(),match[1]);
         await env.DB.prepare(`UPDATE content_bundles SET ${fields.join(",")} WHERE id=?`).bind(...values).run();
         await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"updated",actor,now()).run();
@@ -161,7 +169,7 @@ export default {
       }
       if (match && request.method === "POST" && match[2] === "publish") {
         const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(match[1]).first<Record<string, unknown>>(); if (!row) return json({error:"Paket bulunamadı."},404);
-        const bundle = bundleFromRow(row) as any; if (bundle.status !== "approved") return json({error:"Önce paketi onaylamalısın."},409); if (!bundle.visualUrl) return json({error:"Yayınlamadan önce yazıya özel görsel yüklemelisin."},409);
+        const bundle = bundleFromRow(row) as any; if (bundle.status !== "approved") return json({error:"Önce paketi onaylamalısın."},409); if (!bundle.visualUrl || !bundle.blogMarkdown || !bundle.linkedinPost || bundle.sources.length < 2) return json({error:"Yayın için blog, LinkedIn metni, en az 2 kaynak ve görsel zorunlu."},409);
         const key = decodeURIComponent(String(bundle.visualUrl).replace(/^\/api\/assets\//,"")); const object = await env.UPLOADS.get(key); if (!object) return json({error:"Görsel R2'de bulunamadı."},404);
         const ext = safeName(key.split(".").pop() || "webp"); const assetPath = `public/blog/${bundle.slug}.${ext}`; const heroImage = `/blog/${bundle.slug}.${ext}`;
         await githubPut(env,assetPath,new Uint8Array(await object.arrayBuffer()),`content: add visual for ${bundle.slug}`);

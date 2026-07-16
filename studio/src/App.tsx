@@ -71,6 +71,7 @@ export default function App() {
   const selected = useMemo(() => bundles.find((bundle) => bundle.id === selectedId) ?? bundles[0], [bundles, selectedId]);
   useEffect(() => { setEditor(selected ? { ...selected } : null); setUpload(null); }, [selected]);
   const reviewCount = bundles.filter((bundle) => bundle.status === "review").length;
+  const canApprove = Boolean(selected?.visualUrl && editor?.blogMarkdown?.trim() && editor?.linkedinPost?.trim() && (editor?.sources?.length || 0) >= 2 && selected.checksPassed >= selected.checksTotal);
 
   async function updateStatus(status: Status) {
     if (!selected) return;
@@ -202,7 +203,7 @@ export default function App() {
                   </button>}
                 <input ref={fileInput} hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadImage(event.target.files?.[0])}/>
               </div>
-              <div className="actions"><button className="secondary" disabled={busy} onClick={() => void saveDraft()}>Düzenlemeyi kaydet</button><button className="primary" disabled={busy || selected.checksPassed < selected.checksTotal} onClick={() => void updateStatus("approved")}><Icon name="check"/>{busy ? "İşleniyor…" : "Paketi onayla"}</button></div>
+              <div className="actions"><button className="secondary" disabled={busy} onClick={() => void saveDraft()}>Düzenlemeyi kaydet</button><button className="primary" disabled={busy || !canApprove} onClick={() => void updateStatus("approved")}><Icon name="check"/>{busy ? "İşleniyor…" : "Paketi onayla"}</button></div>
               {(selected.status === "approved" || selected.status === "scheduled") && <button className="publish-button" disabled={busy || !readiness.publishing || (!selected.visualUrl && !upload?.url)} onClick={() => void publishOrVerify()}>{selected.status === "scheduled" ? "Canlılığı doğrula" : "Blogu GitHub'a gönder"}</button>}
               {selected.status === "published" && <a className="preview-link" href={selected.publishedUrl || `https://recepozgur.com${selected.blogPath}`} target="_blank" rel="noreferrer">Canlı blogu aç <Icon name="external"/></a>}
               <p className="safety-note">Sistem taslak üretir; kamuya açık yayın yalnız sen onaylayıp yayın butonuna bastığında başlar. LinkedIn paylaşımı şimdilik kopyala-yapıştır ile sende kalır.</p>
