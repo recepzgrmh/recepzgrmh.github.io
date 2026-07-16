@@ -1,7 +1,7 @@
 interface Env {
   DB: D1Database;
   UPLOADS: R2Bucket;
-  ALLOWED_EMAIL: string;
+  ALLOWED_EMAILS: string;
   MAX_UPLOAD_BYTES: string;
 }
 
@@ -16,7 +16,9 @@ const json = (data: unknown, status = 200) => new Response(JSON.stringify(data),
 function authenticated(request: Request, env: Env) {
   const hostname = new URL(request.url).hostname;
   if (hostname === "localhost" || hostname === "127.0.0.1") return true;
-  return request.headers.get("Cf-Access-Authenticated-User-Email")?.toLowerCase() === env.ALLOWED_EMAIL.toLowerCase();
+  const email = request.headers.get("Cf-Access-Authenticated-User-Email")?.toLowerCase();
+  const allowedEmails = env.ALLOWED_EMAILS.split(",").map((value) => value.trim().toLowerCase());
+  return Boolean(email && allowedEmails.includes(email));
 }
 
 function safeName(value: string) {

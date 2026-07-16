@@ -2,6 +2,15 @@
 
 Cloudflare Workers üzerinde çalışan özel onay paneli. Cloudflare Access tüm uygulamayı e-posta allowlist ile kapatır; D1 içerik paketlerini ve audit kayıtlarını, R2 ise yüklenen görselleri tutar.
 
+Production: `https://studio.recepozgur.com`
+
+Aktif kaynaklar:
+
+- Worker: `recepozgur-content-studio`
+- D1: `recepozgur-content-studio` (`EEUR`)
+- R2: `recepozgur-content-assets` (private, Standard)
+- Access policy: `Owner only`
+
 ## İlk Cloudflare kurulumu
 
 1. `npm install`
@@ -12,7 +21,7 @@ Cloudflare Workers üzerinde çalışan özel onay paneli. Cloudflare Access tü
 6. `npm run db:migrate:remote`
 7. `npm run deploy`
 8. Cloudflare Zero Trust → Access → Applications altında Worker domainini ekle.
-9. Policy: `Allow` → Emails → yalnızca kendi e-posta adresin. Başka Allow kuralı ekleme.
+9. Policy: `Allow` → Emails → yalnızca `recepzgrmh@gmail.com` ve/veya `recep.ozgur.mih@gmail.com`. Başka Allow kuralı ekleme.
 
 Yerelde `npm run db:migrate:local` ardından `npm run dev` kullan. Localhost, Cloudflare Access başlığı olmadığı için geliştirme amacıyla otomatik kabul edilir; uzaktaki `/api/*` çağrıları doğru Access e-postası olmadan `403` döner.
 
