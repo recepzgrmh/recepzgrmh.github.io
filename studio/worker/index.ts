@@ -104,11 +104,17 @@ Araştırma ve yazım kuralları:
 - Recep kariyerinin başında, mobil + backend + ürün teslimi kesişiminde çalışan bir Product Engineer.
 - Kullanıcısı veya ölçeği olmayan kişisel projelerini başarı hikâyesi gibi anlatma. Proje adı kullanmak zorunda değilsin.
 - Kariyer tavsiyesi, motivasyon ve topluluk içeriği üretme.
-- Türkçe, doğal, ölçülü ve teknik yaz. Recep'i deneyiminin ötesinde otorite gibi gösterme.
+- Türkçe, doğal, ölçülü ve teknik yaz. Recep'i deneyiminin ötesinde otorite gibi gösterme. Metin yüksek sesle okunduğunda bir Türk yazılımcının konuşması gibi akmalı; İngilizceden çevrilmiş kurumsal metin gibi görünmemeli.
+- Kısa ve orta uzunlukta cümleleri karıştır. Somut fiiller kullan. Aynı paragrafta peş peşe slogan, karşıtlık veya soyut isim tamlaması kurma.
+- “teslimat akışı”, “en az sürtünme”, “pratik uyum”, “güçlü ikinci aday”, “X kesişiminde”, “asıl mesele/test”, “üç eksende”, “kritik nokta şu” gibi yapay ve tercüme kokan kalıpları kullanma. “X değil, Y” formülünü ve iki nokta üst üste başlayan şablon listeleri tekrarlama.
+- Recep gerçekten denememişse “karşılaştırdım”, “test ettim”, “benim tercihim” gibi kişisel deneyim iddiası kurma. Bunun yerine hangi sonucun resmi doküman, benchmark veya fiyat tablosundan çıkarıldığını açıkça söyle. Kaynakların izin vermediği kişisel hüküm üretme.
+- Ürün ve model adlarını resmi kaynakta geçtiği biçimde yaz. Benzer isim uydurma, sürüm karıştırma veya henüz doğrulanmamış özelliği varmış gibi anlatma.
 - Başlık net; description en fazla 170 karakter olsun.
 - slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
 - blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ekleme. 900-1500 kelime, H2 başlıklar, somut örnek/trade-off ve sonuç içersin.
-- LinkedIn metni 180-300 kelime: ilk satır scroll-stop hook, kısa paragraflar, sahte başarı/etkileşim tuzağı yok, sonda “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” olsun.
+- LinkedIn metni 180-300 kelime: ilk satır doğal ama merak uyandıran bir giriş olsun; kısa paragraflar kullan, sahte başarı ve etkileşim tuzağı kurma.
+- LinkedIn metnini yazdıktan sonra sessiz bir redaksiyon yap: AI klişelerini, gereksiz sıfatları, aynı ritimdeki cümleleri ve Türkçede günlük kullanımda söylenmeyecek ifadeleri temizle.
+- Son bölümde önce “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” bağlantısını ver; en son satırda konuya özel, tek ve kolay cevaplanabilir bir soru sor. “Siz bu konuda ne düşünüyorsunuz?” gibi genel soru sorma. Örneğin bir model karşılaştırmasında okuyucudan kalite, maliyet veya otonomiden hangisini önceliklendirdiğini seçmesini isteyebilirsin.
 - visualPrompt İngilizce ve 16:9 olmalı. Önce makalenin tek ana fikrini seç, sonra bunu tek bakışta anlaşılabilen TEK güçlü görsel metaforla anlat.
 - Görsel küçük LinkedIn önizlemesinde iki saniye içinde okunmalı: tek odak noktası, en fazla 3 ana nesne, güçlü siluet ve temiz kompozisyon kullan. Bütün teknik alt başlıkları aynı kareye doldurma.
 - Varsayılan sanat yönü aydınlık, sıcak ve premium editoryal fotoğraf veya dokunsal mixed-media kolajdır: açık krem/beyaz fon, doğal gün ışığı, gerçekçi malzeme, hafif film dokusu, kontrollü canlı renk ve insani kusurlar. Stok fotoğraf gibi değil, teknoloji/iş dergisi kapağı gibi görünmeli.
