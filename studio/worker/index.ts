@@ -109,7 +109,12 @@ Araştırma ve yazım kuralları:
 - slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
 - blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ekleme. 900-1500 kelime, H2 başlıklar, somut örnek/trade-off ve sonuç içersin.
 - LinkedIn metni 180-300 kelime: ilk satır scroll-stop hook, kısa paragraflar, sahte başarı/etkileşim tuzağı yok, sonda “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” olsun.
-- visualPrompt, ChatGPT web arayüzünde üretilecek yazıya özel 16:9 editorial görsel için ayrıntılı İngilizce prompt olsun; yazı/logo/UI screenshot isteme.
+- visualPrompt İngilizce ve 16:9 olmalı. Önce makalenin tek ana fikrini seç, sonra bunu tek bakışta anlaşılabilen TEK güçlü görsel metaforla anlat.
+- Görsel küçük LinkedIn önizlemesinde iki saniye içinde okunmalı: tek odak noktası, en fazla 3 ana nesne, güçlü siluet ve temiz kompozisyon kullan. Bütün teknik alt başlıkları aynı kareye doldurma.
+- Varsayılan sanat yönü aydınlık, sıcak ve premium editoryal fotoğraf veya dokunsal mixed-media kolajdır: açık krem/beyaz fon, doğal gün ışığı, gerçekçi malzeme, hafif film dokusu, kontrollü canlı renk ve insani kusurlar. Stok fotoğraf gibi değil, teknoloji/iş dergisi kapağı gibi görünmeli.
+- Konuyu somutlaştır: soyut veri akışları yerine gündelik hayattan anlaşılır nesne/metafor kullan. Görselin neden bu yazıya ait olduğu açıklama okumadan sezilebilmeli.
+- AI üretimi klişelerini kesinlikle isteme: karanlık lacivert fon, neon ışık, hologram, parlayan devre, siber kasa, kalkan, onay işareti, anlamsız küpler/küreler, aşırı simetri, isometrik 3D infografik, her yere giden ışık çizgileri, minik ikon ordusu, plastik render ve sinematik bilimkurgu yok.
+- Görselin içine okunabilir yazı, logo, marka işareti, kod, uygulama ekranı veya UI screenshot koyma. Promptta kompozisyonu ve ışığı net tarif et; negatif prompt kısmında yukarıdaki klişeleri tekrar dışla.
 - generationNote belirsizlikleri ve insanın kontrol etmesi gereken noktaları kısaça söylesin.`;
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
