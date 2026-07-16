@@ -126,11 +126,7 @@ export default function MascotIsland({ lang: initialLang }: { lang: Lang }) {
     const evalHidden = () => {
       const page = document.body.dataset.page;
       const hasPersistentPortrait = page === "about" || page === "chat";
-      const hasComposedHero = page === "home" || page === "skills";
-      setHidden(
-        hasPersistentPortrait ||
-          (hasComposedHero && window.scrollY < window.innerHeight * 0.55),
-      );
+      setHidden(hasPersistentPortrait);
     };
     evalHidden();
     window.addEventListener("scroll", evalHidden, { passive: true });

@@ -1,0 +1,283 @@
+---
+import type { Lang, StatTone } from "../../i18n/content";
+import { CONTENT, LANGS, LINKS } from "../../i18n/content";
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Caps from "../../components/Caps.astro";
+import AcademicJourney from "../../components/AcademicJourney.astro";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = CONTENT[lang];
+const about = t.about;
+const skills = t.skillsPage;
+const base = `/${lang}`;
+
+const copy = lang === "tr"
+  ? {
+      title: "Profil — Recep Özgür Mıh",
+      kicker: "Profil",
+      headline: "Mobile, backend ve web arasında ürün geliştiriyorum.",
+      lead: "Flutter uygulamalarından TypeScript ve Node.js servislerine, subscription flow'larından store release süreçlerine kadar ürünün birden fazla katmanında çalışıyorum.",
+      nav: ["Hakkımda", "Deneyim", "Teknik", "Akademik"],
+      scopeKicker: "Teknik profil",
+      scopeTitle: "Production'da kullandığım alanlar.",
+      academicKicker: "Akademik & topluluk",
+      academicTitle: "Okul başlangıçtı, hikâyenin tamamı değil.",
+      academicNote: "Bilgisayar Bilimleri, TÜBİTAK 2209-A ve topluluk liderliği boyunca ürün geliştirme biçimimi şekillendiren altı durak.",
+      cv: "CV'yi görüntüle",
+    }
+  : {
+      title: "Profile — Recep Özgür Mıh",
+      kicker: "Profile",
+      headline: "I build across mobile, backend and web.",
+      lead: "I work across multiple product layers, from Flutter applications and TypeScript services to subscription flows and store releases.",
+      nav: ["About", "Experience", "Technical", "Academic"],
+      scopeKicker: "Technical profile",
+      scopeTitle: "Areas I use in production.",
+      academicKicker: "Academic & community",
+      academicTitle: "School was the starting point, not the whole story.",
+      academicNote: "Six milestones across Computer Science, TÜBİTAK 2209-A and community leadership that shaped how I build products.",
+      cv: "View CV",
+    };
+
+const proof: { value: string; label: string; tone: StatTone }[] = lang === "tr"
+  ? [
+      { value: "5.000+", label: "organik indirme", tone: "amber" },
+      { value: "%99.9", label: "crash-free users", tone: "blue" },
+      { value: "150K+", label: "App Store impressions", tone: "soft" },
+      { value: "3", label: "production ürün · mobile + web", tone: "purple" },
+    ]
+  : [
+      { value: "5,000+", label: "organic downloads", tone: "amber" },
+      { value: "99.9%", label: "crash-free users", tone: "blue" },
+      { value: "150K+", label: "App Store impressions", tone: "soft" },
+      { value: "3", label: "production products · mobile + web", tone: "purple" },
+    ];
+
+const experience = lang === "tr"
+  ? {
+      kicker: "Profesyonel deneyim",
+      title: "Mobile Application Developer",
+      company: "MaviPiksel İnternet Çözümleri",
+      period: "Ocak 2025 — Devam",
+      summary: "Sano AI, Revna ve chat.sanoapp.ai üzerinde mobile, backend ve web katmanlarında production sorumluluğu alıyorum.",
+      products: "Sano AI · Revna · chat.sanoapp.ai",
+      stack: ["Flutter", "TypeScript", "Node.js", "React", "Firebase", "GCP", "Supabase", "PostgreSQL"],
+      areas: [
+        { title: "Mobile delivery", desc: "Flutter ile iOS ve Android feature'ları, localization, reminders, push notifications ve store release süreçleri." },
+        { title: "Backend & subscriptions", desc: "REST APIs, webhooks, Pub/Sub, RTDN, App Store Server Notifications ve entitlement synchronization." },
+        { title: "Web & CI/CD", desc: "chat.sanoapp.ai için React/Vite frontend, CI/CD pipeline, environment config ve secrets management." },
+        { title: "Production operations", desc: "Crashlytics, monitoring, incident investigation, tutarsız user state'leri ve post-release fixes." },
+      ],
+    }
+  : {
+      kicker: "Professional experience",
+      title: "Mobile Application Developer",
+      company: "MaviPiksel Internet Solutions",
+      period: "January 2025 — Present",
+      summary: "I work across the mobile, backend and web layers of Sano AI, Revna and chat.sanoapp.ai with production responsibility.",
+      products: "Sano AI · Revna · chat.sanoapp.ai",
+      stack: ["Flutter", "TypeScript", "Node.js", "React", "Firebase", "GCP", "Supabase", "PostgreSQL"],
+      areas: [
+        { title: "Mobile delivery", desc: "Flutter features for iOS and Android, localization, reminders, push notifications and store releases." },
+        { title: "Backend & subscriptions", desc: "REST APIs, webhooks, Pub/Sub, RTDN, App Store Server Notifications and entitlement synchronization." },
+        { title: "Web & CI/CD", desc: "React/Vite frontend, CI/CD pipeline, environment configuration and secrets for chat.sanoapp.ai." },
+        { title: "Production operations", desc: "Crashlytics, monitoring, incident investigation, inconsistent user states and post-release fixes." },
+      ],
+    };
+
+const proofAccent = ["bg-amber", "bg-blue", "bg-fg", "bg-purple"];
+
+const skillTone: Record<StatTone, string> = {
+  amber: "bg-amber",
+  coral: "bg-coral",
+  blue: "bg-blue",
+  lime: "bg-lime",
+  purple: "bg-purple",
+  white: "bg-fg",
+  soft: "bg-muted",
+};
+---
+
+<Base lang={lang} page="profile" title={copy.title} description={about.lead}>
+  <Nav lang={lang} active="profile" />
+
+  <main>
+    <section id="about" class="relative overflow-hidden scroll-mt-28">
+      <div aria-hidden="true" class="shape -right-24 -top-24 h-72 w-72 bg-purple/50" data-parallax="0.16"></div>
+      <div aria-hidden="true" class="shape right-[32%] top-36 h-24 w-24 bg-lime/80" data-parallax="-0.14"></div>
+
+      <div class="wrap relative z-10 pt-12 pb-16 sm:pt-16 sm:pb-20">
+        <div class="mb-10 flex flex-wrap items-center justify-between gap-5">
+          <p data-reveal class="kicker text-amber">{copy.kicker}</p>
+          <nav data-reveal class="flex flex-wrap gap-x-6 gap-y-2" aria-label={lang === "tr" ? "Profil bölümleri" : "Profile sections"}>
+            <a href="#about" class="ul py-1 text-xs font-bold text-fg-2 hover:text-fg">{copy.nav[0]}</a>
+            <a href="#experience" class="ul py-1 text-xs font-bold text-fg-2 hover:text-fg">{copy.nav[1]}</a>
+            <a href="#technical" class="ul py-1 text-xs font-bold text-fg-2 hover:text-fg">{copy.nav[2]}</a>
+            <a href="#academic" class="ul py-1 text-xs font-bold text-fg-2 hover:text-fg">{copy.nav[3]}</a>
+          </nav>
+        </div>
+
+        <div>
+          <header class="max-w-5xl">
+            <div data-reveal class="mb-5 inline-flex items-center gap-2 rounded-pill border border-border bg-surface px-3.5 py-1.5 text-xs font-bold text-fg-2">
+              <span class="status-dot h-2 w-2 rounded-full bg-lime text-lime"></span>
+              {about.availability}
+            </div>
+            <h1 data-reveal="title" style="--d:70ms" class="max-w-5xl text-balance text-[clamp(3rem,6.2vw,5.75rem)] font-extrabold leading-[0.98] tracking-[-0.045em]">{copy.headline}</h1>
+            <p data-reveal style="--d:140ms" class="mt-6 max-w-3xl text-lg leading-relaxed text-fg-2 sm:text-xl">{copy.lead}</p>
+            <div data-reveal style="--d:210ms" class="mt-9 flex flex-wrap gap-3">
+              <a href={`${base}/contact/`} data-magnetic class="inline-flex items-center gap-2 rounded-pill bg-fg px-5 py-3 text-sm font-bold text-page transition hover:bg-amber hover:text-fg">
+                {t.hero.ctaContact} <span class="arrow-nudge">→</span>
+              </a>
+              <a href={LINKS.cv} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-pill border border-border bg-surface px-5 py-3 text-sm font-bold text-fg transition hover:border-fg/30">
+                {copy.cv} ↗
+              </a>
+            </div>
+          </header>
+
+          <div class="profile-metrics mt-14 grid grid-cols-2 border-y border-border sm:grid-cols-4">
+            {proof.map((fact, index) => (
+              <article data-reveal style={`--d:${220 + index * 55}ms`} class="py-7 sm:px-6 sm:py-8">
+                <span class:list={["mb-7 block h-1 w-10", proofAccent[index]]}></span>
+                <strong class="display block text-3xl leading-none sm:text-4xl">{fact.value}</strong>
+                <p class="mt-3 text-sm font-semibold leading-snug text-fg-2">{fact.label}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" class="sect-sm scroll-mt-24 border-t border-border">
+      <div class="wrap grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
+        <header data-reveal class="self-start lg:sticky lg:top-28">
+          <p class="kicker mb-3 text-amber">{experience.kicker}</p>
+          <h2 class="display text-3xl leading-tight sm:text-4xl">{experience.title}</h2>
+          <p class="mt-2 text-lg font-bold text-fg-2">{experience.company}</p>
+          <span class="mt-5 inline-flex rounded-pill border border-border bg-surface px-3.5 py-2 font-mono text-xs font-semibold text-muted">{experience.period}</span>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-fg-2">{experience.summary}</p>
+          <p class="mt-5 font-mono text-xs font-bold text-amber">{experience.products}</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {experience.stack.map((item) => (
+              <span class="rounded-pill border border-border bg-soft px-3 py-1.5 font-mono text-[0.65rem] font-semibold text-fg-2">{item}</span>
+            ))}
+          </div>
+        </header>
+
+        <div class="flex flex-col">
+          {experience.areas.map((area, index) => (
+            <article data-reveal="left" style={`--d:${index * 60}ms`} class="grid gap-5 border-t border-border py-7 first:border-t-0 first:pt-0 sm:grid-cols-[3rem_1fr]">
+              <span class="font-mono text-xs font-bold text-amber">0{index + 1}</span>
+              <div>
+                <h3 class="display text-2xl">{area.title}</h3>
+                <p class="mt-3 max-w-2xl leading-relaxed text-fg-2">{area.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="technical" class="sect scroll-mt-24 border-y border-border bg-surface">
+      <div class="wrap">
+        <header data-reveal class="mb-12 max-w-4xl">
+          <p class="kicker mb-3 text-amber">{copy.scopeKicker}</p>
+          <h2 class="h-sec">{copy.scopeTitle}</h2>
+          <p class="mt-5 max-w-3xl text-lg leading-relaxed text-fg-2">{skills.note}</p>
+        </header>
+
+        <Caps lang={lang} />
+
+        <div class="mt-16 grid gap-x-10 lg:grid-cols-2">
+          {skills.skills.map((skill, index) => (
+            <article data-reveal="left" style={`--d:${(index % 2) * 60}ms`} class="border-t border-border py-7">
+              <div class="flex items-start justify-between gap-5">
+                <div>
+                  <div class="mb-2 flex items-center gap-2">
+                    <span class={`h-2 w-2 rounded-full ${skillTone[skill.tone]}`}></span>
+                    <span class="font-mono text-[0.62rem] font-semibold uppercase tracking-widest text-muted">{skill.category}</span>
+                  </div>
+                  <h3 class="display text-xl text-fg sm:text-2xl">{skill.name}</h3>
+                </div>
+                <span class="shrink-0 font-mono text-[0.65rem] font-bold uppercase tracking-wide text-fg-2">{skill.levelLabel} · {skill.level}/5</span>
+              </div>
+              <div class="mt-4 grid grid-cols-5 gap-1.5" aria-hidden="true">
+                {Array.from({ length: 5 }, (_, segment) => (
+                  <span class:list={["h-1.5 rounded-pill", segment < skill.level ? skillTone[skill.tone] : "bg-soft"]}></span>
+                ))}
+              </div>
+              <p class="mt-3 text-sm leading-relaxed text-fg-2">{skill.proof}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="academic" class="sect-sm scroll-mt-24 pb-0">
+      <div class="wrap">
+        <header data-reveal class="max-w-4xl">
+          <p class="kicker mb-3 text-amber">{copy.academicKicker}</p>
+          <h2 class="h-sec">{copy.academicTitle}</h2>
+          <p class="mt-5 max-w-3xl text-lg leading-relaxed text-fg-2">{copy.academicNote}</p>
+        </header>
+      </div>
+    </section>
+
+    <AcademicJourney lang={lang} embedded />
+
+    <section class="sect-sm">
+      <div class="wrap">
+        <header data-reveal class="mb-12 max-w-3xl">
+          <p class="kicker mb-3 text-amber">{about.storyKicker}</p>
+          <h2 class="h-sec">{about.storyTitle}</h2>
+        </header>
+        <div class="profile-principles grid border-y border-border lg:grid-cols-3">
+          {about.story.map((item, index) => (
+            <article data-reveal style={`--d:${index * 70}ms`} class="flex min-h-[280px] flex-col justify-between py-8 lg:px-8 lg:py-10">
+              <span class="font-mono text-xs font-bold tracking-widest text-amber">0{index + 1}</span>
+              <div>
+                <h3 class="display text-2xl sm:text-3xl">{item.title}</h3>
+                <p class="mt-4 leading-relaxed text-fg-2">{item.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="sect-sm pt-0">
+      <div class="wrap">
+        <div class="contact-cta band bg-coral px-8 py-20 text-center text-white sm:px-16 sm:py-24">
+          <p data-reveal class="kicker relative z-10 mb-4 text-white/65">{about.contactCta.kicker}</p>
+          <h2 data-reveal="title" style="--d:70ms" class="h-sec relative z-10 mx-auto max-w-3xl text-white">{about.contactCta.title}</h2>
+          <a href={`${base}/contact/`} data-reveal style="--d:140ms" class="relative z-10 mt-8 inline-flex items-center gap-2 rounded-pill bg-white px-6 py-3.5 text-sm font-bold text-fg transition hover:bg-fg hover:text-page">
+            {about.contactCta.cta} <span class="arrow-nudge">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .profile-metrics > :nth-child(odd) { border-right: 1px solid var(--color-border); padding-right: 1rem; }
+  .profile-metrics > :nth-child(even) { padding-left: 1rem; }
+  .profile-metrics > :nth-child(-n + 2) { border-bottom: 1px solid var(--color-border); }
+  .profile-principles > article + article { border-top: 1px solid var(--color-border); }
+  @media (min-width: 640px) {
+    .profile-metrics > * { border-bottom: 0 !important; border-right: 0 !important; }
+    .profile-metrics > * + * { border-left: 1px solid var(--color-border); }
+  }
+  @media (min-width: 1024px) {
+    .profile-principles > article { border-top: 0 !important; }
+    .profile-principles > article + article { border-left: 1px solid var(--color-border); }
+  }
+</style>

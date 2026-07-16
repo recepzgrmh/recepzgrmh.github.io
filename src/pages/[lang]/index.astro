@@ -6,7 +6,6 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import Marquee from "../../components/Marquee.astro";
 import HeroScene from "../../components/HeroScene.astro";
-import StatsProof from "../../components/StatsProof.astro";
 import Paint from "../../components/Paint.astro";
 import ProjectPreviewCard from "../../components/ProjectPreviewCard.astro";
 import Caps from "../../components/Caps.astro";
@@ -57,10 +56,15 @@ const peek = t.stats.items.slice(0, 4);
               </a>
               <a href={LINKS.cv} target="_blank" rel="noopener" data-mascot="cv" class="ul ml-1 text-sm font-semibold text-fg-2 transition hover:text-fg">{t.hero.ctaCV} ↗</a>
             </div>
-            <div data-reveal style="--d:340ms" class="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs font-semibold text-muted">
-              <span>{t.hero.status}</span><span>·</span><span>{t.hero.location}</span><span>·</span>
-              <a href={LINKS.github} target="_blank" rel="noopener" data-mascot="github" class="ul transition hover:text-amber">GitHub ↗</a>
-              <a href={LINKS.linkedin} target="_blank" rel="noopener" data-mascot="linkedin" class="ul transition hover:text-amber">LinkedIn ↗</a>
+            <div data-reveal style="--d:340ms" class="mt-8 pb-14 sm:pb-16">
+              <div class="inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-card border border-border bg-surface/90 px-4 py-3 font-mono text-[0.68rem] font-semibold text-fg-2 shadow-sm">
+                <span class="inline-flex items-center gap-2"><i class="h-2 w-2 rounded-full bg-lime"></i>{t.hero.status}</span>
+                <span class="text-border">/</span>
+                <span>{t.hero.location}</span>
+                <span class="text-border">/</span>
+                <a href={LINKS.github} target="_blank" rel="noopener" data-mascot="github" class="ul transition hover:text-amber">GitHub ↗</a>
+                <a href={LINKS.linkedin} target="_blank" rel="noopener" data-mascot="linkedin" class="ul transition hover:text-amber">LinkedIn ↗</a>
+              </div>
             </div>
           </div>
 
@@ -72,8 +76,13 @@ const peek = t.stats.items.slice(0, 4);
           </div>
         </div>
 
-        <!-- peek strip (more-below feel) -->
-        <div class="-mb-10 grid grid-cols-2 gap-3 pb-2 sm:grid-cols-4 sm:gap-4">
+      </div>
+    </section>
+
+    <!-- PROOF CARDS + TECH MARQUEE: one shared diagonal ribbon -->
+    <div class="showcase-ribbon">
+      <div class="wrap relative z-10">
+        <div class="hero-proof-cards -mb-px grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {
             peek.map((s, i) => (
               <div data-reveal="scale" style={`--d:${420 + i * 55}ms`} class:list={["rounded-card2 px-5 pt-5 pb-9", tone[s.tone]]}>
@@ -84,13 +93,8 @@ const peek = t.stats.items.slice(0, 4);
           }
         </div>
       </div>
-    </section>
-
-    <!-- TECH MARQUEE (full-bleed) -->
-    <Marquee lang={lang} />
-
-    <!-- STATS -->
-    <StatsProof lang={lang} />
+      <Marquee lang={lang} />
+    </div>
 
     <!-- FEATURED -->
     <section id="work" class="sect-sm">
@@ -125,7 +129,7 @@ const peek = t.stats.items.slice(0, 4);
     <section id="skills" aria-labelledby="home-skills-heading" class="sect-sm scroll-mt-24 pt-8">
       <div class="wrap">
         <Caps lang={lang} />
-        <a href={`${base}/skills/`} data-reveal data-magnetic class="mt-8 inline-flex items-center gap-2 rounded-pill border border-border bg-surface px-5 py-3 text-sm font-bold text-fg transition hover:border-fg/30">
+        <a href={`${base}/profile/#technical`} data-reveal data-magnetic class="mt-8 inline-flex items-center gap-2 rounded-pill border border-border bg-surface px-5 py-3 text-sm font-bold text-fg transition hover:border-fg/30">
           {t.capsTeaser.more} <span class="arrow-nudge">→</span>
         </a>
       </div>

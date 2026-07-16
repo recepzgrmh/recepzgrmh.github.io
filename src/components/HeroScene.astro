@@ -2,7 +2,6 @@
 import type { Lang } from "../i18n/content";
 import { CONTENT } from "../i18n/content";
 import Mockup from "./Mockup.astro";
-import HeroMascot from "./mascot/HeroMascot.tsx";
 
 interface Props {
   lang: Lang;
@@ -74,24 +73,13 @@ const fan = [
         )}
 
         {/* floating metric chips for this project */}
-        <span class="chip float-chip right-0 top-10" style="--float-delay:-1s">
+        <span class="chip float-chip bottom-12 right-0" style="--float-delay:-1s">
           <span class="chip-dot bg-amber" />
           {p.metrics[0].value} {p.metrics[0].label}
         </span>
-        {p.metrics[1] && (
-          <span class="chip float-chip bottom-14 right-6" style="--float-delay:-3.8s">
-            <span class="chip-dot bg-coral" />
-            {p.metrics[1].value} {p.metrics[1].label}
-          </span>
-        )}
       </div>
     ))
   }
-
-  <!-- integrated mascot — constant, standing to the left, outside the phones -->
-  <div class="absolute -bottom-6 left-[-78px] z-30">
-    <HeroMascot lang={lang} client:only="react" />
-  </div>
 </div>
 
 <script>

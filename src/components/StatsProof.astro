@@ -17,32 +17,27 @@ const card: Record<StatTone, string> = {
   white: "bg-surface text-fg border border-border",
   soft: "bg-soft text-fg",
 };
-// give the grid some rhythm: a couple of wider cards
-const span = ["sm:col-span-2", "", "", "sm:col-span-2", "", ""];
 ---
 
 <section class="sect-sm">
   <div class="wrap">
-    <header data-reveal class="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <div>
+    <header data-reveal class="mb-12">
+      <div class="max-w-3xl">
         <p class="kicker mb-3 text-amber">{s.kicker}</p>
         <h2 class="h-sec max-w-xl">{s.title}</h2>
       </div>
     </header>
 
-    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-5">
       {
         s.items.map((it, i) => (
           <div
             data-reveal
-            data-tilt
             data-spotlight
             style={`--d:${i * 70}ms`}
             class:list={[
-              "flex flex-col justify-between rounded-hero p-6 sm:p-8",
-              "min-h-[140px] sm:min-h-[180px] transition-transform",
+              "flex min-h-[150px] flex-col justify-between rounded-card2 p-6 sm:min-h-[190px] sm:p-8",
               card[it.tone],
-              span[i],
             ]}
           >
             <span class="font-mono text-xs font-semibold uppercase tracking-widest opacity-70">

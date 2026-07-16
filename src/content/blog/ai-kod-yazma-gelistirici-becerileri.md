@@ -5,7 +5,7 @@ slug: "ai-kod-yazma-gelistirici-becerileri"
 publishedAt: 2026-07-16
 tags: ["yapay zeka","yazılım geliştirme","developer productivity","kodlama","kariyer"]
 category: "Yazılım"
-heroImage: "/blog/ai-kod-yazma-gelistirici-becerileri.png"
+heroImage: "/blog/ai-kod-yazma-gelistirici-becerileri.webp"
 heroAlt: "Yapay zekânın kod üretimi ile geliştiricinin teknik sorumluluğu arasındaki dengeyi anlatan editoryal illüstrasyon"
 featured: false
 draft: false

@@ -5,7 +5,7 @@ slug: "yazilim-ajan-orkestrasyonu"
 publishedAt: 2026-07-16
 tags: ["AI ajanları","yazılım geliştirme","agentic engineering","çoklu ajan sistemleri","yazılım ekipleri"]
 category: "Yazılım Geliştirme"
-heroImage: "/blog/yazilim-ajan-orkestrasyonu.png"
+heroImage: "/blog/yazilim-ajan-orkestrasyonu.webp"
 heroAlt: "Bir geliştiricinin birden fazla yazılım ajanının koordinasyonunu izlediği editoryal illüstrasyon"
 featured: false
 draft: false
