@@ -7,6 +7,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://recepozgur.com',
   integrations: [react()],
+  markdown: {
+    gfm: true,
+  },
   vite: {
     plugins: [tailwindcss()],
   },

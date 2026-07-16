@@ -80,7 +80,7 @@ const pageAlternates = alternates ?? defaultAlternates;
   </head>
   <body data-page={page}>
     <slot />
-    <MascotIsland lang={lang} client:only="react" transition:persist="mascot" />
+    {!page.startsWith("blog:") && <MascotIsland lang={lang} client:only="react" transition:persist="mascot" />}
     <script>
       import "../scripts/ui.ts";
       import "../scripts/scroll.ts";

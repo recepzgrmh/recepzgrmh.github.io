@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
 type View = "today" | "queue" | "assets" | "history" | "settings";
-type Asset = { id: string; bundleId: string; filename: string; contentType: string; sizeBytes: number; createdAt: string; url: string; bundleTitle?: string };
+type AssetRole = "hero" | "inline-1" | "inline-2";
+type InlineVisual = { needed: boolean; slot: number; prompt: string; alt: string; caption: string };
+type Asset = { id: string; bundleId: string; filename: string; contentType: string; sizeBytes: number; createdAt: string; url: string; role: AssetRole; alt?: string; caption?: string; bundleTitle?: string };
 type Bundle = {
   id: string;
   title: string;
@@ -25,6 +27,8 @@ type Bundle = {
   sources?: { label: string; url: string; note: string }[];
   generationNote?: string;
   publishedUrl?: string;
+  articleType?: string;
+  inlineVisuals?: InlineVisual[];
 };
 
 const labels: Record<Status, string> = { draft: "Taslak", review: "İncelemede", approved: "Onaylandı", scheduled: "Planlandı", published: "Yayında" };
@@ -42,8 +46,9 @@ function Icon({ name }: { name: "spark" | "queue" | "image" | "check" | "setting
 }
 
 function inlineMarkdown(value: string): ReactNode[] {
-  return value.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).filter(Boolean).map((part, index) => {
+  return value.split(/(\*\*[^*]+\*\*|(?<!\*)\*[^*]+\*(?!\*)|`[^`]+`|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).filter(Boolean).map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("*") && part.endsWith("*")) return <em key={index}>{part.slice(1, -1)}</em>;
     if (part.startsWith("`") && part.endsWith("`")) return <code key={index}>{part.slice(1, -1)}</code>;
     const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
     if (link) return <a key={index} href={link[2]} target="_blank" rel="noreferrer">{link[1]}</a>;
@@ -51,12 +56,21 @@ function inlineMarkdown(value: string): ReactNode[] {
   });
 }
 
-function MarkdownPreview({ value }: { value: string }) {
+function CodePreview({ blocks }: { blocks: { language:string; code:string }[] }) {
+  const [active, setActive] = useState(0); const current = blocks[active] || blocks[0];
+  const label = (language:string,index:number) => index === 0 ? (language || "Kod") : language === "test" ? "Test" : language === "output" ? "Çıktı" : language;
+  return <section className="preview-code-lab"><header><div>{blocks.map((block,index)=><button key={`${block.language}-${index}`} className={active === index ? "active" : ""} onClick={() => setActive(index)}>{label(block.language,index)}</button>)}</div><button onClick={() => void navigator.clipboard.writeText(current.code)}>Kopyala</button></header><pre><code>{current.code}</code></pre></section>;
+}
+
+function MarkdownPreview({ value, imageSlots = {}, visuals = [] }: { value: string; imageSlots?: Record<number, string>; visuals?: InlineVisual[] }) {
   const lines = value.split("\n"); const blocks: ReactNode[] = [];
   for (let i = 0; i < lines.length;) {
     const line = lines[i];
     if (!line.trim()) { i += 1; continue; }
-    if (line.startsWith("```")) { const code: string[] = []; i += 1; while (i < lines.length && !lines[i].startsWith("```")) code.push(lines[i++]); i += 1; blocks.push(<pre key={`code-${i}`}><code>{code.join("\n")}</code></pre>); continue; }
+    if (line.startsWith("```")) { const codeBlocks: {language:string;code:string}[] = []; while (i < lines.length && lines[i].startsWith("```")) { const language = lines[i].slice(3).trim() || "Kod"; const code: string[] = []; i += 1; while (i < lines.length && !lines[i].startsWith("```")) code.push(lines[i++]); if (i < lines.length) i += 1; codeBlocks.push({language,code:code.join("\n")}); while (i < lines.length && !lines[i].trim()) i += 1; if (!lines[i]?.startsWith("```test") && !lines[i]?.startsWith("```output")) break; } blocks.push(<CodePreview blocks={codeBlocks} key={`code-${i}`}/>); continue; }
+    const marker = line.trim().match(/^\{\{INLINE_IMAGE_([12])\}\}$/); if (marker) { const slot = Number(marker[1]); const visual = visuals.find((item) => item.slot === slot); blocks.push(imageSlots[slot] ? <figure className="preview-inline-image" key={i}><img src={imageSlots[slot]} alt={visual?.alt || `Yazı içi görsel ${slot}`}/>{visual?.caption && <figcaption>{visual.caption}</figcaption>}</figure> : <div className="preview-inline-placeholder" key={i}><strong>İç görsel {slot} burada görünecek</strong>{visual?.caption && <span>{visual.caption}</span>}</div>); i += 1; continue; }
+    const image = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/); if (image) { blocks.push(<figure className="preview-inline-image" key={i}><img src={image[2]} alt={image[1]}/></figure>); i += 1; continue; }
+    if (line.includes("|") && i + 1 < lines.length && /^\s*\|?\s*:?-+/.test(lines[i + 1])) { const rows: string[][] = []; const split = (row:string) => row.replace(/^\s*\||\|\s*$/g, "").split("|").map((cell) => cell.trim()); const head = split(line); i += 2; while (i < lines.length && lines[i].includes("|")) rows.push(split(lines[i++])); blocks.push(<div className="preview-table-wrap" key={`table-${i}`}><table><thead><tr>{head.map((cell,index)=><th key={index}>{inlineMarkdown(cell)}</th>)}</tr></thead><tbody>{rows.map((row,rowIndex)=><tr key={rowIndex}>{row.map((cell,index)=><td key={index}>{inlineMarkdown(cell)}</td>)}</tr>)}</tbody></table></div>); continue; }
     if (line.startsWith("## ")) { blocks.push(<h2 key={i}>{inlineMarkdown(line.slice(3))}</h2>); i += 1; continue; }
     if (line.startsWith("### ")) { blocks.push(<h3 key={i}>{inlineMarkdown(line.slice(4))}</h3>); i += 1; continue; }
     if (line.startsWith("> ")) { blocks.push(<blockquote key={i}>{inlineMarkdown(line.slice(2))}</blockquote>); i += 1; continue; }
@@ -82,14 +96,14 @@ function LinkedinPreview({ bundle, imageUrl, expanded, onToggle, onCopy }: { bun
   </section>;
 }
 
-function BlogSitePreview({ bundle, imageUrl }: { bundle: Bundle; imageUrl?: string }) {
+function BlogSitePreview({ bundle, imageUrl, imageSlots = {} }: { bundle: Bundle; imageUrl?: string; imageSlots?: Record<number,string> }) {
   const headings = (bundle.blogMarkdown || "").split("\n").filter((line) => line.startsWith("## ")).map((line) => line.slice(3).replace(/\*\*/g, ""));
   const wordCount = (bundle.blogMarkdown || "").trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(wordCount / 190));
   return <section className="blog-site-preview" aria-label="Recepozgur.com blog önizlemesi">
     <nav className="site-nav"><a href="https://recepozgur.com" target="_blank" rel="noreferrer"><img src="https://recepozgur.com/logo.webp" alt="RÖM"/></a><div><span>Projeler</span><span>Yetenekler</span><span>Hakkımda</span><span>Akademik</span><span>Labs</span><b>Blog</b><span>Sohbet</span><em>EN</em><strong>İletişim</strong></div></nav>
     <header className="site-hero"><div><span className="site-back">← TÜM YAZILAR</span><p><b>{bundle.category}</b> · {new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date())} · {minutes} DK OKUMA</p><h1>{bundle.title}</h1><div className="site-description">{bundle.description}</div><div className="site-tags">{bundle.tags?.map((tag) => <span key={tag}>#{tag}</span>)}</div></div>{imageUrl ? <figure><img src={imageUrl} alt={bundle.heroAlt || "Blog kapak görseli"}/></figure> : <figure className="site-image-placeholder"><span>1200 × 630 kapak görseli</span><small>Görsel yüklediğinde gerçek hali burada görünür</small></figure>}</header>
-    <div className="site-article-grid"><aside><strong>BU YAZIDA</strong>{headings.map((heading) => <span key={heading}>{heading}</span>)}</aside><main><MarkdownPreview value={bundle.blogMarkdown || ""}/><section className="site-sources"><small>DOĞRULAMA</small><h2>Kaynaklar</h2><p>Yazıdaki dış iddiaları doğrulamak ve daha derine inmek için kullandığım ana kaynaklar.</p>{bundle.sources?.map((source, index) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><b>{String(index + 1).padStart(2, "0")}</b><span><strong>{source.label} ↗</strong><small>{source.note}</small></span></a>)}</section><footer className="site-author"><div><small>YAZAN</small><h3>Recep Özgür Mıh</h3><p>Mobil, backend ve ürün geliştirme kesişiminde çalışan bir yazılım mühendisi.</p></div><span>Hakkımda →</span></footer></main></div>
+    <div className="site-article-grid"><aside><strong>BU YAZIDA</strong>{headings.map((heading) => <span key={heading}>{heading}</span>)}</aside><main><MarkdownPreview value={bundle.blogMarkdown || ""} imageSlots={imageSlots} visuals={bundle.inlineVisuals}/><section className="site-sources"><small>DOĞRULAMA</small><h2>Kaynaklar</h2><p>Yazıdaki dış iddiaları doğrulamak ve daha derine inmek için kullandığım ana kaynaklar.</p>{bundle.sources?.map((source, index) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><b>{String(index + 1).padStart(2, "0")}</b><span><strong>{source.label} ↗</strong><small>{source.note}</small></span></a>)}</section><footer className="site-author"><div><small>YAZAN</small><h3>Recep Özgür Mıh</h3><p>Mobil, backend ve ürün geliştirme kesişiminde çalışan bir yazılım mühendisi.</p></div><span>Hakkımda →</span></footer></main></div>
     <footer className="site-footer"><strong>Recep Özgür Mıh</strong><span>Mobil · Backend · Ürün geliştirme</span></footer>
   </section>;
 }
@@ -101,6 +115,7 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [upload, setUpload] = useState<{ name: string; url: string } | null>(null);
+  const [bundleAssets, setBundleAssets] = useState<Asset[]>([]);
   const [topic, setTopic] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [readiness, setReadiness] = useState({ generation: false, publishing: false });
@@ -112,6 +127,7 @@ export default function App() {
   const [linkedinExpanded, setLinkedinExpanded] = useState(false);
   const [assets, setAssets] = useState<Asset[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
+  const inlineFileInputs = useRef<Record<number, HTMLInputElement | null>>({});
 
   const load = useCallback(async () => {
     try {
@@ -130,7 +146,10 @@ export default function App() {
 
   useEffect(() => { void load(); }, [load]);
   const selected = useMemo(() => bundles.find((bundle) => bundle.id === selectedId) ?? bundles[0], [bundles, selectedId]);
-  useEffect(() => { setEditor(selected ? { ...selected } : null); setUpload(null); setLinkedinExpanded(false); }, [selected]);
+  useEffect(() => {
+    setEditor(selected ? { ...selected } : null); setUpload(null); setLinkedinExpanded(false); setBundleAssets([]);
+    if (selected?.id) void fetch(`/api/assets?bundleId=${encodeURIComponent(selected.id)}`).then((response) => response.json()).then((data: { assets?: Asset[] }) => setBundleAssets(data.assets || [])).catch(() => setNotice("Paket görselleri alınamadı."));
+  }, [selected]);
   useEffect(() => {
     if (!fullscreenSurface) return;
     const close = (event: KeyboardEvent) => { if (event.key === "Escape") setFullscreenSurface(null); };
@@ -149,6 +168,7 @@ export default function App() {
     if (!allowed.some((bundle) => bundle.id === selectedId)) setSelectedId(allowed[0]?.id || "");
   }, [view, bundles, selectedId]);
   const canApprove = Boolean(selected?.visualUrl && editor?.blogMarkdown?.trim() && editor?.linkedinPost?.trim() && (editor?.sources?.length || 0) >= 2 && selected.checksPassed >= selected.checksTotal);
+  const inlineImageSlots = Object.fromEntries([1, 2].map((slot) => [slot, bundleAssets.find((asset) => asset.role === `inline-${slot}`)?.url]).filter((entry) => entry[1])) as Record<number,string>;
   const viewCopy: Record<View, { eyebrow: string; title: string; description: string }> = {
     today: { eyebrow: "BUGÜNÜN ÇALIŞMA ALANI", title: "Günaydın Recep.", description: "Otomasyon konuları araştırır; yayın kararı sende kalır." },
     queue: { eyebrow: "ONAY MERKEZİ", title: "İçerik kuyruğu", description: "Blog ve LinkedIn paketlerini yayınlamadan önce incele." },
@@ -185,7 +205,7 @@ export default function App() {
   async function saveDraft() {
     if (!editor) return; setBusy(true); setNotice("");
     try {
-      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, slug: editor.slug, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, visualPrompt: editor.visualPrompt, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, tags: editor.tags, sources: editor.sources }) });
+      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, slug: editor.slug, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, visualPrompt: editor.visualPrompt, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, articleType: editor.articleType, inlineVisuals: editor.inlineVisuals, tags: editor.tags, sources: editor.sources }) });
       const result = await response.json() as { bundle?: Bundle; error?: string }; if (!response.ok || !result.bundle) throw new Error(result.error || "Taslak kaydedilemedi");
       setBundles((items) => items.map((item) => item.id === result.bundle!.id ? result.bundle! : item)); setNotice("Düzenlemeler kaydedildi.");
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); } finally { setBusy(false); }
@@ -207,20 +227,24 @@ export default function App() {
     if (!editor?.linkedinPost) return; await navigator.clipboard.writeText(editor.linkedinPost); setNotice("LinkedIn metni panoya kopyalandı.");
   }
 
-  async function uploadImage(file?: File) {
+  async function uploadImage(file?: File, role: AssetRole = "hero", visual?: InlineVisual) {
     if (!file || !selected) return;
     setBusy(true);
     setNotice("");
     const body = new FormData();
     body.append("file", file);
     body.append("bundleId", selected.id);
+    body.append("role", role);
+    if (visual?.alt) body.append("alt", visual.alt);
+    if (visual?.caption) body.append("caption", visual.caption);
     try {
       const response = await fetch("/api/assets", { method: "POST", body });
       const result = await response.json() as { url?: string; error?: string };
       if (!response.ok || !result.url) throw new Error(result.error || "Görsel yüklenemedi");
-      setUpload({ name: file.name, url: result.url });
-      setBundles((items) => items.map((item) => item.id === selected.id ? { ...item, visualUrl: result.url, checksPassed: item.checksTotal } : item));
-      setNotice("Görsel pakete eklendi.");
+      const newAsset: Asset = { id: `${role}-${Date.now()}`, bundleId:selected.id, filename:file.name, contentType:file.type, sizeBytes:file.size, createdAt:new Date().toISOString(), url:result.url, role, alt:visual?.alt, caption:visual?.caption };
+      setBundleAssets((items) => [newAsset, ...items]);
+      if (role === "hero") { setUpload({ name: file.name, url: result.url }); setBundles((items) => items.map((item) => item.id === selected.id ? { ...item, visualUrl: result.url, checksPassed: item.checksTotal } : item)); }
+      setNotice(role === "hero" ? "Kapak görseli pakete eklendi." : `İç görsel ${role.slice(-1)} pakete eklendi.`);
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); }
     finally { setBusy(false); }
   }
@@ -284,7 +308,7 @@ export default function App() {
               <div className="checks"><div><span>Kaynak ve kalite kontrolleri</span><b>{selected.checksPassed}/{selected.checksTotal}</b></div><progress value={selected.checksPassed} max={selected.checksTotal}/><small>Kaynak URL’leri · iddia eşleşmesi · ton · tekrar · metadata</small></div>
               {previewMode === "preview" ? <>
                 <div className="surface-switch"><div><button className={previewSurface === "linkedin" ? "active" : ""} onClick={() => setPreviewSurface("linkedin")}>LinkedIn'de görünümü</button><button className={previewSurface === "blog" ? "active" : ""} onClick={() => setPreviewSurface("blog")}>Sitede görünümü</button></div><button className="fullscreen-button" onClick={() => setFullscreenSurface(previewSurface)}>Tam ekran ↗</button></div>
-                {previewSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <div className="blog-preview-viewport"><BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl}/></div>}
+                {previewSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <div className="blog-preview-viewport"><BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} imageSlots={inlineImageSlots}/></div>}
               </> : <>
                 <details className="editor-section" open><summary>Blog yazısı</summary><textarea value={editor.blogMarkdown || ""} onChange={(event) => setEditor({ ...editor, blogMarkdown: event.target.value })}/></details>
                 <details className="editor-section" open><summary>LinkedIn paylaşımı</summary><textarea value={editor.linkedinPost || ""} onChange={(event) => setEditor({ ...editor, linkedinPost: event.target.value })}/><button className="text-button" onClick={() => void copyLinkedIn()}>Metni kopyala</button></details>
@@ -299,6 +323,16 @@ export default function App() {
                   </button>}
                 <input ref={fileInput} hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadImage(event.target.files?.[0])}/>
               </div>
+              {editor.inlineVisuals?.filter((visual) => visual.needed).map((visual) => {
+                const role = `inline-${visual.slot}` as AssetRole; const image = bundleAssets.find((asset) => asset.role === role)?.url;
+                return <div className="visual-block inline-visual-block" key={role}>
+                  <div className="visual-title"><span>YAZI İÇİ GÖRSEL {visual.slot}</span>{image && <b>Hazır</b>}</div>
+                  <p className="inline-visual-caption">{visual.caption}</p>
+                  <details className="inline-prompt"><summary>Bu bölüme özel görsel promptu</summary><textarea value={visual.prompt} onChange={(event) => setEditor({ ...editor, inlineVisuals: editor.inlineVisuals?.map((item) => item.slot === visual.slot ? { ...item, prompt:event.target.value } : item) })}/><button className="text-button" onClick={() => { void navigator.clipboard.writeText(visual.prompt); setNotice(`İç görsel ${visual.slot} promptu kopyalandı.`); }}>Promptu kopyala</button></details>
+                  {image ? <div className="image-preview"><img src={image} alt={visual.alt}/><button onClick={() => inlineFileInputs.current[visual.slot]?.click()}>Değiştir</button></div> : <button className="dropzone compact" onClick={() => inlineFileInputs.current[visual.slot]?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); void uploadImage(event.dataTransfer.files[0], role, visual); }}><Icon name="image"/><strong>İç görseli yükle</strong><span>Yazıda {`{{INLINE_IMAGE_${visual.slot}}}`} konumunda görünür</span><em>Dosya seç</em></button>}
+                  <input ref={(node) => { inlineFileInputs.current[visual.slot] = node; }} hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadImage(event.target.files?.[0], role, visual)}/>
+                </div>;
+              })}
               <div className="actions">{previewMode === "edit" && <button className="secondary" disabled={busy} onClick={() => void saveDraft()}>Düzenlemeyi kaydet</button>}{selected.status !== "published" && selected.status !== "scheduled" && <button className="primary" disabled={busy || !canApprove} onClick={() => void updateStatus("approved")}><Icon name="check"/>{busy ? "İşleniyor…" : "Paketi onayla"}</button>}</div>
               {(selected.status === "approved" || selected.status === "scheduled") && <button className="publish-button" disabled={busy || !readiness.publishing || (!selected.visualUrl && !upload?.url)} onClick={() => void publishOrVerify()}>{selected.status === "scheduled" ? "Canlılığı doğrula" : "Blogu GitHub'a gönder"}</button>}
               {selected.status === "published" && <a className="preview-link" href={selected.publishedUrl || `https://recepozgur.com${selected.blogPath}`} target="_blank" rel="noreferrer">Canlı blogu aç <Icon name="external"/></a>}
@@ -317,7 +351,7 @@ export default function App() {
           <article className="settings-card wide"><span>KONU ÇERÇEVESİ</span><h2>Gösteriş değil, kanıtlanabilir teknik düşünce</h2><p>Backend ve sistem tasarımı, AI ile ürün geliştirme, mobil mimari, ürün mühendisliği, otomasyon ve growth engineering. Projeler yalnız gerçek bir ders veya trade-off anlatıyorsa örnek olur; kullanıcı sayısı veya başarı şişirilmez.</p></article>
         </section>}
       </main>
-      {fullscreenSurface && editor && <div className={`preview-modal ${fullscreenSurface}`} role="dialog" aria-modal="true" aria-label={`${fullscreenSurface === "linkedin" ? "LinkedIn" : "Blog"} tam ekran önizleme`}><header><div><strong>{fullscreenSurface === "linkedin" ? "LinkedIn gönderisi" : "recepozgur.com blog yazısı"}</strong><span>Bu yalnızca önizleme; henüz yayınlanmadı.</span></div><button onClick={() => setFullscreenSurface(null)}>Kapat ×</button></header><div className="preview-modal-body">{fullscreenSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl}/>}</div></div>}
+      {fullscreenSurface && editor && <div className={`preview-modal ${fullscreenSurface}`} role="dialog" aria-modal="true" aria-label={`${fullscreenSurface === "linkedin" ? "LinkedIn" : "Blog"} tam ekran önizleme`}><header><div><strong>{fullscreenSurface === "linkedin" ? "LinkedIn gönderisi" : "recepozgur.com blog yazısı"}</strong><span>Bu yalnızca önizleme; henüz yayınlanmadı.</span></div><button onClick={() => setFullscreenSurface(null)}>Kapat ×</button></header><div className="preview-modal-body">{fullscreenSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} imageSlots={inlineImageSlots}/>}</div></div>}
     </div>
   );
 }

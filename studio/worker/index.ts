@@ -12,10 +12,11 @@ interface Env {
 
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
 type Source = { label: string; url: string; note: string };
+type InlineVisual = { needed: boolean; slot: number; prompt: string; alt: string; caption: string };
 type GeneratedBundle = {
   title: string; slug: string; description: string; category: string; tags: string[];
   hook: string; blogMarkdown: string; linkedinPost: string; visualPrompt: string;
-  heroAlt: string; sources: Source[]; generationNote: string;
+  heroAlt: string; articleType: string; inlineVisuals: InlineVisual[]; sources: Source[]; generationNote: string;
 };
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow, noarchive" } });
@@ -65,12 +66,13 @@ function parseJson<T>(value: unknown, fallback: T): T {
 }
 
 function bundleFromRow(row: Record<string, unknown>) {
-  return { ...row, tags: parseJson(row.tagsJson, []), sources: parseJson(row.sourcesJson, []), tagsJson: undefined, sourcesJson: undefined };
+  return { ...row, tags: parseJson(row.tagsJson, []), sources: parseJson(row.sourcesJson, []), inlineVisuals: parseJson(row.inlineVisualsJson, []), tagsJson: undefined, sourcesJson: undefined, inlineVisualsJson: undefined };
 }
 
 const selectColumns = `id, title, slug, description, hook, blog_path AS blogPath, blog_markdown AS blogMarkdown,
 linkedin_post AS linkedinPost, visual_prompt AS visualPrompt, hero_alt AS heroAlt, status, category,
 tags_json AS tagsJson, sources_json AS sourcesJson, generation_note AS generationNote,
+article_type AS articleType, inline_visuals_json AS inlineVisualsJson,
 updated_at AS updatedAt, created_at AS createdAt, source_count AS sourceCount,
 checks_passed AS checksPassed, checks_total AS checksTotal, visual_url AS visualUrl, published_url AS publishedUrl`;
 
@@ -84,10 +86,11 @@ function extractJson(text: string) {
 async function generateBundle(env: Env, topic: string, recentTitles: string[] = []): Promise<GeneratedBundle> {
   if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY secret'ı henüz tanımlı değil.");
   const schema = {
-    type: "object", additionalProperties: false, required: ["title","slug","description","category","tags","hook","blogMarkdown","linkedinPost","visualPrompt","heroAlt","sources","generationNote"],
+    type: "object", additionalProperties: false, required: ["title","slug","description","category","tags","hook","blogMarkdown","linkedinPost","visualPrompt","heroAlt","articleType","inlineVisuals","sources","generationNote"],
     properties: {
       title:{type:"string"}, slug:{type:"string"}, description:{type:"string"}, category:{type:"string"}, tags:{type:"array",items:{type:"string"},maxItems:6}, hook:{type:"string"},
-      blogMarkdown:{type:"string"}, linkedinPost:{type:"string"}, visualPrompt:{type:"string"}, heroAlt:{type:"string"},
+      blogMarkdown:{type:"string"}, linkedinPost:{type:"string"}, visualPrompt:{type:"string"}, heroAlt:{type:"string"}, articleType:{type:"string",enum:["opinion","technical","tutorial","comparison","data","case-study"]},
+      inlineVisuals:{type:"array",minItems:2,maxItems:2,items:{type:"object",additionalProperties:false,required:["needed","slot","prompt","alt","caption"],properties:{needed:{type:"boolean"},slot:{type:"integer",minimum:1,maximum:2},prompt:{type:"string"},alt:{type:"string"},caption:{type:"string"}}}},
       sources:{type:"array",minItems:2,maxItems:12,items:{type:"object",additionalProperties:false,required:["label","url","note"],properties:{label:{type:"string"},url:{type:"string"},note:{type:"string"}}}}, generationNote:{type:"string"}
     }
   };
@@ -113,9 +116,17 @@ Araştırma ve yazım kuralları:
 - “teslimat akışı”, “en az sürtünme”, “pratik uyum”, “güçlü ikinci aday”, “X kesişiminde”, “asıl mesele/test”, “üç eksende”, “kritik nokta şu” gibi yapay ve tercüme kokan kalıpları kullanma. “X değil, Y” formülünü ve iki nokta üst üste başlayan şablon listeleri tekrarlama.
 - YALNIZ konu Claude Fable 5, GPT-5.6 Sol veya açık bir model karşılaştırmasıysa şu bilgiyi kullan: Recep bu iki modeli bizzat kullandı ve “kullandım”, “karşılaştırdım”, “benim tercihim” diyebilir. Diğer konulara bu modelleri veya model seçimi tartışmasını sokma.
 - Ürün ve model adlarını resmi kaynakta geçtiği biçimde yaz. Benzer isim uydurma, sürüm karıştırma veya henüz doğrulanmamış özelliği varmış gibi anlatma.
-- Başlık net; description en fazla 170 karakter olsun.
+- Başlık için sessizce en az 5 farklı aday düşün ve en doğal, somut olanı seç. Başlık tercihen 45-72 karakter olsun; tek başına “X nedir?” kalıbı, clickbait, gereksiz iki nokta ve soyut kurumsal dil kullanma. description en fazla 170 karakter olsun.
 - slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
-- blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ekleme. 900-1500 kelime, H2 başlıklar, yalnız konuyla doğrudan ilgili somut örnekler ve sonuç içersin.
+- Önce articleType seç: opinion, technical, tutorial, comparison, data veya case-study. Uzunluğu türe göre ayarla: opinion 650-900; technical 900-1300; tutorial 1100-1500; comparison 800-1100; data 700-1000; case-study 800-1100 kelime. Konu gerektirmiyorsa sırf uzun olsun diye uzatma.
+- blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ve H1 ekleme. En fazla 4-5 adet H2 kullan. Başlıkları doğal, kısa ve birbirinden farklı kur; “Giriş”, “Sonuç”, “Asıl mesele”, “Neden önemli?” gibi jenerik başlıklardan kaçın.
+- Metni duvar gibi yazma. Konuya uygunsa paragrafların arasına Markdown listesi, kısa blockquote, karşılaştırma tablosu veya kod örneği koy. Her yazıda aynı bileşenleri kullanma; biçimi konu belirlesin.
+- 2-5 gerçekten önemli ifadeyi **kalın**, 1-3 kısa nüansı *italik* yaz. Bütün paragrafı kalın/italik yapma; altı çizili metin üretme.
+- Blockquote yalnız tek ve güçlü bir çıkarım için kullanılmalı; genel slogan veya yazının özeti olmamalı.
+- Karşılaştırma ya da doğrulanmış sayısal veri varsa standart Markdown tablosu kullan. Sayı uydurma. Konu sayısal değilse tablo zorunlu değildir.
+- Kod gerçekten konuyu açıklıyorsa dil adı verilmiş fenced code block kullan. Ardından test senaryosu veya beklenen çıktı faydalıysa sırasıyla \`\`\`test ve \`\`\`output blokları ekle; sistem bunları Kod / Test / Çıktı sekmeleri olarak gösterecek. Kod ilgisizse ekleme.
+- inlineVisuals her zaman tam 2 kayıt içersin. Yazının içinde ek görsel anlatımı güçlendirecekse needed=true yap, 35-75 kelimelik İngilizce ve o bölüme özel prompt, doğal Türkçe alt ve caption üret. Gerekmiyorsa needed=false ve metin alanlarını boş bırak.
+- needed=true olan görsel için blogMarkdown içinde uygun bölüm sonuna tek başına {{INLINE_IMAGE_1}} veya {{INLINE_IMAGE_2}} yer tutucusunu tam bir kez koy. Yer tutucuyu başlığın hemen altına, ilk paragraftan önce veya art arda koyma. Görsel makalenin söylediği şeyi tekrar etmemeli; açıklaması zor bir kavramı, karşılaştırmayı veya veriyi görünür kılmalı.
 - LinkedIn metni 180-300 kelime: ilk satır doğal ama merak uyandıran bir giriş olsun; kısa paragraflar kullan, sahte başarı ve etkileşim tuzağı kurma.
 - LinkedIn metnini yazdıktan sonra sessiz bir redaksiyon yap: AI klişelerini, gereksiz sıfatları, aynı ritimdeki cümleleri ve Türkçede günlük kullanımda söylenmeyecek ifadeleri temizle.
 - Son bölümde önce “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” bağlantısını ver; en son satırda konuya özel, tek ve kolay cevaplanabilir bir soru sor. “Siz bu konuda ne düşünüyorsunuz?” gibi genel soru sorma. Örneğin bir model karşılaştırmasında okuyucudan kalite, maliyet veya otonomiden hangisini önceliklendirdiğini seçmesini isteyebilirsin.
@@ -149,7 +160,9 @@ Araştırma ve yazım kuralları:
   const slug = compactSlug(raw.slug || raw.title);
   const sources = (raw.sources || []).filter((s) => /^https:\/\//.test(s.url)).slice(0, 12);
   if (sources.length < 2) throw new Error("Yeterli doğrulanabilir kaynak bulunamadı; paket kaydedilmedi.");
-  return { ...raw, slug, sources, tags: (raw.tags || []).slice(0, 6), description: raw.description.slice(0, 170) };
+  const inlineVisuals = (raw.inlineVisuals || []).slice(0, 2).map((visual, index) => ({ ...visual, slot: index + 1 }));
+  while (inlineVisuals.length < 2) inlineVisuals.push({ needed:false, slot:inlineVisuals.length + 1, prompt:"", alt:"", caption:"" });
+  return { ...raw, slug, sources, inlineVisuals, tags: (raw.tags || []).slice(0, 6), description: raw.description.slice(0, 170) };
 }
 
 async function recentTitles(env: Env) {
@@ -160,8 +173,8 @@ async function recentTitles(env: Env) {
 async function storeGeneratedBundle(env: Env, generated: GeneratedBundle, actor: string, action = "generated") {
   const id = crypto.randomUUID(); const timestamp = now(); const slug = await uniqueSlug(env, generated.slug);
   const linkedinPost = syncLinkedinUrl(generated.linkedinPost, slug);
-  await env.DB.prepare(`INSERT INTO content_bundles (id,title,slug,description,hook,blog_path,blog_markdown,linkedin_post,visual_prompt,hero_alt,status,category,tags_json,sources_json,generation_note,source_count,checks_passed,checks_total,updated_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
-    .bind(id,generated.title,slug,generated.description,generated.hook,`/blog/${slug}/`,generated.blogMarkdown,linkedinPost,generated.visualPrompt,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.sources.length,4,5,timestamp,timestamp).run();
+  await env.DB.prepare(`INSERT INTO content_bundles (id,title,slug,description,hook,blog_path,blog_markdown,linkedin_post,visual_prompt,hero_alt,status,category,tags_json,sources_json,generation_note,article_type,inline_visuals_json,source_count,checks_passed,checks_total,updated_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+    .bind(id,generated.title,slug,generated.description,generated.hook,`/blog/${slug}/`,generated.blogMarkdown,linkedinPost,generated.visualPrompt,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.articleType,JSON.stringify(generated.inlineVisuals),generated.sources.length,4,5,timestamp,timestamp).run();
   await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(id,action,actor,timestamp).run();
   const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(id).first<Record<string, unknown>>();
   return bundleFromRow(row || {});
@@ -175,9 +188,17 @@ async function automaticGeneration(env: Env) {
 }
 
 function yaml(value: string) { return JSON.stringify(value.replace(/\r/g, "")); }
-function markdownFile(bundle: any, heroImage: string) {
+function markdownFile(bundle: any, heroImage: string, inlineImages: Record<number, string> = {}) {
   const sources = (bundle.sources as Source[]).map((s) => `  - label: ${yaml(s.label)}\n    url: ${yaml(s.url)}\n    note: ${yaml(s.note)}`).join("\n");
-  return `---\ntitle: ${yaml(bundle.title)}\ndescription: ${yaml(bundle.description)}\nslug: ${yaml(bundle.slug)}\npublishedAt: ${new Date().toISOString().slice(0,10)}\ntags: ${JSON.stringify(bundle.tags)}\ncategory: ${yaml(bundle.category)}\nheroImage: ${yaml(heroImage)}\nheroAlt: ${yaml(bundle.heroAlt)}\nfeatured: false\ndraft: false\nsources:\n${sources}\n---\n\n${bundle.blogMarkdown.trim()}\n`;
+  let body = String(bundle.blogMarkdown || "").trim();
+  for (const visual of (bundle.inlineVisuals || []) as InlineVisual[]) {
+    const marker = `{{INLINE_IMAGE_${visual.slot}}}`;
+    const path = inlineImages[visual.slot];
+    const replacement = path ? `![${visual.alt || bundle.title}](${path})${visual.caption ? `\n\n*${visual.caption}*` : ""}` : "";
+    body = body.split(marker).join(replacement);
+  }
+  body = body.replace(/\{\{INLINE_IMAGE_[12]\}\}/g, "");
+  return `---\ntitle: ${yaml(bundle.title)}\ndescription: ${yaml(bundle.description)}\nslug: ${yaml(bundle.slug)}\npublishedAt: ${new Date().toISOString().slice(0,10)}\ntags: ${JSON.stringify(bundle.tags)}\ncategory: ${yaml(bundle.category)}\nheroImage: ${yaml(heroImage)}\nheroAlt: ${yaml(bundle.heroAlt)}\nfeatured: false\ndraft: false\nsources:\n${sources}\n---\n\n${body}\n`;
 }
 
 function bytesToBase64(bytes: Uint8Array) {
@@ -210,7 +231,7 @@ export default {
         return json({ bundles: result.results.map(bundleFromRow), generationReady: Boolean(env.OPENAI_API_KEY), publishingReady: Boolean(env.GITHUB_TOKEN) });
       }
       if (request.method === "GET" && url.pathname === "/api/assets") {
-        const result = await env.DB.prepare(`SELECT assets.id, assets.bundle_id AS bundleId, assets.filename, assets.content_type AS contentType, assets.size_bytes AS sizeBytes, assets.created_at AS createdAt, '/api/assets/' || assets.object_key AS url, content_bundles.title AS bundleTitle FROM assets LEFT JOIN content_bundles ON content_bundles.id=assets.bundle_id ORDER BY assets.created_at DESC`).all();
+        const result = await env.DB.prepare(`SELECT assets.id, assets.bundle_id AS bundleId, assets.filename, assets.content_type AS contentType, assets.size_bytes AS sizeBytes, assets.created_at AS createdAt, assets.role, assets.alt_text AS alt, assets.caption, '/api/assets/' || assets.object_key AS url, content_bundles.title AS bundleTitle FROM assets LEFT JOIN content_bundles ON content_bundles.id=assets.bundle_id ${url.searchParams.get("bundleId") ? "WHERE assets.bundle_id=?" : ""} ORDER BY assets.created_at DESC`).bind(...(url.searchParams.get("bundleId") ? [url.searchParams.get("bundleId")] : [])).all();
         return json({ assets: result.results });
       }
       if (request.method === "POST" && url.pathname === "/api/bundles/generate") {
@@ -230,10 +251,11 @@ export default {
           fields.push("slug=?","blog_path=?"); values.push(slug,`/blog/${slug}/`);
           body.linkedinPost = syncLinkedinUrl(typeof body.linkedinPost === "string" ? body.linkedinPost : existing.linkedinPost, slug);
         }
-        const editable: Record<string,string> = { title:"title",description:"description",hook:"hook",blogMarkdown:"blog_markdown",linkedinPost:"linkedin_post",visualPrompt:"visual_prompt",heroAlt:"hero_alt",category:"category",generationNote:"generation_note" };
+        const editable: Record<string,string> = { title:"title",description:"description",hook:"hook",blogMarkdown:"blog_markdown",linkedinPost:"linkedin_post",visualPrompt:"visual_prompt",heroAlt:"hero_alt",category:"category",generationNote:"generation_note",articleType:"article_type" };
         for (const [key,column] of Object.entries(editable)) if (typeof body[key] === "string") { fields.push(`${column}=?`); values.push(String(body[key]).trim()); }
         if (Array.isArray(body.tags)) { fields.push("tags_json=?"); values.push(JSON.stringify(body.tags)); }
         if (Array.isArray(body.sources)) { fields.push("sources_json=?","source_count=?"); values.push(JSON.stringify(body.sources),body.sources.length); }
+        if (Array.isArray(body.inlineVisuals)) { fields.push("inline_visuals_json=?"); values.push(JSON.stringify(body.inlineVisuals.slice(0,2))); }
         if (typeof body.status === "string") {
           if (!allowedStatuses.has(body.status as Status)) return json({error:"Geçersiz durum."},400);
           if (body.status === "approved") {
@@ -254,7 +276,16 @@ export default {
         const key = decodeURIComponent(String(bundle.visualUrl).replace(/^\/api\/assets\//,"")); const object = await env.UPLOADS.get(key); if (!object) return json({error:"Görsel R2'de bulunamadı."},404);
         const ext = safeName(key.split(".").pop() || "webp"); const assetPath = `public/blog/${bundle.slug}.${ext}`; const heroImage = `/blog/${bundle.slug}.${ext}`;
         await githubPut(env,assetPath,new Uint8Array(await object.arrayBuffer()),`content: add visual for ${bundle.slug}`);
-        await githubPut(env,`src/content/blog/${bundle.slug}.md`,new TextEncoder().encode(markdownFile(bundle,heroImage)),`content: publish ${bundle.slug}`);
+        const inlineRows = await env.DB.prepare("SELECT object_key AS objectKey, role FROM assets WHERE bundle_id=? AND role IN ('inline-1','inline-2') ORDER BY created_at DESC").bind(match[1]).all<{objectKey:string;role:string}>();
+        const inlineImages: Record<number,string> = {};
+        for (const row of inlineRows.results) {
+          const slot = Number(row.role.slice(-1)); if (inlineImages[slot]) continue;
+          const inlineObject = await env.UPLOADS.get(row.objectKey); if (!inlineObject) continue;
+          const inlineExt = safeName(row.objectKey.split(".").pop() || "webp"); const inlinePath = `public/blog/${bundle.slug}-inline-${slot}.${inlineExt}`;
+          await githubPut(env,inlinePath,new Uint8Array(await inlineObject.arrayBuffer()),`content: add inline visual ${slot} for ${bundle.slug}`);
+          inlineImages[slot] = `/blog/${bundle.slug}-inline-${slot}.${inlineExt}`;
+        }
+        await githubPut(env,`src/content/blog/${bundle.slug}.md`,new TextEncoder().encode(markdownFile(bundle,heroImage,inlineImages)),`content: publish ${bundle.slug}`);
         const publishedUrl = `https://recepozgur.com/blog/${bundle.slug}/`; await env.DB.prepare("UPDATE content_bundles SET status='scheduled',published_url=?,updated_at=? WHERE id=?").bind(publishedUrl,now(),match[1]).run();
         await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"blog_commit",actor,now()).run(); return json({ok:true,url:publishedUrl,status:"scheduled"});
       }
@@ -264,10 +295,14 @@ export default {
         await env.DB.prepare("UPDATE content_bundles SET status='published',updated_at=? WHERE id=?").bind(now(),match[1]).run(); return json({ok:true,status:"published",url:row.publishedUrl});
       }
       if (request.method === "POST" && url.pathname === "/api/assets") {
-        const form=await request.formData(); const file=form.get("file"); const bundleId=String(form.get("bundleId")||"unassigned"); if (!(file instanceof File)) return json({error:"Bir görsel seçmelisin."},400);
+        const form=await request.formData(); const file=form.get("file"); const bundleId=String(form.get("bundleId")||"unassigned"); const role=String(form.get("role")||"hero"); const alt=String(form.get("alt")||"").slice(0,300); const caption=String(form.get("caption")||"").slice(0,500); if (!(file instanceof File)) return json({error:"Bir görsel seçmelisin."},400);
+        if (!new Set(["hero","inline-1","inline-2"]).has(role)) return json({error:"Geçersiz görsel alanı."},400);
         if (!new Set(["image/png","image/jpeg","image/webp","image/svg+xml"]).has(file.type)) return json({error:"Yalnızca PNG, JPG, WebP veya SVG yüklenebilir."},415); if (file.size>Number(env.MAX_UPLOAD_BYTES||10_485_760)) return json({error:"Görsel 10 MB sınırını aşıyor."},413);
-        const key=`${safeName(bundleId)}/${Date.now()}-${safeName(file.name)}`; await env.UPLOADS.put(key,file.stream(),{httpMetadata:{contentType:file.type,cacheControl:"public, max-age=31536000, immutable"},customMetadata:{bundleId}}); const assetUrl=`/api/assets/${encodeURIComponent(key)}`;
-        await env.DB.prepare("INSERT INTO assets (id,bundle_id,object_key,filename,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?,?)").bind(crypto.randomUUID(),bundleId,key,file.name,file.type,file.size,now()).run(); await env.DB.prepare("UPDATE content_bundles SET visual_url=?,checks_passed=checks_total,updated_at=? WHERE id=?").bind(assetUrl,now(),bundleId).run(); return json({ok:true,key,url:assetUrl},201);
+        const key=`${safeName(bundleId)}/${Date.now()}-${safeName(file.name)}`; await env.UPLOADS.put(key,file.stream(),{httpMetadata:{contentType:file.type,cacheControl:"public, max-age=31536000, immutable"},customMetadata:{bundleId,role}}); const assetUrl=`/api/assets/${encodeURIComponent(key)}`;
+        await env.DB.prepare("INSERT INTO assets (id,bundle_id,object_key,filename,content_type,size_bytes,role,alt_text,caption,created_at) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(crypto.randomUUID(),bundleId,key,file.name,file.type,file.size,role,alt,caption,now()).run();
+        if (role === "hero") await env.DB.prepare("UPDATE content_bundles SET visual_url=?,checks_passed=checks_total,updated_at=? WHERE id=?").bind(assetUrl,now(),bundleId).run();
+        else await env.DB.prepare("UPDATE content_bundles SET updated_at=? WHERE id=?").bind(now(),bundleId).run();
+        return json({ok:true,key,url:assetUrl,role},201);
       }
       const asset=url.pathname.match(/^\/api\/assets\/(.+)$/); if (request.method==="GET"&&asset) { const object=await env.UPLOADS.get(decodeURIComponent(asset[1])); if(!object)return new Response("Not found",{status:404}); const headers=new Headers();object.writeHttpMetadata(headers);headers.set("etag",object.httpEtag);headers.set("X-Robots-Tag","noindex, nofollow, noarchive");return new Response(object.body,{headers}); }
       return json({error:"Endpoint bulunamadı."},404);

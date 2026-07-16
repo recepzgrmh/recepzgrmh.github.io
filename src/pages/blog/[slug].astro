@@ -19,6 +19,7 @@ interface Props {
 const { post, allPosts } = Astro.props;
 const { Content, headings } = await render(post);
 const minutes = readingMinutes(post.body ?? "");
+const titleSize = post.data.title.length > 74 ? "text-[clamp(2.35rem,5vw,4.15rem)] leading-[1.02]" : post.data.title.length > 54 ? "text-[clamp(2.45rem,5.5vw,4.65rem)] leading-[1]" : "text-[clamp(2.5rem,6vw,5.25rem)] leading-[0.98]";
 const canonical = `https://recepozgur.com/blog/${post.data.slug}/`;
 const related = sortPosts(allPosts.filter((candidate) => candidate.id !== post.id && candidate.data.tags.some((tag) => post.data.tags.includes(tag)))).slice(0, 2);
 const jsonLd = {
@@ -64,7 +65,7 @@ const jsonLd = {
               <span class="text-amber">{post.data.category}</span><span>·</span>
               <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time><span>·</span><span>{minutes} dk okuma</span>
             </div>
-            <h1 class="display mt-6 text-balance text-[clamp(2.5rem,6vw,5.25rem)] leading-[0.98] tracking-[-0.045em]">{post.data.title}</h1>
+            <h1 class:list={["display mt-6 text-balance tracking-[-0.045em]", titleSize]}>{post.data.title}</h1>
             <p class="mt-7 max-w-2xl text-lg leading-relaxed text-fg-2 sm:text-xl">{post.data.description}</p>
             <div class="mt-8 flex flex-wrap gap-2">{post.data.tags.map((tag) => <span class="rounded-pill bg-soft px-3 py-1.5 font-mono text-[0.68rem] font-semibold text-fg-2">#{tag}</span>)}</div>
           </div>
@@ -126,4 +127,7 @@ const jsonLd = {
     )}
   </main>
   <Footer lang="tr" />
+  <script>
+    import "../../scripts/blogArticle.ts";
+  </script>
 </Base>

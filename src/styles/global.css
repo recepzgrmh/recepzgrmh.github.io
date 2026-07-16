@@ -123,6 +123,11 @@ body {
 .blog-prose > * + * {
   margin-top: 1.45rem;
 }
+.blog-prose > p:first-child {
+  color: var(--color-fg);
+  font-size: clamp(1.16rem, 1.8vw, 1.3rem);
+  line-height: 1.72;
+}
 .blog-prose h2,
 .blog-prose h3 {
   color: var(--color-fg);
@@ -168,12 +173,68 @@ body {
   margin-top: 0.65rem;
 }
 .blog-prose blockquote {
+  position: relative;
   border-left: 4px solid var(--color-amber);
   border-radius: 0 var(--radius-card) var(--radius-card) 0;
   background: var(--color-soft);
   padding: 1.25rem 1.5rem;
   color: var(--color-fg);
   font-weight: 700;
+}
+.blog-prose blockquote::before {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-amber);
+  content: "ÖNE ÇIKAN FİKİR";
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+.blog-prose table {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.blog-prose th,
+.blog-prose td {
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.9rem 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+.blog-prose th {
+  background: var(--color-night);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+.blog-prose tr:last-child td { border-bottom: 0; }
+.blog-prose > p:has(> img) {
+  overflow: hidden;
+  margin-top: 3rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card2);
+  background: var(--color-soft);
+}
+.blog-prose > p:has(> img) img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.blog-prose > p:has(> img) + p:has(> em:only-child) {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.55;
 }
 .blog-prose pre {
   overflow-x: auto;
@@ -185,6 +246,43 @@ body {
   font-size: 0.88rem;
   line-height: 1.7;
 }
+.blog-prose .code-lab {
+  overflow: hidden;
+  border: 1px solid #29292f;
+  border-radius: var(--radius-card);
+  background: var(--color-night);
+  box-shadow: 0 22px 50px -34px rgba(17, 17, 20, 0.7);
+}
+.blog-prose .code-lab-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  border-bottom: 1px solid #2f2f35;
+  padding-inline: 0.65rem 0.8rem;
+}
+.blog-prose .code-lab-tabs { display: flex; align-self: stretch; }
+.blog-prose .code-lab button {
+  border: 0;
+  background: transparent;
+  color: #a1a1aa;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.blog-prose .code-lab-tabs button { border-bottom: 2px solid transparent; padding-inline: 0.75rem; }
+.blog-prose .code-lab-tabs button.active { border-color: var(--color-amber); color: white; }
+.blog-prose .code-copy { border: 1px solid #3f3f46; border-radius: 999px; padding: 0.38rem 0.7rem; }
+.blog-prose .code-copy:hover { border-color: var(--color-amber); color: white; }
+.blog-prose .code-lab pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 1.4rem;
+}
+.blog-prose .code-lab pre[hidden] { display: none; }
 .blog-prose :not(pre) > code {
   border-radius: 0.4rem;
   background: var(--color-soft);
