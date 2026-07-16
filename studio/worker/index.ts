@@ -33,6 +33,32 @@ function safeName(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9._-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").slice(0, 100) || "icerik";
 }
 
+const slugStopWords = new Set(["acaba","ama","ancak","bir","bu","da","de","daha","icin","ile","mi","mu","mı","mü","nasil","neden","ne","olarak","olan","olur","ve","veya","yalnizca"]);
+
+function compactSlug(value: string) {
+  const ascii = value.toLowerCase().replace(/[çğıöşü]/g, (letter) => ({ ç:"c", ğ:"g", ı:"i", ö:"o", ş:"s", ü:"u" } as Record<string,string>)[letter] || letter);
+  const words = safeName(ascii).split("-").filter((word) => word.length > 1 && !slugStopWords.has(word));
+  const chosen: string[] = [];
+  for (const word of words) {
+    if (!chosen.includes(word)) chosen.push(word);
+    if (chosen.length === 5) break;
+  }
+  while (chosen.join("-").length > 60 && chosen.length > 3) chosen.pop();
+  return chosen.join("-") || "teknik-not";
+}
+
+function syncLinkedinUrl(post: string, slug: string) {
+  const url = `https://recepozgur.com/blog/${slug}/`;
+  if (/https:\/\/recepozgur\.com\/blog\/[^\s/]+\/?/i.test(post)) return post.replace(/https:\/\/recepozgur\.com\/blog\/[^\s/]+\/?/gi, url);
+  return `${post.trim()}\n\nDaha ayrıntılı okuma: ${url}`;
+}
+
+async function uniqueSlug(env: Env, requested: string, excludeId = "") {
+  const base = compactSlug(requested); let candidate = base; let suffix = 2;
+  while (await env.DB.prepare("SELECT id FROM content_bundles WHERE slug=? AND id<>? LIMIT 1").bind(candidate, excludeId).first()) candidate = `${base.slice(0, 56)}-${suffix++}`;
+  return candidate;
+}
+
 function parseJson<T>(value: unknown, fallback: T): T {
   if (typeof value !== "string") return fallback;
   try { return JSON.parse(value) as T; } catch { return fallback; }
@@ -79,7 +105,8 @@ Araştırma ve yazım kuralları:
 - Kullanıcısı veya ölçeği olmayan kişisel projelerini başarı hikâyesi gibi anlatma. Proje adı kullanmak zorunda değilsin.
 - Kariyer tavsiyesi, motivasyon ve topluluk içeriği üretme.
 - Türkçe, doğal, ölçülü ve teknik yaz. Recep'i deneyiminin ötesinde otorite gibi gösterme.
-- Başlık net; description en fazla 170 karakter; slug ASCII kebab-case olsun.
+- Başlık net; description en fazla 170 karakter olsun.
+- slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
 - blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ekleme. 900-1500 kelime, H2 başlıklar, somut örnek/trade-off ve sonuç içersin.
 - LinkedIn metni 180-300 kelime: ilk satır scroll-stop hook, kısa paragraflar, sahte başarı/etkileşim tuzağı yok, sonda “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” olsun.
 - visualPrompt, ChatGPT web arayüzünde üretilecek yazıya özel 16:9 editorial görsel için ayrıntılı İngilizce prompt olsun; yazı/logo/UI screenshot isteme.
@@ -102,7 +129,7 @@ Araştırma ve yazım kuralları:
   const outputText = result.output_text || result.output?.flatMap((item: any) => item.content || []).find((item: any) => item.type === "output_text")?.text;
   if (!outputText) throw new Error("OpenAI boş veya tamamlanmamış yanıt döndürdü.");
   const raw = extractJson(outputText) as GeneratedBundle;
-  const slug = safeName(raw.slug || raw.title);
+  const slug = compactSlug(raw.slug || raw.title);
   const sources = (raw.sources || []).filter((s) => /^https:\/\//.test(s.url)).slice(0, 12);
   if (sources.length < 2) throw new Error("Yeterli doğrulanabilir kaynak bulunamadı; paket kaydedilmedi.");
   return { ...raw, slug, sources, tags: (raw.tags || []).slice(0, 6), description: raw.description.slice(0, 170) };
@@ -114,9 +141,10 @@ async function recentTitles(env: Env) {
 }
 
 async function storeGeneratedBundle(env: Env, generated: GeneratedBundle, actor: string, action = "generated") {
-  const id = crypto.randomUUID(); const timestamp = now();
+  const id = crypto.randomUUID(); const timestamp = now(); const slug = await uniqueSlug(env, generated.slug);
+  const linkedinPost = syncLinkedinUrl(generated.linkedinPost, slug);
   await env.DB.prepare(`INSERT INTO content_bundles (id,title,slug,description,hook,blog_path,blog_markdown,linkedin_post,visual_prompt,hero_alt,status,category,tags_json,sources_json,generation_note,source_count,checks_passed,checks_total,updated_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
-    .bind(id,generated.title,generated.slug,generated.description,generated.hook,`/blog/${generated.slug}/`,generated.blogMarkdown,generated.linkedinPost,generated.visualPrompt,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.sources.length,4,5,timestamp,timestamp).run();
+    .bind(id,generated.title,slug,generated.description,generated.hook,`/blog/${slug}/`,generated.blogMarkdown,linkedinPost,generated.visualPrompt,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.sources.length,4,5,timestamp,timestamp).run();
   await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(id,action,actor,timestamp).run();
   const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(id).first<Record<string, unknown>>();
   return bundleFromRow(row || {});
@@ -177,6 +205,14 @@ export default {
       const match = url.pathname.match(/^\/api\/bundles\/([a-zA-Z0-9_-]+)(?:\/(publish|verify))?$/);
       if (match && request.method === "PATCH" && !match[2]) {
         const body = await request.json<Record<string, unknown>>(); const fields: string[]=[]; const values: unknown[]=[];
+        const existing = await env.DB.prepare("SELECT slug,status,linkedin_post AS linkedinPost FROM content_bundles WHERE id=?").bind(match[1]).first<{slug:string;status:Status;linkedinPost:string}>();
+        if (!existing) return json({error:"Paket bulunamadı."},404);
+        if (typeof body.slug === "string") {
+          const slug = await uniqueSlug(env, body.slug, match[1]);
+          if ((existing.status === "scheduled" || existing.status === "published") && slug !== existing.slug) return json({error:"Yayınlanmış URL değiştirilemez. Değişiklik gerekiyorsa 301 yönlendirme planlanmalı."},409);
+          fields.push("slug=?","blog_path=?"); values.push(slug,`/blog/${slug}/`);
+          body.linkedinPost = syncLinkedinUrl(typeof body.linkedinPost === "string" ? body.linkedinPost : existing.linkedinPost, slug);
+        }
         const editable: Record<string,string> = { title:"title",description:"description",hook:"hook",blogMarkdown:"blog_markdown",linkedinPost:"linkedin_post",visualPrompt:"visual_prompt",heroAlt:"hero_alt",category:"category",generationNote:"generation_note" };
         for (const [key,column] of Object.entries(editable)) if (typeof body[key] === "string") { fields.push(`${column}=?`); values.push(String(body[key]).trim()); }
         if (Array.isArray(body.tags)) { fields.push("tags_json=?"); values.push(JSON.stringify(body.tags)); }

@@ -185,7 +185,7 @@ export default function App() {
   async function saveDraft() {
     if (!editor) return; setBusy(true); setNotice("");
     try {
-      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, visualPrompt: editor.visualPrompt, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, tags: editor.tags, sources: editor.sources }) });
+      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, slug: editor.slug, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, visualPrompt: editor.visualPrompt, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, tags: editor.tags, sources: editor.sources }) });
       const result = await response.json() as { bundle?: Bundle; error?: string }; if (!response.ok || !result.bundle) throw new Error(result.error || "Taslak kaydedilemedi");
       setBundles((items) => items.map((item) => item.id === result.bundle!.id ? result.bundle! : item)); setNotice("Düzenlemeler kaydedildi.");
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); } finally { setBusy(false); }
@@ -276,6 +276,9 @@ export default function App() {
               <div className="preview-toggle"><button className={previewMode === "preview" ? "active" : ""} onClick={() => setPreviewMode("preview")}>Okuyucu önizlemesi</button><button className={previewMode === "edit" ? "active" : ""} onClick={() => setPreviewMode("edit")}>Düzenle</button></div>
               {previewMode === "edit" ? <>
                 <input className="title-input" value={editor.title} onChange={(event) => setEditor({ ...editor, title: event.target.value })}/>
+                <label className="field-label" htmlFor="slug-editor">YAYIN URL'Sİ</label>
+                <div className="slug-editor"><span>recepozgur.com/blog/</span><input id="slug-editor" value={editor.slug || ""} disabled={selected.status === "published" || selected.status === "scheduled"} maxLength={60} onChange={(event) => { const slug = event.target.value.toLowerCase().replace(/[çğıöşü]/g, (letter) => ({ ç:"c", ğ:"g", ı:"i", ö:"o", ş:"s", ü:"u" } as Record<string,string>)[letter] || letter).replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-/, ""); setEditor({ ...editor, slug, blogPath: `/blog/${slug}/` }); }}/><b>/</b></div>
+                <small className="slug-help">3–5 anahtar kelime · en fazla 60 karakter · yayınlandıktan sonra değişmez <em>{editor.slug?.length || 0}/60</em></small>
                 <label className="field-label">LINKEDIN AÇILIŞI</label><textarea className="short-editor" value={editor.hook} onChange={(event) => setEditor({ ...editor, hook: event.target.value })}/>
               </> : <div className="preview-title"><small>{editor.category} · {editor.sourceCount} kaynak</small><h2>{editor.title}</h2><p>{editor.description}</p></div>}
               <div className="checks"><div><span>Kaynak ve kalite kontrolleri</span><b>{selected.checksPassed}/{selected.checksTotal}</b></div><progress value={selected.checksPassed} max={selected.checksTotal}/><small>Kaynak URL’leri · iddia eşleşmesi · ton · tekrar · metadata</small></div>

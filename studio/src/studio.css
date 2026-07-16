@@ -13,6 +13,12 @@
 .create-box button.primary { background:var(--ink); color:#fff; }
 .title-input { width:100%; margin-top:10px; border:0; border-bottom:1px solid var(--line); background:transparent; padding:5px 0 10px; font-size:21px; font-weight:800; letter-spacing:-.035em; }
 .field-label { display:block; margin-top:18px; }
+.slug-editor { display:flex; align-items:center; gap:3px; overflow:hidden; margin-top:7px; border:1px solid var(--line); border-radius:10px; background:#fff; padding:0 10px; }
+.slug-editor span,.slug-editor b { flex:none; color:var(--muted); font:500 9px DM Mono,monospace; }
+.slug-editor input { min-width:80px; flex:1; border:0; outline:0; background:transparent; padding:11px 0; color:var(--ink); font:600 10px DM Mono,monospace; }
+.slug-editor input:disabled { cursor:not-allowed; color:var(--muted); }
+.slug-help { display:flex; justify-content:space-between; gap:10px; margin-top:5px; color:var(--muted); font-size:8px; line-height:1.4; }
+.slug-help em { flex:none; color:var(--orange); font-style:normal; font-weight:800; }
 .short-editor { min-height:70px; margin-top:7px; border-left:3px solid var(--orange); background:#f4f1ea; font-size:13px; font-weight:700; }
 .editor-section { margin-top:14px; border:1px solid var(--line); border-radius:12px; background:#faf8f2; padding:0 12px; }
 .editor-section summary { cursor:pointer; padding:12px 0; font-size:11px; font-weight:800; }
