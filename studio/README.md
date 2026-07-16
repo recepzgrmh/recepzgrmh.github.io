@@ -27,6 +27,20 @@ Yerelde `npm run db:migrate:local` ardından `npm run dev` kullan. Localhost, Cl
 
 Cloudflare Access policy uygulamanın tamamını korumalıdır. Worker'daki e-posta kontrolü ikinci savunma katmanıdır; tek başına login ekranı değildir.
 
+## İçerik motoru ve yayın secret'ları
+
+Canlı Worker iki şifreli secret kullanır; değerleri dosyaya veya GitHub'a yazma:
+
+```bash
+npx wrangler secret put GEMINI_API_KEY
+npx wrangler secret put GITHUB_TOKEN
+```
+
+- `GEMINI_API_KEY`: Google AI Studio'dan alınan Gemini API anahtarı. Araştırma çağrısı Google Search grounding, yazım çağrısı structured JSON kullanır.
+- `GITHUB_TOKEN`: yalnız `recepzgrmh/recepzgrmh.github.io` deposu için `Contents: Read and write` izni bulunan fine-grained token. Başka repository veya account izni verme.
+
+Akış: `Yeni paket` → kaynaklı araştırma → blog + LinkedIn + görsel promptu → düzenleme → görsel yükleme → onay → GitHub commit → GitHub Pages deploy → canlılık doğrulama. LinkedIn'e otomatik giriş/bot yoktur; son metin panoya kopyalanır ve kullanıcı tarafından paylaşılır.
+
 ## GitHub Actions secrets
 
 - `CLOUDFLARE_API_TOKEN`
