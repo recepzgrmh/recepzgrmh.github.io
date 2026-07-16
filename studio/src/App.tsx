@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
 type View = "today" | "queue" | "assets" | "history" | "settings";
@@ -41,15 +41,57 @@ function Icon({ name }: { name: "spark" | "queue" | "image" | "check" | "setting
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
 
+function inlineMarkdown(value: string): ReactNode[] {
+  return value.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).filter(Boolean).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={index}>{part.slice(1, -1)}</code>;
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+    if (link) return <a key={index} href={link[2]} target="_blank" rel="noreferrer">{link[1]}</a>;
+    return part;
+  });
+}
+
 function MarkdownPreview({ value }: { value: string }) {
-  return <div className="markdown-preview">{value.split("\n").map((line, index) => {
-    if (line.startsWith("## ")) return <h2 key={index}>{line.slice(3)}</h2>;
-    if (line.startsWith("### ")) return <h3 key={index}>{line.slice(4)}</h3>;
-    if (line.startsWith("- ")) return <li key={index}>{line.slice(2)}</li>;
-    if (/^\d+\. /.test(line)) return <li key={index}>{line.replace(/^\d+\. /, "")}</li>;
-    if (!line.trim()) return <br key={index}/>;
-    return <p key={index}>{line.replace(/\*\*/g, "")}</p>;
-  })}</div>;
+  const lines = value.split("\n"); const blocks: ReactNode[] = [];
+  for (let i = 0; i < lines.length;) {
+    const line = lines[i];
+    if (!line.trim()) { i += 1; continue; }
+    if (line.startsWith("```")) { const code: string[] = []; i += 1; while (i < lines.length && !lines[i].startsWith("```")) code.push(lines[i++]); i += 1; blocks.push(<pre key={`code-${i}`}><code>{code.join("\n")}</code></pre>); continue; }
+    if (line.startsWith("## ")) { blocks.push(<h2 key={i}>{inlineMarkdown(line.slice(3))}</h2>); i += 1; continue; }
+    if (line.startsWith("### ")) { blocks.push(<h3 key={i}>{inlineMarkdown(line.slice(4))}</h3>); i += 1; continue; }
+    if (line.startsWith("> ")) { blocks.push(<blockquote key={i}>{inlineMarkdown(line.slice(2))}</blockquote>); i += 1; continue; }
+    if (/^- /.test(line)) { const items: ReactNode[] = []; while (i < lines.length && /^- /.test(lines[i])) { items.push(<li key={i}>{inlineMarkdown(lines[i].slice(2))}</li>); i += 1; } blocks.push(<ul key={`ul-${i}`}>{items}</ul>); continue; }
+    if (/^\d+\. /.test(line)) { const items: ReactNode[] = []; while (i < lines.length && /^\d+\. /.test(lines[i])) { items.push(<li key={i}>{inlineMarkdown(lines[i].replace(/^\d+\. /, ""))}</li>); i += 1; } blocks.push(<ol key={`ol-${i}`}>{items}</ol>); continue; }
+    blocks.push(<p key={i}>{inlineMarkdown(line)}</p>); i += 1;
+  }
+  return <div className="markdown-preview">{blocks}</div>;
+}
+
+function LinkedinPreview({ bundle, imageUrl, expanded, onToggle, onCopy }: { bundle: Bundle; imageUrl?: string; expanded: boolean; onToggle: () => void; onCopy: () => void }) {
+  const text = bundle.linkedinPost || "LinkedIn metni henüz oluşturulmadı.";
+  return <section className="linkedin-stage" aria-label="LinkedIn gönderisi önizlemesi">
+    <div className="linkedin-chrome"><span>LinkedIn masaüstü akış önizlemesi</span><button onClick={onCopy}>Metni kopyala</button></div>
+    <article className="linkedin-post-card">
+      <header className="li-post-head"><img src="https://recepozgur.com/logo.webp" alt="Recep Özgür Mıh"/><div><strong>Recep Özgür Mıh <b>in</b><small>· 1.</small></strong><span>Product Engineer | Backend &amp; Mobile Developer</span><span>Şimdi · 🌐</span></div><button aria-label="Diğer seçenekler">•••</button></header>
+      <div className={`li-post-copy ${expanded ? "expanded" : ""}`}><p>{text}</p>{!expanded && text.length > 420 && <button onClick={onToggle}>…devamını gör</button>}</div>
+      {imageUrl ? <img className="li-post-image" src={imageUrl} alt={bundle.heroAlt || "LinkedIn gönderi görseli"}/> : <div className="li-image-placeholder"><span>Yazıya özel görsel burada 1.91:1 oranında görünecek</span><small>Önizlemeyi tamamlamak için pakete görsel yükle</small></div>}
+      <div className="li-social-proof"><span><i>♥</i><i>💡</i> 0</span><span>0 yorum · 0 yeniden yayınlama</span></div>
+      <footer className="li-action-row"><button>♧ <span>Beğen</span></button><button>▢ <span>Yorum yap</span></button><button>↻ <span>Yeniden yayınla</span></button><button>➤ <span>Gönder</span></button></footer>
+    </article>
+    <p className="preview-disclaimer">Yazı tipi ve boşluklar LinkedIn masaüstü akışına göre simüle edilir. Tepki sayıları yayın sonrasında oluşur.</p>
+  </section>;
+}
+
+function BlogSitePreview({ bundle, imageUrl }: { bundle: Bundle; imageUrl?: string }) {
+  const headings = (bundle.blogMarkdown || "").split("\n").filter((line) => line.startsWith("## ")).map((line) => line.slice(3).replace(/\*\*/g, ""));
+  const wordCount = (bundle.blogMarkdown || "").trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(wordCount / 190));
+  return <section className="blog-site-preview" aria-label="Recepozgur.com blog önizlemesi">
+    <nav className="site-nav"><a href="https://recepozgur.com" target="_blank" rel="noreferrer"><img src="https://recepozgur.com/logo.webp" alt="RÖM"/></a><div><span>Projeler</span><span>Yetenekler</span><span>Hakkımda</span><span>Akademik</span><span>Labs</span><b>Blog</b><span>Sohbet</span><em>EN</em><strong>İletişim</strong></div></nav>
+    <header className="site-hero"><div><span className="site-back">← TÜM YAZILAR</span><p><b>{bundle.category}</b> · {new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" }).format(new Date())} · {minutes} DK OKUMA</p><h1>{bundle.title}</h1><div className="site-description">{bundle.description}</div><div className="site-tags">{bundle.tags?.map((tag) => <span key={tag}>#{tag}</span>)}</div></div>{imageUrl ? <figure><img src={imageUrl} alt={bundle.heroAlt || "Blog kapak görseli"}/></figure> : <figure className="site-image-placeholder"><span>1200 × 630 kapak görseli</span><small>Görsel yüklediğinde gerçek hali burada görünür</small></figure>}</header>
+    <div className="site-article-grid"><aside><strong>BU YAZIDA</strong>{headings.map((heading) => <span key={heading}>{heading}</span>)}</aside><main><MarkdownPreview value={bundle.blogMarkdown || ""}/><section className="site-sources"><small>DOĞRULAMA</small><h2>Kaynaklar</h2><p>Yazıdaki dış iddiaları doğrulamak ve daha derine inmek için kullandığım ana kaynaklar.</p>{bundle.sources?.map((source, index) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><b>{String(index + 1).padStart(2, "0")}</b><span><strong>{source.label} ↗</strong><small>{source.note}</small></span></a>)}</section><footer className="site-author"><div><small>YAZAN</small><h3>Recep Özgür Mıh</h3><p>Mobil, backend ve ürün geliştirme kesişiminde çalışan bir yazılım mühendisi.</p></div><span>Hakkımda →</span></footer></main></div>
+    <footer className="site-footer"><strong>Recep Özgür Mıh</strong><span>Mobil · Backend · Ürün geliştirme</span></footer>
+  </section>;
 }
 
 export default function App() {
@@ -65,6 +107,9 @@ export default function App() {
   const [editor, setEditor] = useState<Bundle | null>(null);
   const [view, setView] = useState<View>("today");
   const [previewMode, setPreviewMode] = useState<"edit" | "preview">("preview");
+  const [previewSurface, setPreviewSurface] = useState<"linkedin" | "blog">("linkedin");
+  const [fullscreenSurface, setFullscreenSurface] = useState<"linkedin" | "blog" | null>(null);
+  const [linkedinExpanded, setLinkedinExpanded] = useState(false);
   const [assets, setAssets] = useState<Asset[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -85,7 +130,13 @@ export default function App() {
 
   useEffect(() => { void load(); }, [load]);
   const selected = useMemo(() => bundles.find((bundle) => bundle.id === selectedId) ?? bundles[0], [bundles, selectedId]);
-  useEffect(() => { setEditor(selected ? { ...selected } : null); setUpload(null); }, [selected]);
+  useEffect(() => { setEditor(selected ? { ...selected } : null); setUpload(null); setLinkedinExpanded(false); }, [selected]);
+  useEffect(() => {
+    if (!fullscreenSurface) return;
+    const close = (event: KeyboardEvent) => { if (event.key === "Escape") setFullscreenSurface(null); };
+    document.body.classList.add("preview-open"); window.addEventListener("keydown", close);
+    return () => { document.body.classList.remove("preview-open"); window.removeEventListener("keydown", close); };
+  }, [fullscreenSurface]);
   useEffect(() => {
     if (view !== "assets") return;
     void fetch("/api/assets").then((response) => response.json()).then((data: { assets?: Asset[] }) => setAssets(data.assets || [])).catch(() => setNotice("Görsel arşivi alınamadı."));
@@ -229,8 +280,8 @@ export default function App() {
               </> : <div className="preview-title"><small>{editor.category} · {editor.sourceCount} kaynak</small><h2>{editor.title}</h2><p>{editor.description}</p></div>}
               <div className="checks"><div><span>Kaynak ve kalite kontrolleri</span><b>{selected.checksPassed}/{selected.checksTotal}</b></div><progress value={selected.checksPassed} max={selected.checksTotal}/><small>Kaynak URL’leri · iddia eşleşmesi · ton · tekrar · metadata</small></div>
               {previewMode === "preview" ? <>
-                <section className="content-preview"><div className="preview-label"><span>BLOG ÖNİZLEMESİ</span><small>recepozgur.com{editor.blogPath}</small></div>{(upload?.url || selected.visualUrl) && <img src={upload?.url || selected.visualUrl} alt={editor.heroAlt || "Yazı görseli"}/>}<MarkdownPreview value={editor.blogMarkdown || ""}/></section>
-                <section className="linkedin-preview"><div className="linkedin-author"><span>RÖ</span><div><strong>Recep Özgür Mıh</strong><small>Product Engineer · Backend · Mobile</small></div></div><p>{editor.linkedinPost}</p>{(upload?.url || selected.visualUrl) && <img src={upload?.url || selected.visualUrl} alt="LinkedIn paylaşım görseli"/>}<div className="linkedin-actions"><span>Beğen</span><span>Yorum yap</span><span>Yeniden yayınla</span><span>Gönder</span></div><button className="text-button" onClick={() => void copyLinkedIn()}>LinkedIn metnini kopyala</button></section>
+                <div className="surface-switch"><div><button className={previewSurface === "linkedin" ? "active" : ""} onClick={() => setPreviewSurface("linkedin")}>LinkedIn'de görünümü</button><button className={previewSurface === "blog" ? "active" : ""} onClick={() => setPreviewSurface("blog")}>Sitede görünümü</button></div><button className="fullscreen-button" onClick={() => setFullscreenSurface(previewSurface)}>Tam ekran ↗</button></div>
+                {previewSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <div className="blog-preview-viewport"><BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl}/></div>}
               </> : <>
                 <details className="editor-section" open><summary>Blog yazısı</summary><textarea value={editor.blogMarkdown || ""} onChange={(event) => setEditor({ ...editor, blogMarkdown: event.target.value })}/></details>
                 <details className="editor-section" open><summary>LinkedIn paylaşımı</summary><textarea value={editor.linkedinPost || ""} onChange={(event) => setEditor({ ...editor, linkedinPost: event.target.value })}/><button className="text-button" onClick={() => void copyLinkedIn()}>Metni kopyala</button></details>
@@ -263,6 +314,7 @@ export default function App() {
           <article className="settings-card wide"><span>KONU ÇERÇEVESİ</span><h2>Gösteriş değil, kanıtlanabilir teknik düşünce</h2><p>Backend ve sistem tasarımı, AI ile ürün geliştirme, mobil mimari, ürün mühendisliği, otomasyon ve growth engineering. Projeler yalnız gerçek bir ders veya trade-off anlatıyorsa örnek olur; kullanıcı sayısı veya başarı şişirilmez.</p></article>
         </section>}
       </main>
+      {fullscreenSurface && editor && <div className={`preview-modal ${fullscreenSurface}`} role="dialog" aria-modal="true" aria-label={`${fullscreenSurface === "linkedin" ? "LinkedIn" : "Blog"} tam ekran önizleme`}><header><div><strong>{fullscreenSurface === "linkedin" ? "LinkedIn gönderisi" : "recepozgur.com blog yazısı"}</strong><span>Bu yalnızca önizleme; henüz yayınlanmadı.</span></div><button onClick={() => setFullscreenSurface(null)}>Kapat ×</button></header><div className="preview-modal-body">{fullscreenSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl}/>}</div></div>}
     </div>
   );
 }
