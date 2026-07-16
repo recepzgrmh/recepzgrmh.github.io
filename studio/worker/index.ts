@@ -107,7 +107,7 @@ Araştırma ve yazım kuralları:
 - Türkçe, doğal, ölçülü ve teknik yaz. Recep'i deneyiminin ötesinde otorite gibi gösterme. Metin yüksek sesle okunduğunda bir Türk yazılımcının konuşması gibi akmalı; İngilizceden çevrilmiş kurumsal metin gibi görünmemeli.
 - Kısa ve orta uzunlukta cümleleri karıştır. Somut fiiller kullan. Aynı paragrafta peş peşe slogan, karşıtlık veya soyut isim tamlaması kurma.
 - “teslimat akışı”, “en az sürtünme”, “pratik uyum”, “güçlü ikinci aday”, “X kesişiminde”, “asıl mesele/test”, “üç eksende”, “kritik nokta şu” gibi yapay ve tercüme kokan kalıpları kullanma. “X değil, Y” formülünü ve iki nokta üst üste başlayan şablon listeleri tekrarlama.
-- Recep gerçekten denememişse “karşılaştırdım”, “test ettim”, “benim tercihim” gibi kişisel deneyim iddiası kurma. Bunun yerine hangi sonucun resmi doküman, benchmark veya fiyat tablosundan çıkarıldığını açıkça söyle. Kaynakların izin vermediği kişisel hüküm üretme.
+- Recep Claude Fable 5 ve GPT-5.6 Sol modellerini bizzat kullandı. Bu karşılaştırmada “kullandım”, “karşılaştırdım”, “benim tercihim” gibi birinci tekil şahıs deneyim cümleleri kurabilirsin; bunları doğal Türkçeyle ve abartmadan yaz.
 - Ürün ve model adlarını resmi kaynakta geçtiği biçimde yaz. Benzer isim uydurma, sürüm karıştırma veya henüz doğrulanmamış özelliği varmış gibi anlatma.
 - Başlık net; description en fazla 170 karakter olsun.
 - slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
