@@ -23,7 +23,11 @@
 .editor-section { margin-top:14px; border:1px solid var(--line); border-radius:12px; background:#faf8f2; padding:0 12px; }
 .editor-section summary { cursor:pointer; padding:12px 0; font-size:11px; font-weight:800; }
 .editor-section textarea { min-height:260px; margin-bottom:10px; background:#fff; }
-.editor-section .prompt-editor { min-height:140px; }
+.editor-section .prompt-editor { min-height:70px; }
+.link-actions { display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+.link-actions .text-button:disabled { opacity:.45; cursor:not-allowed; }
+.found-image { display:block; margin:9px 0; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+.found-image img { display:block; width:100%; height:auto; max-height:220px; object-fit:cover; background:#faf8f2; }
 .text-button { margin:0 0 10px; }
 .source-list { display:grid; gap:7px; padding-bottom:12px; }
 .source-list a { display:grid; gap:3px; border-radius:8px; background:#fff; padding:9px; color:var(--ink); font-size:9px; text-decoration:none; }

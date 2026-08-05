@@ -39,7 +39,7 @@ npx wrangler secret put GITHUB_TOKEN
 - `OPENAI_API_KEY`: OpenAI Platform proje anahtarı. Tek Responses API çağrısında `web_search` ile kaynaklı araştırma ve Structured Outputs ile doğrulanmış içerik paketi üretir.
 - `GITHUB_TOKEN`: yalnız `recepzgrmh/recepzgrmh.github.io` deposu için `Contents: Read and write` izni bulunan fine-grained token. Başka repository veya account izni verme.
 
-Akış: `Yeni paket` → kaynaklı araştırma → blog + LinkedIn + görsel promptu → düzenleme → görsel yükleme → onay → GitHub commit → GitHub Pages deploy → canlılık doğrulama. LinkedIn'e otomatik giriş/bot yoktur; son metin panoya kopyalanır ve kullanıcı tarafından paylaşılır.
+Akış: `Yeni paket` → kaynaklı araştırma → blog + LinkedIn + internetten bulunmuş görsel linki → düzenleme → görsel yükleme → onay → GitHub commit → GitHub Pages deploy → canlılık doğrulama. LinkedIn'e otomatik giriş/bot yoktur; son metin panoya kopyalanır ve kullanıcı tarafından paylaşılır.
 
 ## GitHub Actions secrets
 

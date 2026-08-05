@@ -12,10 +12,10 @@ interface Env {
 
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
 type Source = { label: string; url: string; note: string };
-type InlineVisual = { needed: boolean; slot: number; prompt: string; alt: string; caption: string };
+type InlineVisual = { needed: boolean; slot: number; imageUrl: string; alt: string; caption: string };
 type GeneratedBundle = {
   title: string; slug: string; description: string; category: string; tags: string[];
-  hook: string; blogMarkdown: string; linkedinPost: string; visualPrompt: string;
+  hook: string; blogMarkdown: string; linkedinPost: string; heroImageUrl: string;
   heroAlt: string; articleType: string; inlineVisuals: InlineVisual[]; sources: Source[]; generationNote: string;
 };
 
@@ -70,7 +70,7 @@ function bundleFromRow(row: Record<string, unknown>) {
 }
 
 const selectColumns = `id, title, slug, description, hook, blog_path AS blogPath, blog_markdown AS blogMarkdown,
-linkedin_post AS linkedinPost, visual_prompt AS visualPrompt, hero_alt AS heroAlt, status, category,
+linkedin_post AS linkedinPost, visual_prompt AS heroImageUrl, hero_alt AS heroAlt, status, category,
 tags_json AS tagsJson, sources_json AS sourcesJson, generation_note AS generationNote,
 article_type AS articleType, inline_visuals_json AS inlineVisualsJson,
 updated_at AS updatedAt, created_at AS createdAt, source_count AS sourceCount,
@@ -83,62 +83,104 @@ function extractJson(text: string) {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
+const assetRoles = new Set(["hero", "inline-1", "inline-2"]);
+const imageTypes = new Set(["image/png", "image/jpeg", "image/webp", "image/svg+xml"]);
+const imageExtensions: Record<string, string> = { "image/png":"png", "image/jpeg":"jpg", "image/webp":"webp", "image/svg+xml":"svg" };
+
+function directImageUrl(value: unknown) {
+  const url = typeof value === "string" ? value.trim() : "";
+  if (!/^https:\/\/[^\s<>"']+$/i.test(url) || url.length > 500) return "";
+  if (/\.(?:html?|php|aspx?|jsp)(?:$|\?|#)/i.test(url)) return "";
+  if (/^https:\/\/(?:[a-z0-9-]+\.)*(?:google|bing|duckduckgo|yandex)\.[a-z.]+\//i.test(url)) return "";
+  return url;
+}
+
+async function saveAsset(env: Env, bundleId: string, role: string, filename: string, contentType: string, body: ReadableStream | Uint8Array, size: number, alt: string, caption: string) {
+  const key = `${safeName(bundleId)}/${Date.now()}-${safeName(filename)}`;
+  await env.UPLOADS.put(key, body, { httpMetadata: { contentType, cacheControl: "public, max-age=31536000, immutable" }, customMetadata: { bundleId, role } });
+  const assetUrl = `/api/assets/${encodeURIComponent(key)}`;
+  await env.DB.prepare("INSERT INTO assets (id,bundle_id,object_key,filename,content_type,size_bytes,role,alt_text,caption,created_at) VALUES (?,?,?,?,?,?,?,?,?,?)")
+    .bind(crypto.randomUUID(), bundleId, key, filename, contentType, size, role, alt, caption, now()).run();
+  if (role === "hero") await env.DB.prepare("UPDATE content_bundles SET visual_url=?,checks_passed=checks_total,updated_at=? WHERE id=?").bind(assetUrl, now(), bundleId).run();
+  else await env.DB.prepare("UPDATE content_bundles SET updated_at=? WHERE id=?").bind(now(), bundleId).run();
+  return { key, assetUrl };
+}
+
 async function generateBundle(env: Env, topic: string, recentTitles: string[] = []): Promise<GeneratedBundle> {
   if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY secret'ı henüz tanımlı değil.");
   const schema = {
-    type: "object", additionalProperties: false, required: ["title","slug","description","category","tags","hook","blogMarkdown","linkedinPost","visualPrompt","heroAlt","articleType","inlineVisuals","sources","generationNote"],
+    type: "object", additionalProperties: false, required: ["title","slug","description","category","tags","hook","blogMarkdown","linkedinPost","heroImageUrl","heroAlt","articleType","inlineVisuals","sources","generationNote"],
     properties: {
       title:{type:"string"}, slug:{type:"string"}, description:{type:"string"}, category:{type:"string"}, tags:{type:"array",items:{type:"string"},maxItems:6}, hook:{type:"string"},
-      blogMarkdown:{type:"string"}, linkedinPost:{type:"string"}, visualPrompt:{type:"string"}, heroAlt:{type:"string"}, articleType:{type:"string",enum:["opinion","technical","tutorial","comparison","data","case-study"]},
-      inlineVisuals:{type:"array",minItems:2,maxItems:2,items:{type:"object",additionalProperties:false,required:["needed","slot","prompt","alt","caption"],properties:{needed:{type:"boolean"},slot:{type:"integer",minimum:1,maximum:2},prompt:{type:"string"},alt:{type:"string"},caption:{type:"string"}}}},
+      blogMarkdown:{type:"string"}, linkedinPost:{type:"string"}, heroImageUrl:{type:"string"}, heroAlt:{type:"string"}, articleType:{type:"string",enum:["opinion","technical","tutorial","comparison","data","case-study"]},
+      inlineVisuals:{type:"array",minItems:2,maxItems:2,items:{type:"object",additionalProperties:false,required:["needed","slot","imageUrl","alt","caption"],properties:{needed:{type:"boolean"},slot:{type:"integer",minimum:1,maximum:2},imageUrl:{type:"string"},alt:{type:"string"},caption:{type:"string"}}}},
       sources:{type:"array",minItems:2,maxItems:12,items:{type:"object",additionalProperties:false,required:["label","url","note"],properties:{label:{type:"string"},url:{type:"string"},note:{type:"string"}}}}, generationNote:{type:"string"}
     }
   };
-  const prompt = `Bugünün tarihi ${new Date().toISOString().slice(0, 10)}. Web'de araştırma yap ve Recep Özgür Mıh için tek bir Türkçe yayın paketi üret.
+  const today = new Date().toISOString().slice(0, 10);
+  const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString().slice(0, 10);
+  const topicBlock = topic
+    ? `Konu (kullanıcı yazdı, EN YÜKSEK ÖNCELİK): ${topic}
+- Bu konuyu ve kapsamını aynen uygula. Recep'in CV'sine, mobil/backend/ödeme geçmişine veya sevdiğin bir yan konuya kaydırma.`
+    : `Konu seçimi — kullanıcı konu vermedi, konuyu SEN bulacaksın ve tek işin şu:
+- Web'de arama yap ve ${weekAgo} – ${today} aralığında yazılım ve teknoloji dünyasında EN ÇOK konuşulan tek gelişmeyi bul. Yazıyı o gelişme hakkında yaz.
+- Hacker News (news.ycombinator.com), Reddit r/programming ve r/ExperiencedDevs, GitHub Trending, TechCrunch, The Verge, Ars Technica, InfoQ ve ilgili şirketin resmi blogu/changelog'una bak. En az 3 farklı kaynağın aynı hafta içinde konuştuğunu doğrula.
+- Bu gerçek bir haber olmalı: bir sürüm, satın alma, güvenlik olayı, lisans değişikliği, outage, benchmark, mahkeme kararı, açık kaynak tartışması. Tarihi ${weekAgo} sonrası olsun.
+- Kafandan jenerik konu ÜRETME. Şunlar yasak: "temiz kod", "kariyer tavsiyesi", "yeni başlayanlar için X", "yazılımın geleceği", "AI insanların işini alacak mı", "10 ipucu", "X vs Y" karşılaştırması (o hafta gerçekten tartışılmadıysa).
+- generationNote'un ilk cümlesinde şunu yaz: hangi gelişmeyi seçtin, hangi tarihte oldu, bu hafta neden konuşuldu.`;
+  const prompt = `Bugünün tarihi ${today}. Web'de gerçekten araştırma yap ve Recep Özgür Mıh'ın kişisel blogu için tek bir Türkçe yayın paketi üret.
 
-Konu: ${topic || "Mobil, backend, ödeme sistemleri veya güvenilir AI ürünleri alanında güncel ve öğretici bir konu seç."}
+${topicBlock}
+
 Son içerik başlıkları (bunları veya çok benzerini seçme): ${recentTitles.length ? recentTitles.join(" | ") : "Henüz yok"}
 
-Araştırma ve yazım kuralları:
-- Öncelikle resmi dokümantasyon, standart, araştırma makalesi ve ilgili ürünün engineering blogunu kullan.
-- Kritik iddiaları mümkünse birinci taraf kaynakla doğrula. Eski gelişmeyi yeniymiş gibi sunma.
-- Her kaynak için doğrudan HTTPS URL ver; arama sonucu veya yönlendirme URL'si kullanma.
-- Kaynakların söylemediği iddiaları ekleme. Belirsizliği generationNote alanında belirt.
-- KULLANICININ YAZDIĞI KONU VE KAPSAM EN YÜKSEK ÖNCELİKTİR. Konuyu Recep'in CV'sine veya teknoloji geçmişine doğru daraltma. Mobil, backend, ödeme sistemi, kişisel proje ya da belirli model örneğini yalnız kullanıcı konusu bunu gerçekten gerektiriyorsa kullan.
-- Recep kariyerinin başında bir Product Engineer; bu bilgi yalnız sesini ve deneyim seviyesini ayarlamak içindir, her yazının konusu değildir.
-- Kullanıcısı veya ölçeği olmayan kişisel projelerini başarı hikâyesi gibi anlatma. Proje adı kullanmak zorunda değilsin.
-- Kariyer, yeni başlayanlar veya yazılım dünyasının geleceği hakkında kendiliğinden konu üretme; fakat kullanıcı açıkça bunları sorarsa isteği eksiksiz uygula ve teknik yan konuya kaçma.
-- AI ve yazılımın geleceği sorulduğunda AI'ın bugün kod, test, dokümantasyon ve uzun ajan görevlerinde işin büyük bölümünü yapabildiğini dürüstçe kabul et. “İnsan hâlâ gerekli” sonucunu kanıtlamak için ödeme, API sürümü, duplicate request veya edge-case örnekleri uydurup konuyu küçültme.
-- Gelecek yazılarında şu eksenlerden konuya uygun olanları işle: kod üretiminin ucuzlaması; eski junior görevlerinin azalması; işe giriş çıtasının değişmesi; çalışan ürün ve karar sürecini gösteren portföyler; küçük ekiplerin ve tek geliştiricinin artan üretim gücü; yazılım öğrenmenin değişen anlamı; yeni fırsatlar ve gerçek riskler.
-- Bu tür yazılarda iddialı ama dengeli bir ana tez kur. Okuyucuya uygulanabilir bir sonuç ver; fakat metnin tamamını “önce bunu öğren, sonra şunu yap” şeklinde adım adım başlangıç rehberine çevirme.
-- Türkçe, doğal, ölçülü ve teknik yaz. Recep'i deneyiminin ötesinde otorite gibi gösterme. Metin yüksek sesle okunduğunda bir Türk yazılımcının konuşması gibi akmalı; İngilizceden çevrilmiş kurumsal metin gibi görünmemeli.
-- Kısa ve orta uzunlukta cümleleri karıştır. Somut fiiller kullan. Aynı paragrafta peş peşe slogan, karşıtlık veya soyut isim tamlaması kurma.
-- “teslimat akışı”, “en az sürtünme”, “pratik uyum”, “güçlü ikinci aday”, “X kesişiminde”, “asıl mesele/test”, “üç eksende”, “kritik nokta şu” gibi yapay ve tercüme kokan kalıpları kullanma. “X değil, Y” formülünü ve iki nokta üst üste başlayan şablon listeleri tekrarlama.
-- YALNIZ konu Claude Fable 5, GPT-5.6 Sol veya açık bir model karşılaştırmasıysa şu bilgiyi kullan: Recep bu iki modeli bizzat kullandı ve “kullandım”, “karşılaştırdım”, “benim tercihim” diyebilir. Diğer konulara bu modelleri veya model seçimi tartışmasını sokma.
-- Ürün ve model adlarını resmi kaynakta geçtiği biçimde yaz. Benzer isim uydurma, sürüm karıştırma veya henüz doğrulanmamış özelliği varmış gibi anlatma.
-- Başlık için sessizce en az 5 farklı aday düşün ve en doğal, somut olanı seç. Başlık tercihen 45-72 karakter olsun; tek başına “X nedir?” kalıbı, clickbait, gereksiz iki nokta ve soyut kurumsal dil kullanma. description en fazla 170 karakter olsun.
-- slug başlığın tamamı değildir: arama niyetini taşıyan 3-5 kısa anahtar kelimeden oluşan, en fazla 60 karakterlik ASCII kebab-case üret. “neden”, “nasıl”, “için”, “ve”, “yalnızca” gibi dolgu kelimelerini kullanma.
-- Önce articleType seç: opinion, technical, tutorial, comparison, data veya case-study. Uzunluğu türe göre ayarla: opinion 650-900; technical 900-1300; tutorial 1100-1500; comparison 800-1100; data 700-1000; case-study 800-1100 kelime. Konu gerektirmiyorsa sırf uzun olsun diye uzatma.
-- blogMarkdown yalnız Markdown gövdesi olsun, frontmatter ve H1 ekleme. En fazla 4-5 adet H2 kullan. Başlıkları doğal, kısa ve birbirinden farklı kur; “Giriş”, “Sonuç”, “Asıl mesele”, “Neden önemli?” gibi jenerik başlıklardan kaçın.
-- Metni duvar gibi yazma. Konuya uygunsa paragrafların arasına Markdown listesi, kısa blockquote, karşılaştırma tablosu veya kod örneği koy. Her yazıda aynı bileşenleri kullanma; biçimi konu belirlesin.
-- 2-5 gerçekten önemli ifadeyi **kalın**, 1-3 kısa nüansı *italik* yaz. Bütün paragrafı kalın/italik yapma; altı çizili metin üretme.
-- Blockquote yalnız tek ve güçlü bir çıkarım için kullanılmalı; genel slogan veya yazının özeti olmamalı.
-- Karşılaştırma ya da doğrulanmış sayısal veri varsa standart Markdown tablosu kullan. Sayı uydurma. Konu sayısal değilse tablo zorunlu değildir.
-- Kod gerçekten konuyu açıklıyorsa dil adı verilmiş fenced code block kullan. Ardından test senaryosu veya beklenen çıktı faydalıysa sırasıyla \`\`\`test ve \`\`\`output blokları ekle; sistem bunları Kod / Test / Çıktı sekmeleri olarak gösterecek. Kod ilgisizse ekleme.
-- inlineVisuals her zaman tam 2 kayıt içersin. Yazının içinde ek görsel anlatımı güçlendirecekse needed=true yap, 35-75 kelimelik İngilizce ve o bölüme özel prompt, doğal Türkçe alt ve caption üret. Gerekmiyorsa needed=false ve metin alanlarını boş bırak.
-- needed=true olan görsel için blogMarkdown içinde uygun bölüm sonuna tek başına {{INLINE_IMAGE_1}} veya {{INLINE_IMAGE_2}} yer tutucusunu tam bir kez koy. Yer tutucuyu başlığın hemen altına, ilk paragraftan önce veya art arda koyma. Görsel makalenin söylediği şeyi tekrar etmemeli; açıklaması zor bir kavramı, karşılaştırmayı veya veriyi görünür kılmalı.
-- LinkedIn metni 180-300 kelime: ilk satır doğal ama merak uyandıran bir giriş olsun; kısa paragraflar kullan, sahte başarı ve etkileşim tuzağı kurma.
-- LinkedIn metnini yazdıktan sonra sessiz bir redaksiyon yap: AI klişelerini, gereksiz sıfatları, aynı ritimdeki cümleleri ve Türkçede günlük kullanımda söylenmeyecek ifadeleri temizle.
-- Son bölümde önce “Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/” bağlantısını ver; en son satırda konuya özel, tek ve kolay cevaplanabilir bir soru sor. “Siz bu konuda ne düşünüyorsunuz?” gibi genel soru sorma. Örneğin bir model karşılaştırmasında okuyucudan kalite, maliyet veya otonomiden hangisini önceliklendirdiğini seçmesini isteyebilirsin.
-- visualPrompt İngilizce, 16:9 blog kapağı ve LinkedIn görseli için olmalı. Promptu bir sahne envanteri gibi değil, kısa bir yaratıcı brief gibi yaz: kullanım amacı → yazının gerçek ana fikri → seçilen görsel medium ve mood → yalnız 2-3 zorunlu kısıt.
-- Önce içerik türünü belirle ve ona uygun TEK format seç: fikir/yorum yazısına özgün editoryal illüstrasyon; gerçek kişi veya çalışma kültürüne belgesel/candid fotoğraf; ürün/model karşılaştırmasına ilgili ürünlerin görsel kimlikleriyle sade karşılaştırma kompozisyonu; doğrulanmış sayısal veriye data visualization; sistemin yapısı gerçekten ana konuysa teknik diyagram.
-- Formatı konuya göre değiştir. Her yazıya aynı krem masa, genç geliştirici, laptop, telefon, sunucu, split-screen, mixed-media kolaj veya infografik şablonunu uygulama.
-- Görsel prompt 45-90 İngilizce kelime olsun. Yazıdaki bütün başlıkları, iş akışlarını, ekranları, insanları ve detayları aynı kareye koyma. Modelin ikincil kompozisyon ve görsel fikir kararlarına alan bırak.
-- Görseldeki tek ana fikir yazının tezine doğrudan bağlı olsun. Fikir yazılarında modelden “one simple, surprising visual idea” bulmasını isteyebilirsin; hazır robot, beyin, el sıkışma veya bilgisayar başında insan klişesini tarif etme.
-- Sayısal görsel yalnız kaynaklarda doğrulanmış gerçek sayılar varsa kullanılmalı; prompta tam veriyi ve birimini yaz. Veri yoksa chart, skor veya benchmark uydurtma. Yoğun ve kesin grafik gerekiyorsa image generation yerine sonradan kodla/SVG ile üretilmesi gerektiğini visualPrompt içinde belirt.
-- Fotoğraf seçilirse “candid, unposed, real camera, natural imperfections” gibi birkaç hedefli gerçekçilik ipucu kullan. İllüstrasyon seçilirse tek bir uygun medium belirt (ör. linocut, risograph, ink, paper cut); aynı anda beş stil isteme.
-- Varsayılan olarak görselde metin olmasın. Karşılaştırmada model/ürün adı zorunluysa yalnız bu isimleri tırnak içinde ver. Kısıtları “no extra text, no watermark, no clutter” gibi kısa tut; uzun negatif prompt listeleri yazma.
-- generationNote belirsizlikleri ve insanın kontrol etmesi gereken noktaları kısaça söylesin.`;
+ARAŞTIRMA
+- Önce birinci taraf kaynak: resmi duyuru, changelog, dokümantasyon, engineering blog, mahkeme/kurum belgesi, araştırma makalesi. Sonra iyi teknoloji gazeteciliği.
+- Her kaynak için doğrudan HTTPS URL ver; arama sonucu, yönlendirme veya kısaltılmış link verme.
+- Kaynağın söylemediği hiçbir şeyi yazma. Sayı, tarih, sürüm ve alıntıları uydurma. Emin olmadığın yeri generationNote'ta söyle.
+- Ürün, sürüm ve kişi adlarını resmi kaynaktaki yazımıyla yaz.
+
+SES VE BAKIŞ AÇISI
+- Recep kariyerinin başında bir Product Engineer. Onu deneyiminin ötesinde otorite gibi gösterme. Uzman ağzıyla değil, konuyu takip eden ve okuduğunu anlatan biri gibi yaz.
+- Birinci tekil şahıs kullan: "okudum", "denedim", "bana kalırsa", "burada emin değilim". Ansiklopedi anlatıcısı gibi yazma.
+- Kullanıcısı veya ölçeği olmayan kişisel projeleri başarı hikâyesi gibi anlatma.
+- YALNIZ konu Claude Fable 5 veya GPT-5.6 Sol'ün doğrudan karşılaştırmasıysa Recep bu iki modeli bizzat kullandığını söyleyebilir. Başka konuya bu tartışmayı sokma.
+
+AI GİBİ DURMAMA KURALLARI — BU BÖLÜM EN ÖNEMLİSİ
+- Yazı MADDE MADDE OLMAYACAK. Anlatım düz paragrafla akacak. Yazıyı liste + alt başlık iskeletine oturtma.
+- Tüm yazıda en fazla 1 Markdown listesi kullanabilirsin ve yalnız gerçekten sayılabilir bir şey varsa (sürüm farkları, fiyatlar, sıralı adımlar). Gerekmiyorsa hiç liste kullanma. Liste maddesi 4'ü geçmesin.
+- "Sadece X değil, Y" / "yalnızca X değil aynı zamanda Y" / "X değil; asıl olan Y" kalıbını hiç kurma. İddiayı doğrudan söyle.
+- Süs amaçlı üçleme yapma ("hız, kalite ve maliyet" gibi). Gerçekten iki şey varsa iki yaz.
+- Paragrafa "Ayrıca", "Dahası", "Bununla birlikte", "Öte yandan", "Sonuç olarak", "Özetle", "Kısacası" ile başlama.
+- Uzun tire (—) kullanma. Virgül, nokta veya iki ayrı cümle kullan.
+- Paragrafları simetrik kurma. Bir paragraf beş cümle, diğeri tek cümle olabilir. Cümle uzunluklarını bilinçli değiştir.
+- İçi boş sıfat ve kalıpları kullanma: "gelişmiş", "güçlü", "devrim niteliğinde", "kritik", "önemli bir adım", "oyun değiştirici", "ekosistem", "dönüşüm", "teslimat akışı", "en az sürtünme", "asıl mesele", "kritik nokta şu", "X kesişiminde".
+- Her iddiada somut ol: tarih, sürüm numarası, şirket adı, gerçek rakam, gerçek alıntı. Soyut genelleme yerine olayın kendisini anlat.
+- En az bir yerde net bir görüş bildir ve en az bir yerde kendi tereddüdünü ya da karşı argümanı yaz. Her şeyi dengeleyip nötr kapatma.
+- Metin İngilizceden çevrilmiş kurumsal metin gibi durmasın. Bitirmeden önce sessizce yüksek sesle okuma testi yap: bir Türk yazılımcının sohbette kurmayacağı cümleyi sil, yeniden yaz.
+
+BAŞLIK VE BİÇİM
+- Başlık için sessizce en az 5 aday düşün, en somut olanı seç. 45-72 karakter; "X nedir?" kalıbı, clickbait ve iki nokta üst üste yok. description en fazla 170 karakter.
+- slug: arama niyetini taşıyan 3-5 kısa kelime, en fazla 60 karakter ASCII kebab-case. "neden", "nasıl", "için", "ve" gibi dolgu kelimesi kullanma.
+- articleType seç: opinion, technical, tutorial, comparison, data, case-study. Uzunluk: opinion 650-900; technical 900-1300; tutorial 1100-1500; comparison 800-1100; data 700-1000; case-study 800-1100 kelime.
+- blogMarkdown yalnız Markdown gövdesi; frontmatter ve H1 yok. En fazla 3 H2 kullan, hiç kullanmaman da olabilir. Başlıklar somut ve cümle gibi olsun; "Giriş", "Sonuç", "Neden önemli?" gibi jenerik başlık ve başlıkta her kelimeyi büyük harfle başlatma yasak. Yatay çizgi (---) kullanma.
+- En fazla 3 ifadeyi **kalın**, en fazla 2 ifadeyi *italik* yap. Blockquote yalnız gerçek bir alıntı varsa ve kimin söylediğini yazarak kullan.
+- Tablo yalnız iki şeyi gerçekten karşılaştırıyorsan ve sayılar kaynakta doğrulanmışsa. Kod yalnız konuyu açıklıyorsa: dil adı verilmiş fenced code block, faydalıysa ardından \`\`\`test ve \`\`\`output blokları (sistem bunları Kod / Test / Çıktı sekmesi olarak gösterir).
+
+GÖRSEL — ARTIK PROMPT ÜRETME, İNTERNETTEN GERÇEK GÖRSEL BUL
+- heroImageUrl: web aramanda GERÇEKTEN gördüğün, doğrudan görsel DOSYASINA giden tek bir HTTPS bağlantısı olsun. Tercihen .jpg, .jpeg, .png veya .webp ile bitsin; Unsplash gibi uzantısız CDN bağlantıları da olur. HTML sayfası, arama sonucu, Google Images yönlendirmesi, kısaltılmış link veya data URI verme.
+- Bu bağlantıyı sistem sunucu tarafında indirip pakete ekleyecek. Bu yüzden giriş, çerez veya hotlink koruması istemeyen, herkese açık bir bağlantı seç.
+- Kaynak önceliği: konunun sahibi şirketin resmi basın/blog görseli, GitHub veya resmi dokümantasyon ekran görüntüsü, Wikimedia Commons, Unsplash, Pexels. Haber ajansı fotoğrafı (Getty, Reuters, AP) ve telifli stok görsel kullanma.
+- Görsel konuyla doğrudan ilgili olsun: olayın ürünü, arayüzü, logosu, grafiği. Alakasız dekoratif "teknoloji" fotoğrafı koyma. Yatay ve en az 1200 piksel genişlikte olmasını tercih et.
+- Bağlantıyı UYDURMA. Erişemediğin veya emin olmadığın URL yerine boş string döndür ve nedenini generationNote'ta yaz.
+- heroAlt: görselin gerçekte ne gösterdiğini anlatan Türkçe alt metin. generationNote'un sonuna görselin kaynağını ve lisansını tek satır ekle (ör. "Görsel: Wikimedia Commons, CC BY-SA 4.0").
+- inlineVisuals her zaman tam 2 kayıt içersin. Yazı gerçekten ek bir görsel gerektiriyorsa needed=true yap, aynı kurallarla imageUrl bul, doğal Türkçe alt ve caption yaz. Gerekmiyorsa needed=false ve metin alanlarını boş bırak; süs olsun diye görsel ekleme.
+- needed=true olan görsel için blogMarkdown içinde uygun bölüm sonuna tek başına {{INLINE_IMAGE_1}} veya {{INLINE_IMAGE_2}} yer tutucusunu tam bir kez koy. Başlığın hemen altına, ilk paragraftan önce veya art arda koyma.
+
+LINKEDIN
+- 180-300 kelime. İlk satır doğal ama merak uyandıran olsun. Kısa paragraflar, sahte başarı ve etkileşim tuzağı yok. Yukarıdaki AI gibi durmama kurallarının tamamı burada da geçerli; madde madde yazma.
+- Son bölümde önce "Daha ayrıntılı okuma: https://recepozgur.com/blog/<slug>/" bağlantısını ver; en son satırda konuya özel, tek ve kolay cevaplanabilir bir soru sor. "Siz ne düşünüyorsunuz?" gibi genel soru sorma.
+- generationNote: seçilen haberin özeti, belirsizlikler, insanın kontrol etmesi gereken noktalar ve görsel kaynağı.`;
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${env.OPENAI_API_KEY}` },
@@ -147,7 +189,7 @@ Araştırma ve yazım kuralları:
       input: prompt,
       tools: [{ type: "web_search", external_web_access: true }],
       tool_choice: "required",
-      reasoning: { effort: "low" },
+      reasoning: { effort: "medium" },
       max_output_tokens: 9000,
       text: { format: { type: "json_schema", name: "content_bundle", strict: true, schema } },
     }),
@@ -160,9 +202,9 @@ Araştırma ve yazım kuralları:
   const slug = compactSlug(raw.slug || raw.title);
   const sources = (raw.sources || []).filter((s) => /^https:\/\//.test(s.url)).slice(0, 12);
   if (sources.length < 2) throw new Error("Yeterli doğrulanabilir kaynak bulunamadı; paket kaydedilmedi.");
-  const inlineVisuals = (raw.inlineVisuals || []).slice(0, 2).map((visual, index) => ({ ...visual, slot: index + 1 }));
-  while (inlineVisuals.length < 2) inlineVisuals.push({ needed:false, slot:inlineVisuals.length + 1, prompt:"", alt:"", caption:"" });
-  return { ...raw, slug, sources, inlineVisuals, tags: (raw.tags || []).slice(0, 6), description: raw.description.slice(0, 170) };
+  const inlineVisuals = (raw.inlineVisuals || []).slice(0, 2).map((visual, index) => ({ ...visual, slot: index + 1, imageUrl: directImageUrl(visual.imageUrl) }));
+  while (inlineVisuals.length < 2) inlineVisuals.push({ needed:false, slot:inlineVisuals.length + 1, imageUrl:"", alt:"", caption:"" });
+  return { ...raw, slug, sources, inlineVisuals, heroImageUrl: directImageUrl(raw.heroImageUrl), tags: (raw.tags || []).slice(0, 6), description: raw.description.slice(0, 170) };
 }
 
 async function recentTitles(env: Env) {
@@ -174,7 +216,7 @@ async function storeGeneratedBundle(env: Env, generated: GeneratedBundle, actor:
   const id = crypto.randomUUID(); const timestamp = now(); const slug = await uniqueSlug(env, generated.slug);
   const linkedinPost = syncLinkedinUrl(generated.linkedinPost, slug);
   await env.DB.prepare(`INSERT INTO content_bundles (id,title,slug,description,hook,blog_path,blog_markdown,linkedin_post,visual_prompt,hero_alt,status,category,tags_json,sources_json,generation_note,article_type,inline_visuals_json,source_count,checks_passed,checks_total,updated_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
-    .bind(id,generated.title,slug,generated.description,generated.hook,`/blog/${slug}/`,generated.blogMarkdown,linkedinPost,generated.visualPrompt,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.articleType,JSON.stringify(generated.inlineVisuals),generated.sources.length,4,5,timestamp,timestamp).run();
+    .bind(id,generated.title,slug,generated.description,generated.hook,`/blog/${slug}/`,generated.blogMarkdown,linkedinPost,generated.heroImageUrl,generated.heroAlt,"review",generated.category,JSON.stringify(generated.tags),JSON.stringify(generated.sources),generated.generationNote,generated.articleType,JSON.stringify(generated.inlineVisuals),generated.sources.length,4,5,timestamp,timestamp).run();
   await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(id,action,actor,timestamp).run();
   const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(id).first<Record<string, unknown>>();
   return bundleFromRow(row || {});
@@ -251,7 +293,7 @@ export default {
           fields.push("slug=?","blog_path=?"); values.push(slug,`/blog/${slug}/`);
           body.linkedinPost = syncLinkedinUrl(typeof body.linkedinPost === "string" ? body.linkedinPost : existing.linkedinPost, slug);
         }
-        const editable: Record<string,string> = { title:"title",description:"description",hook:"hook",blogMarkdown:"blog_markdown",linkedinPost:"linkedin_post",visualPrompt:"visual_prompt",heroAlt:"hero_alt",category:"category",generationNote:"generation_note",articleType:"article_type" };
+        const editable: Record<string,string> = { title:"title",description:"description",hook:"hook",blogMarkdown:"blog_markdown",linkedinPost:"linkedin_post",heroImageUrl:"visual_prompt",heroAlt:"hero_alt",category:"category",generationNote:"generation_note",articleType:"article_type" };
         for (const [key,column] of Object.entries(editable)) if (typeof body[key] === "string") { fields.push(`${column}=?`); values.push(String(body[key]).trim()); }
         if (Array.isArray(body.tags)) { fields.push("tags_json=?"); values.push(JSON.stringify(body.tags)); }
         if (Array.isArray(body.sources)) { fields.push("sources_json=?","source_count=?"); values.push(JSON.stringify(body.sources),body.sources.length); }
@@ -296,13 +338,30 @@ export default {
       }
       if (request.method === "POST" && url.pathname === "/api/assets") {
         const form=await request.formData(); const file=form.get("file"); const bundleId=String(form.get("bundleId")||"unassigned"); const role=String(form.get("role")||"hero"); const alt=String(form.get("alt")||"").slice(0,300); const caption=String(form.get("caption")||"").slice(0,500); if (!(file instanceof File)) return json({error:"Bir görsel seçmelisin."},400);
-        if (!new Set(["hero","inline-1","inline-2"]).has(role)) return json({error:"Geçersiz görsel alanı."},400);
-        if (!new Set(["image/png","image/jpeg","image/webp","image/svg+xml"]).has(file.type)) return json({error:"Yalnızca PNG, JPG, WebP veya SVG yüklenebilir."},415); if (file.size>Number(env.MAX_UPLOAD_BYTES||10_485_760)) return json({error:"Görsel 10 MB sınırını aşıyor."},413);
-        const key=`${safeName(bundleId)}/${Date.now()}-${safeName(file.name)}`; await env.UPLOADS.put(key,file.stream(),{httpMetadata:{contentType:file.type,cacheControl:"public, max-age=31536000, immutable"},customMetadata:{bundleId,role}}); const assetUrl=`/api/assets/${encodeURIComponent(key)}`;
-        await env.DB.prepare("INSERT INTO assets (id,bundle_id,object_key,filename,content_type,size_bytes,role,alt_text,caption,created_at) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(crypto.randomUUID(),bundleId,key,file.name,file.type,file.size,role,alt,caption,now()).run();
-        if (role === "hero") await env.DB.prepare("UPDATE content_bundles SET visual_url=?,checks_passed=checks_total,updated_at=? WHERE id=?").bind(assetUrl,now(),bundleId).run();
-        else await env.DB.prepare("UPDATE content_bundles SET updated_at=? WHERE id=?").bind(now(),bundleId).run();
-        return json({ok:true,key,url:assetUrl,role},201);
+        if (!assetRoles.has(role)) return json({error:"Geçersiz görsel alanı."},400);
+        if (!imageTypes.has(file.type)) return json({error:"Yalnızca PNG, JPG, WebP veya SVG yüklenebilir."},415); if (file.size>Number(env.MAX_UPLOAD_BYTES||10_485_760)) return json({error:"Görsel 10 MB sınırını aşıyor."},413);
+        const saved = await saveAsset(env,bundleId,role,file.name,file.type,file.stream(),file.size,alt,caption);
+        return json({ok:true,key:saved.key,url:saved.assetUrl,role},201);
+      }
+      if (request.method === "POST" && url.pathname === "/api/assets/fetch") {
+        const body = await request.json<{bundleId?:string;role?:string;url?:string;alt?:string;caption?:string}>();
+        const bundleId = String(body.bundleId||"").trim(); const role = String(body.role||"hero"); const remote = directImageUrl(body.url);
+        if (!bundleId) return json({error:"Önce bir paket seçmelisin."},400);
+        if (!assetRoles.has(role)) return json({error:"Geçersiz görsel alanı."},400);
+        if (!remote) return json({error:"Geçerli bir HTTPS görsel bağlantısı gerekiyor."},400);
+        let remoteResponse: Response;
+        try { remoteResponse = await fetch(remote,{redirect:"follow",headers:{"User-Agent":"RecepOzgur-Studio-ImageFetcher",Accept:"image/*"}}); }
+        catch { return json({error:"Bağlantıya ulaşılamadı; görsel indirilemedi."},502); }
+        if (!remoteResponse.ok) return json({error:`Görsel indirilemedi (${remoteResponse.status}).`},502);
+        const contentType = (remoteResponse.headers.get("content-type")||"").split(";")[0].trim().toLowerCase();
+        if (!imageTypes.has(contentType)) return json({error:`Bu bağlantı görsel dosyası değil (${contentType||"tür bilinmiyor"}). Doğrudan .jpg, .png veya .webp dosyasına giden bir link gerekiyor.`},415);
+        const bytes = new Uint8Array(await remoteResponse.arrayBuffer());
+        if (!bytes.byteLength) return json({error:"Görsel boş geldi."},502);
+        if (bytes.byteLength > Number(env.MAX_UPLOAD_BYTES||10_485_760)) return json({error:"Görsel 10 MB sınırını aşıyor."},413);
+        const stem = safeName(decodeURIComponent(new URL(remote).pathname.split("/").pop()||"").replace(/\.[a-z0-9]+$/i,"")) || "gorsel";
+        const filename = `${stem.slice(0,60)}.${imageExtensions[contentType]}`;
+        const saved = await saveAsset(env,bundleId,role,filename,contentType,bytes,bytes.byteLength,String(body.alt||"").slice(0,300),String(body.caption||"").slice(0,500));
+        return json({ok:true,key:saved.key,url:saved.assetUrl,role,filename,contentType,sizeBytes:bytes.byteLength,sourceUrl:remote},201);
       }
       const asset=url.pathname.match(/^\/api\/assets\/(.+)$/); if (request.method==="GET"&&asset) { const object=await env.UPLOADS.get(decodeURIComponent(asset[1])); if(!object)return new Response("Not found",{status:404}); const headers=new Headers();object.writeHttpMetadata(headers);headers.set("etag",object.httpEtag);headers.set("X-Robots-Tag","noindex, nofollow, noarchive");return new Response(object.body,{headers}); }
       return json({error:"Endpoint bulunamadı."},404);

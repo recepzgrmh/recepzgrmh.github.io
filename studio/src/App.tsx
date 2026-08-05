@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
 type View = "today" | "queue" | "assets" | "history" | "settings";
 type AssetRole = "hero" | "inline-1" | "inline-2";
-type InlineVisual = { needed: boolean; slot: number; prompt: string; alt: string; caption: string };
+type InlineVisual = { needed: boolean; slot: number; imageUrl: string; alt: string; caption: string };
 type Asset = { id: string; bundleId: string; filename: string; contentType: string; sizeBytes: number; createdAt: string; url: string; role: AssetRole; alt?: string; caption?: string; bundleTitle?: string };
 type Bundle = {
   id: string;
@@ -21,7 +21,7 @@ type Bundle = {
   description?: string;
   blogMarkdown?: string;
   linkedinPost?: string;
-  visualPrompt?: string;
+  heroImageUrl?: string;
   heroAlt?: string;
   tags?: string[];
   sources?: { label: string; url: string; note: string }[];
@@ -205,7 +205,7 @@ export default function App() {
   async function saveDraft() {
     if (!editor) return; setBusy(true); setNotice("");
     try {
-      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, slug: editor.slug, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, visualPrompt: editor.visualPrompt, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, articleType: editor.articleType, inlineVisuals: editor.inlineVisuals, tags: editor.tags, sources: editor.sources }) });
+      const response = await fetch(`/api/bundles/${editor.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: editor.title, slug: editor.slug, description: editor.description, hook: editor.hook, blogMarkdown: editor.blogMarkdown, linkedinPost: editor.linkedinPost, heroImageUrl: editor.heroImageUrl, heroAlt: editor.heroAlt, category: editor.category, generationNote: editor.generationNote, articleType: editor.articleType, inlineVisuals: editor.inlineVisuals, tags: editor.tags, sources: editor.sources }) });
       const result = await response.json() as { bundle?: Bundle; error?: string }; if (!response.ok || !result.bundle) throw new Error(result.error || "Taslak kaydedilemedi");
       setBundles((items) => items.map((item) => item.id === result.bundle!.id ? result.bundle! : item)); setNotice("Düzenlemeler kaydedildi.");
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); } finally { setBusy(false); }
@@ -245,6 +245,24 @@ export default function App() {
       setBundleAssets((items) => [newAsset, ...items]);
       if (role === "hero") { setUpload({ name: file.name, url: result.url }); setBundles((items) => items.map((item) => item.id === selected.id ? { ...item, visualUrl: result.url, checksPassed: item.checksTotal } : item)); }
       setNotice(role === "hero" ? "Kapak görseli pakete eklendi." : `İç görsel ${role.slice(-1)} pakete eklendi.`);
+    } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); }
+    finally { setBusy(false); }
+  }
+
+  async function importImage(sourceUrl?: string, role: AssetRole = "hero", visual?: InlineVisual) {
+    if (!selected?.id) return;
+    const link = (sourceUrl || "").trim();
+    if (!link) { setNotice("Önce bir görsel bağlantısı gerekli."); return; }
+    setBusy(true);
+    setNotice("");
+    try {
+      const response = await fetch("/api/assets/fetch", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bundleId: selected.id, role, url: link, alt: visual?.alt || editor?.heroAlt, caption: visual?.caption }) });
+      const result = await response.json() as { url?: string; error?: string; filename?: string; contentType?: string; sizeBytes?: number };
+      if (!response.ok || !result.url) throw new Error(result.error || "Görsel indirilemedi");
+      const newAsset: Asset = { id: `${role}-${Date.now()}`, bundleId: selected.id, filename: result.filename || "gorsel", contentType: result.contentType || "image/jpeg", sizeBytes: result.sizeBytes || 0, createdAt: new Date().toISOString(), url: result.url, role, alt: visual?.alt, caption: visual?.caption };
+      setBundleAssets((items) => [newAsset, ...items.filter((item) => item.role !== role)]);
+      if (role === "hero") { setUpload({ name: newAsset.filename, url: result.url }); setBundles((items) => items.map((item) => item.id === selected.id ? { ...item, visualUrl: result.url, checksPassed: item.checksTotal } : item)); }
+      setNotice(role === "hero" ? "Kapak görseli linkten indirilip pakete eklendi." : `İç görsel ${role.slice(-1)} linkten indirilip pakete eklendi.`);
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); }
     finally { setBusy(false); }
   }
@@ -314,7 +332,14 @@ export default function App() {
                 <details className="editor-section" open><summary>LinkedIn paylaşımı</summary><textarea value={editor.linkedinPost || ""} onChange={(event) => setEditor({ ...editor, linkedinPost: event.target.value })}/><button className="text-button" onClick={() => void copyLinkedIn()}>Metni kopyala</button></details>
               </>}
               <details className="editor-section"><summary>Kaynaklar ({editor.sources?.length || 0})</summary><div className="source-list">{editor.sources?.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><strong>{source.label}</strong><span>{source.note}</span></a>) || <small>Kaynak yok.</small>}</div></details>
-              <details className="editor-section"><summary>Görsel üretim promptu</summary><textarea className="prompt-editor" value={editor.visualPrompt || ""} onChange={(event) => setEditor({ ...editor, visualPrompt: event.target.value })}/><button className="text-button" onClick={() => { void navigator.clipboard.writeText(editor.visualPrompt || ""); setNotice("Görsel promptu kopyalandı."); }}>Promptu kopyala</button></details>
+              <details className="editor-section" open={Boolean(editor.heroImageUrl)}><summary>İnternetten bulunan kapak görseli</summary>
+                <textarea className="prompt-editor" value={editor.heroImageUrl || ""} placeholder="Model doğrudan görsel bağlantısı bulamadı. Kendin bir link yapıştırabilirsin." onChange={(event) => setEditor({ ...editor, heroImageUrl: event.target.value.trim() })}/>
+                {editor.heroImageUrl && <a className="found-image" href={editor.heroImageUrl} target="_blank" rel="noreferrer"><img src={editor.heroImageUrl} alt={editor.heroAlt || "Bulunan kapak görseli"}/></a>}
+                <div className="link-actions">
+                  <button className="text-button" disabled={busy || !editor.heroImageUrl} onClick={() => void importImage(editor.heroImageUrl, "hero")}>{busy ? "İndiriliyor…" : "Bu linki pakete indir"}</button>
+                  <button className="text-button" onClick={() => { void navigator.clipboard.writeText(editor.heroImageUrl || ""); setNotice("Görsel linki kopyalandı."); }}>Linki kopyala</button>
+                </div>
+              </details>
               <div className="visual-block">
                 <div className="visual-title"><span>YAZIYA ÖZEL GÖRSEL</span>{(upload?.url || selected.visualUrl) && <b>Hazır</b>}</div>
                 {(upload?.url || selected.visualUrl) ? <div className="image-preview"><img src={upload?.url || selected.visualUrl} alt="Yüklenen içerik görseli"/><button onClick={() => fileInput.current?.click()}>Değiştir</button></div> :
@@ -328,7 +353,7 @@ export default function App() {
                 return <div className="visual-block inline-visual-block" key={role}>
                   <div className="visual-title"><span>YAZI İÇİ GÖRSEL {visual.slot}</span>{image && <b>Hazır</b>}</div>
                   <p className="inline-visual-caption">{visual.caption}</p>
-                  <details className="inline-prompt"><summary>Bu bölüme özel görsel promptu</summary><textarea value={visual.prompt} onChange={(event) => setEditor({ ...editor, inlineVisuals: editor.inlineVisuals?.map((item) => item.slot === visual.slot ? { ...item, prompt:event.target.value } : item) })}/><button className="text-button" onClick={() => { void navigator.clipboard.writeText(visual.prompt); setNotice(`İç görsel ${visual.slot} promptu kopyalandı.`); }}>Promptu kopyala</button></details>
+                  <details className="inline-prompt" open={Boolean(visual.imageUrl)}><summary>İnternetten bulunan görsel linki</summary><textarea value={visual.imageUrl} placeholder="Doğrudan görsel bağlantısı" onChange={(event) => setEditor({ ...editor, inlineVisuals: editor.inlineVisuals?.map((item) => item.slot === visual.slot ? { ...item, imageUrl:event.target.value.trim() } : item) })}/>{visual.imageUrl && <a className="found-image" href={visual.imageUrl} target="_blank" rel="noreferrer"><img src={visual.imageUrl} alt={visual.alt}/></a>}<div className="link-actions"><button className="text-button" disabled={busy || !visual.imageUrl} onClick={() => void importImage(visual.imageUrl, role, visual)}>{busy ? "İndiriliyor…" : "Bu linki pakete indir"}</button><button className="text-button" onClick={() => { void navigator.clipboard.writeText(visual.imageUrl); setNotice(`İç görsel ${visual.slot} linki kopyalandı.`); }}>Linki kopyala</button></div></details>
                   {image ? <div className="image-preview"><img src={image} alt={visual.alt}/><button onClick={() => inlineFileInputs.current[visual.slot]?.click()}>Değiştir</button></div> : <button className="dropzone compact" onClick={() => inlineFileInputs.current[visual.slot]?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); void uploadImage(event.dataTransfer.files[0], role, visual); }}><Icon name="image"/><strong>İç görseli yükle</strong><span>Yazıda {`{{INLINE_IMAGE_${visual.slot}}}`} konumunda görünür</span><em>Dosya seç</em></button>}
                   <input ref={(node) => { inlineFileInputs.current[visual.slot] = node; }} hidden type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadImage(event.target.files?.[0], role, visual)}/>
                 </div>;
@@ -347,8 +372,8 @@ export default function App() {
           <article className="settings-card accent-card"><span>OTOMATİK KONU KEŞFİ</span><h2>Açık</h2><p>OpenAI güncel web kaynaklarını tarar, geçmiş başlıklarla tekrar etmeyen ve senin uzmanlık alanlarına uyan konuyu kendi seçer.</p></article>
           <article className="settings-card"><span>ÜRETİM TAKVİMİ</span><h2>Pzt · Çrş · Cum</h2><p>Her çalışma günü saat 10:00'da (İstanbul) bir blog + LinkedIn paketi oluşturulur ve inceleme kuyruğuna alınır.</p></article>
           <article className="settings-card"><span>YAYIN GÜVENLİĞİ</span><h2>İnsan onayı zorunlu</h2><p>Hiçbir içerik kendiliğinden bloga veya LinkedIn'e gitmez. Önizler, düzenler, onaylar ve blog yayınını sen başlatırsın.</p></article>
-          <article className="settings-card"><span>İÇERİK MOTORU</span><h2>GPT-5.6 Luna</h2><p>Kaynaklı araştırma, blog yazısı, LinkedIn uyarlaması, SEO metadata ve görsel promptu tek paket olarak üretilir.</p></article>
-          <article className="settings-card wide"><span>KONU ÇERÇEVESİ</span><h2>Gösteriş değil, kanıtlanabilir teknik düşünce</h2><p>Backend ve sistem tasarımı, AI ile ürün geliştirme, mobil mimari, ürün mühendisliği, otomasyon ve growth engineering. Projeler yalnız gerçek bir ders veya trade-off anlatıyorsa örnek olur; kullanıcı sayısı veya başarı şişirilmez.</p></article>
+          <article className="settings-card"><span>İÇERİK MOTORU</span><h2>GPT-5.6 Luna</h2><p>Kaynaklı araştırma, blog yazısı, LinkedIn uyarlaması, SEO metadata ve internetten bulunmuş görsel linki tek paket olarak üretilir.</p></article>
+          <article className="settings-card wide"><span>KONU ÇERÇEVESİ</span><h2>Haftanın en çok konuşulan teknoloji gelişmesi</h2><p>Konu yazmadan üretim yaparsan model son 7 günde yazılım ve teknoloji dünyasında en çok konuşulan tek gelişmeyi araştırıp onu yazar. Kendi kafasından jenerik kariyer, temiz kod veya "yazılımın geleceği" konusu üretmesi yasak. Konu yazarsan senin konun her şeyin önündedir.</p></article>
         </section>}
       </main>
       {fullscreenSurface && editor && <div className={`preview-modal ${fullscreenSurface}`} role="dialog" aria-modal="true" aria-label={`${fullscreenSurface === "linkedin" ? "LinkedIn" : "Blog"} tam ekran önizleme`}><header><div><strong>{fullscreenSurface === "linkedin" ? "LinkedIn gönderisi" : "recepozgur.com blog yazısı"}</strong><span>Bu yalnızca önizleme; henüz yayınlanmadı.</span></div><button onClick={() => setFullscreenSurface(null)}>Kapat ×</button></header><div className="preview-modal-body">{fullscreenSurface === "linkedin" ? <LinkedinPreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} expanded={linkedinExpanded} onToggle={() => setLinkedinExpanded(true)} onCopy={() => void copyLinkedIn()}/> : <BlogSitePreview bundle={editor} imageUrl={upload?.url || selected.visualUrl} imageSlots={inlineImageSlots}/>}</div></div>}
