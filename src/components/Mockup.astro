@@ -4,6 +4,8 @@ import { workImage } from "../lib/workImages";
 interface Props {
   variant: "phone" | "browser";
   image?: string;
+  /** motion shot: plays inside the frame instead of the still (public/ paths) */
+  video?: { mp4: string; webm: string; poster: string };
   placeholder?: string;
   soon?: string;
   url?: string;
@@ -13,6 +15,7 @@ interface Props {
 const {
   variant,
   image,
+  video,
   placeholder = "Preview",
   soon = "",
   url = "recepozgur.com",
@@ -29,7 +32,21 @@ const img = image ? workImage(image) : null;
       <div class="phone-frame">
         <span class="phone-notch" />
         <div class="phone-screen">
-          {img ? (
+          {video ? (
+            <video
+              data-shot-video
+              class="shot-video"
+              poster={video.poster}
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-label={placeholder}
+            >
+              <source src={video.webm} type="video/webm" />
+              <source src={video.mp4} type="video/mp4" />
+            </video>
+          ) : img ? (
             <img src={img.src} alt={placeholder} loading="lazy" decoding="async" />
           ) : (
             <div class="ph">
@@ -51,7 +68,21 @@ const img = image ? workImage(image) : null;
           <span class="br-url">{url}</span>
         </div>
         <div class="br-screen">
-          {img ? (
+          {video ? (
+            <video
+              data-shot-video
+              class="shot-video"
+              poster={video.poster}
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-label={placeholder}
+            >
+              <source src={video.webm} type="video/webm" />
+              <source src={video.mp4} type="video/mp4" />
+            </video>
+          ) : img ? (
             <img src={img.src} alt={placeholder} loading="lazy" decoding="async" />
           ) : (
             <div class="ph">
@@ -106,7 +137,9 @@ const img = image ? workImage(image) : null;
   }
   .ph img,
   .phone-screen img,
-  .br-screen img {
+  .br-screen img,
+  .phone-screen .shot-video,
+  .br-screen .shot-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -194,10 +227,54 @@ const img = image ? workImage(image) : null;
     aspect-ratio: 16 / 10;
     background: var(--color-soft);
   }
+  .shot-video {
+    background: var(--color-night);
+  }
+  /* the browser dots/url bar already round the top; keep controls inside */
+  .shot-video::-webkit-media-controls-panel {
+    border-radius: 0 0 var(--radius-card) var(--radius-card);
+  }
   @media (prefers-reduced-motion: reduce) {
     .phone-screen img,
-    .br-screen img {
+    .br-screen img,
+    .phone-screen .shot-video,
+    .br-screen .shot-video {
       animation: none;
     }
   }
 </style>
+
+<script>
+  /* Motion shots: autoplay muted while on screen, pause when off.
+     prefers-reduced-motion (or a blocked autoplay) falls back to a poster
+     with native controls, so nothing moves unless the visitor asks for it. */
+  const shots = document.querySelectorAll<HTMLVideoElement>("video[data-shot-video]");
+  if (shots.length) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const manual = (v: HTMLVideoElement) => {
+      v.preload = "metadata";
+      v.controls = true;
+      v.loop = false;
+    };
+
+    if (reduce.matches) {
+      shots.forEach(manual);
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const v = e.target as HTMLVideoElement;
+            if (e.isIntersecting) {
+              v.preload = "auto";
+              v.play().catch(() => manual(v));
+            } else if (!v.controls) {
+              v.pause();
+            }
+          }
+        },
+        { threshold: 0.25 },
+      );
+      shots.forEach((v) => io.observe(v));
+    }
+  }
+</script>

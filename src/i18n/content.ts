@@ -23,6 +23,9 @@ export interface Preview {
   /** optional per-shot copy; when present (and one per image) a browser project
       renders as a pinned deck with side-text that changes as you scroll */
   captions?: { title: string; desc: string }[];
+  /** optional motion shot rendered inside the mockup frame instead of a still.
+      Files live in public/ (Astro's image pipeline only handles rasters). */
+  video?: { mp4: string; webm: string; poster: string };
 }
 export interface Project {
   slug: string;
@@ -75,6 +78,7 @@ export const LINKS = {
   revnaLanding: "https://revna.org/",
   revnaAppStore: "https://apps.apple.com/app/id6769646368",
   revnaPlayStore: "https://play.google.com/store/apps/details?id=com.mavipiksel.revna",
+  dancem: "https://dancem.app/",
   cv: "/Recep_Ozgur_Mih_CV.pdf",
 };
 
@@ -677,6 +681,60 @@ const en: Content = {
         "A small web product benefits early from repeatable deploys, explicit environment configuration and disciplined secrets management.",
       stores: [{ label: "chat.sanoapp.ai", href: LINKS.sano }],
     },
+    {
+      slug: "dancem",
+      mascot: "dancem",
+      name: "Dancem",
+      tagline: "Your movement becomes music",
+      role: "Design and development",
+      year: "2026",
+      stack: ["Web", "Pose tracking", "AI music generation", "Audio/video sync"],
+      metrics: [
+        { value: "33", label: "tracked joints" },
+        { value: "30 / sec", label: "pose reads" },
+        { value: "8", label: "music genres" },
+        { value: "Live", label: "on the web" },
+      ],
+      blurb:
+        "Dance in front of your camera and get an original track built around your own tempo — no choreography, no install.",
+      tags: ["Live web", "Pose tracking", "AI music"],
+      summary:
+        "Dance in front of your camera. In-browser pose tracking reads 33 joints 30 times a second to measure your tempo, generates an original track for your dance, and lays the audio over your video at sample accuracy. No choreography required — 8 genres, the tempo is yours.",
+      features: [
+        { title: "No choreography", desc: "Just move in front of the camera. There is no routine to learn and nothing to install." },
+        { title: "In-browser pose tracking", desc: "33 body joints, read 30 times a second, without the video leaving the browser." },
+        { title: "Tempo from your body", desc: "Your movement sets the tempo the track is generated around." },
+        { title: "Eight genres", desc: "The same dance, rendered as a track in any of eight musical genres." },
+        { title: "Sample-accurate mixdown", desc: "The generated audio is laid over your video at sample accuracy, so it stays locked to the movement." },
+      ],
+      preview: {
+        variant: "browser",
+        images: ["dancem-1"],
+        placeholder: "Web preview",
+        video: {
+          mp4: "/work/dancem-demo.mp4",
+          webm: "/work/dancem-demo.webm",
+          poster: "/work/dancem-poster.webp",
+        },
+      },
+      problem:
+        "Turning a live dance into music means the beat has to come from the body rather than a click track — and the finished audio has to stay locked to the video it was generated from.",
+      build: [
+        "Ran pose tracking in the browser: 33 joints, sampled 30 times a second.",
+        "Turned that motion into a tempo estimate that drives generation.",
+        "Generated an original track for the dance, in one of eight genres.",
+        "Laid the generated audio over the recorded video at sample accuracy.",
+      ],
+      architecture: [
+        "Camera → in-browser pose tracking (33 joints @ 30/s)",
+        "Motion → tempo estimation",
+        "Tempo + genre → track generation",
+        "Audio + video → sample-accurate mixdown",
+      ],
+      learnings:
+        "With a human body as the input, generating audio is the easy half — agreeing on the beat and holding sync all the way to the exported file is the part that decides whether it feels real.",
+      stores: [{ label: "dancem.app", href: LINKS.dancem }],
+    },
   ],
   footer: {
     built: "Designed and built by Recep Özgür Mıh.",
@@ -1201,6 +1259,60 @@ const tr: Content = {
       learnings:
         "Küçük bir web ürünü bile repeatable deploy, explicit environment config ve düzenli secrets management'tan erken aşamada fayda görüyor.",
       stores: [{ label: "chat.sanoapp.ai", href: LINKS.sano }],
+    },
+    {
+      slug: "dancem",
+      mascot: "dancem",
+      name: "Dancem",
+      tagline: "Hareketin müziğe dönüşüyor",
+      role: "Tasarım ve geliştirme",
+      year: "2026",
+      stack: ["Web", "Poz takibi", "AI müzik üretimi", "Ses/video senkronu"],
+      metrics: [
+        { value: "33", label: "takip edilen eklem" },
+        { value: "30 / sn", label: "poz okuması" },
+        { value: "8", label: "müzik türü" },
+        { value: "Yayında", label: "web’de" },
+      ],
+      blurb:
+        "Kameranın karşısında dans et, kendi temponun üzerine kurulmuş özgün bir parça çıksın — koreografi de yok kurulum da.",
+      tags: ["Web’de yayında", "Poz takibi", "AI müzik"],
+      summary:
+        "Kameranın karşısında dans et. Tarayıcıda çalışan poz takibi 33 eklemi saniyede 30 kez okuyup temponu ölçüyor, dansına özel bir parça üretiyor ve sesi videonun üzerine örnek hassasiyetinde bindiriyor. Koreografi gerekmiyor — 8 farklı tür, tempo senden.",
+      features: [
+        { title: "Koreografi yok", desc: "Kameranın karşısında hareket etmen yeterli. Öğrenilecek bir rutin de yok, kurulum da." },
+        { title: "Tarayıcıda poz takibi", desc: "33 vücut eklemi, saniyede 30 kez okunuyor; video tarayıcıdan çıkmıyor." },
+        { title: "Tempo senin bedeninden", desc: "Parçanın üzerine kurulduğu tempoyu senin hareketin belirliyor." },
+        { title: "Sekiz tür", desc: "Aynı dans, sekiz müzik türünden herhangi biriyle parçaya dönüşüyor." },
+        { title: "Örnek hassasiyetinde miks", desc: "Üretilen ses videonun üzerine örnek hassasiyetinde biniyor, böylece harekete kilitli kalıyor." },
+      ],
+      preview: {
+        variant: "browser",
+        images: ["dancem-1"],
+        placeholder: "Web önizlemesi",
+        video: {
+          mp4: "/work/dancem-demo.mp4",
+          webm: "/work/dancem-demo.webm",
+          poster: "/work/dancem-poster.webp",
+        },
+      },
+      problem:
+        "Canlı bir dansı müziğe çevirmek, vuruşunu bir metronomdan değil bedenden almayı gerektiriyor — ve biten sesin, üretildiği videoya kilitli kalmasını.",
+      build: [
+        "Poz takibini tarayıcıda çalıştırdım: 33 eklem, saniyede 30 örnek.",
+        "Bu hareketi, üretimi süren bir tempo tahminine çevirdim.",
+        "Dansa özel, sekiz türden birinde özgün bir parça üretilmesini sağladım.",
+        "Üretilen sesi kaydedilen videonun üzerine örnek hassasiyetinde bindirdim.",
+      ],
+      architecture: [
+        "Kamera → tarayıcıda poz takibi (33 eklem @ 30/sn)",
+        "Hareket → tempo tahmini",
+        "Tempo + tür → parça üretimi",
+        "Ses + video → örnek hassasiyetinde miks",
+      ],
+      learnings:
+        "Girdi bir insan bedeni olduğunda sesi üretmek işin kolay yarısı — vuruşta anlaşmak ve senkronu dışa aktarılan dosyaya kadar korumak, işin gerçek hissettiren kısmı.",
+      stores: [{ label: "dancem.app", href: LINKS.dancem }],
     },
   ],
   footer: {

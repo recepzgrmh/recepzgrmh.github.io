@@ -5,6 +5,7 @@ import Base from "../../../layouts/Base.astro";
 import Nav from "../../../components/Nav.astro";
 import Footer from "../../../components/Footer.astro";
 import Mockup from "../../../components/Mockup.astro";
+import { PREVIEW_URL } from "../../../lib/previewUrl";
 
 export function getStaticPaths() {
   return LANGS.flatMap((lang) =>
@@ -19,7 +20,7 @@ const idx = projects.findIndex((p) => p.slug === slug);
 const p = projects[idx];
 const next = projects[(idx + 1) % projects.length];
 const base = `/${lang}`;
-const url = slug === "chat-sanoapp-ai" ? "chat.sanoapp.ai" : "recepozgur.com";
+const url = PREVIEW_URL[slug] ?? "recepozgur.com";
 const title = `${p.name} — ${p.tagline}`;
 const panel = ["bg-amber/12", "bg-purple/40", "bg-blue/10"][idx % 3];
 const isPhone = p.preview.variant === "phone";
@@ -135,11 +136,12 @@ const shotCount = p.preview.images.length;
                   ? "flex flex-wrap items-center justify-center gap-8 sm:gap-12"
                   : "mx-auto max-w-4xl",
               ]}>
-                {p.preview.images.map((img) => (
+                {p.preview.images.map((img, i) => (
                   <div class:list={[isPhone ? "w-44 sm:w-56" : "w-full"]}>
                     <Mockup
                       variant={p.preview.variant}
                       image={img}
+                      video={i === 0 ? p.preview.video : undefined}
                       placeholder={isPhone ? ui.appPreview : ui.webPreview}
                       soon={ui.soon}
                       url={url}

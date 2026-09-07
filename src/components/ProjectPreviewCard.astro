@@ -2,6 +2,7 @@
 import type { Lang, Project } from "../i18n/content";
 import { CONTENT } from "../i18n/content";
 import Mockup from "./Mockup.astro";
+import { PREVIEW_URL } from "../lib/previewUrl";
 
 interface Props {
   lang: Lang;
@@ -16,7 +17,7 @@ const flip = index % 2 === 1;
 const panels = ["bg-amber/[0.13]", "bg-purple/45", "bg-blue/[0.1]"];
 const panel = panels[index % panels.length];
 const tagDot = ["bg-amber", "bg-blue", "bg-coral"];
-const url = p.slug === "chat-sanoapp-ai" ? "chat.sanoapp.ai" : "recepozgur.com";
+const url = PREVIEW_URL[p.slug] ?? "recepozgur.com";
 
 const phones = p.preview.variant === "phone";
 const imgs = p.preview.images;
@@ -103,7 +104,7 @@ const pos = fan[Math.min(n, 3)] ?? fan[1];
           ) : (
             <div class="proj-scene px-6 py-12 sm:px-10">
               <div class="transition-transform duration-500 group-hover:-translate-y-2">
-                <Mockup variant="browser" image={imgs[0]} placeholder={ui.webPreview} soon={ui.soon} url={url} />
+                <Mockup variant="browser" image={imgs[0]} video={p.preview.video} placeholder={ui.webPreview} soon={ui.soon} url={url} />
               </div>
             </div>
           )
