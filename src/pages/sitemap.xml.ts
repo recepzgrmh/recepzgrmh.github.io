@@ -2,6 +2,7 @@ import { getCollection } from "astro:content";
 import type { BlogPost } from "../lib/blog";
 import { sortPosts } from "../lib/blog";
 import { CONTENT, LANGS } from "../i18n/content";
+import { categorySummary } from "./blog/kategori/[category].astro";
 
 const SITE = "https://recepozgur.com";
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
@@ -53,10 +54,21 @@ export async function GET() {
 
   const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 
+  // Kategori arşivleri src/pages/blog/kategori/[category].astro'dan gelir; yol
+  // üretimi orada tek yerde durduğu için burada sadece aynı yardımcıyı çağırıyoruz.
+  // (Yukarıdaki glob yalnızca [lang] sayfalarını tarar, blog altını değil.)
+  const categoryUrls = categorySummary(posts).map((category) => ({
+    loc: category.href,
+    lastmod: postDate(
+      posts.find((post) => post.data.category === category.name) ?? posts[0],
+    ),
+  }));
+
   const entries = [
     { loc: "/", lastmod: BUILD_DATE },
     ...langUrls.map((loc) => ({ loc, lastmod: BUILD_DATE })),
     { loc: "/blog/", lastmod: posts[0] ? postDate(posts[0]) : BUILD_DATE },
+    ...categoryUrls,
     ...posts.map((post) => ({
       loc: `/blog/${post.data.slug}/`,
       lastmod: postDate(post),

@@ -5,6 +5,7 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import BlogCard from "../../components/blog/BlogCard.astro";
 import { formatDate, readingMinutes, sortPosts } from "../../lib/blog";
+import { categoryPath } from "./kategori/[category].astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
@@ -75,7 +76,7 @@ const jsonLd = {
           <div>
             <a href="/blog/" class="mb-8 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-fg-2 transition hover:text-amber">← Tüm yazılar</a>
             <div class="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] font-semibold uppercase tracking-widest text-muted">
-              <span class="text-amber">{post.data.category}</span><span>·</span>
+              <a href={categoryPath(post.data.category)} class="text-amber underline decoration-amber/30 underline-offset-4 transition hover:decoration-amber">{post.data.category}</a><span>·</span>
               <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time><span>·</span><span>{minutes} dk okuma</span>
             </div>
             <h1 class:list={["display mt-6 text-balance tracking-[-0.045em]", titleSize]}>{post.data.title}</h1>

@@ -1,0 +1,148 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Nav from "../../../components/Nav.astro";
+import Footer from "../../../components/Footer.astro";
+import type { BlogPost } from "../../../lib/blog";
+import { formatDate, readingMinutes, sortPosts } from "../../../lib/blog";
+
+/**
+ * Kategori adı → URL slug'ı. Türkçe harfler ASCII'ye iner, kalan her şey tireye.
+ * "ı" ve "İ" NFD ile ayrışmadığı için önce elle eşleniyor.
+ * Bu üç yardımcı kategori URL'lerinin tek kaynağı: blog/index.astro,
+ * blog/[slug].astro ve sitemap.xml.ts buradan içeri alır.
+ */
+export const categorySlug = (category: string) =>
+  category
+    .replace(/ı/g, "i")
+    .replace(/İ/g, "i")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+export const categoryPath = (category: string) => `/blog/kategori/${categorySlug(category)}/`;
+
+/** Yayınlanmış yazılardan kategori listesi: çok yazılıdan aza, eşitlikte alfabetik. */
+export const categorySummary = (posts: BlogPost[]) => {
+  const counts = new Map<string, number>();
+  for (const post of posts) {
+    counts.set(post.data.category, (counts.get(post.data.category) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([name, count]) => ({ name, count, slug: categorySlug(name), href: categoryPath(name) }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "tr"));
+};
+
+export async function getStaticPaths() {
+  const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
+  return categorySummary(posts).map((category) => ({
+    params: { category: category.slug },
+    props: {
+      category: category.name,
+      posts: posts.filter((post) => post.data.category === category.name),
+      categories: categorySummary(posts),
+    },
+  }));
+}
+
+interface Props {
+  category: string;
+  posts: BlogPost[];
+  categories: ReturnType<typeof categorySummary>;
+}
+
+const { category, posts, categories } = Astro.props;
+const canonical = `https://recepozgur.com${categoryPath(category)}`;
+const description = `${category} kategorisindeki ${posts.length} teknik yazı — Recep Özgür Mıh'ın production odaklı notları.`;
+const tones = ["bg-amber", "bg-blue", "bg-coral", "bg-lime"];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${category} — Blog`,
+  description,
+  url: canonical,
+  inLanguage: "tr-TR",
+  isPartOf: { "@type": "Blog", name: "Recep Özgür Mıh — Blog", url: "https://recepozgur.com/blog/" },
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: posts.length,
+    itemListElement: posts.map((post, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://recepozgur.com/blog/${post.data.slug}/`,
+      name: post.data.title,
+    })),
+  },
+};
+---
+
+<Base
+  lang="tr"
+  page={`blog:kategori:${categorySlug(category)}`}
+  title={`${category} yazıları — Recep Özgür Mıh`}
+  description={description}
+  canonical={canonical}
+  alternates={[{ lang: "tr", href: canonical }, { lang: "x-default", href: canonical }]}
+  jsonLd={jsonLd}
+>
+  <Nav lang="tr" active="blog" />
+
+  <main>
+    <section class="sect-sm">
+      <div class="wrap">
+        <a href="/blog/" class="mb-8 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-fg-2 transition hover:text-amber">← Tüm yazılar</a>
+        <p class="kicker mb-3 text-amber">Kategori</p>
+        <h1 class="display text-3xl sm:text-4xl">{category}</h1>
+        <p class="mt-4 max-w-2xl leading-relaxed text-fg-2">
+          {posts.length} yazı · en yeniden eskiye.
+        </p>
+
+        <nav aria-label="Kategoriler" class="mt-8 mb-12 flex flex-wrap gap-2 border-b border-border pb-8">
+          {categories.map((item) => (
+            <a
+              href={item.href}
+              aria-current={item.name === category ? "page" : undefined}
+              class:list={[
+                "rounded-pill border px-4 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-widest transition",
+                item.name === category
+                  ? "border-fg bg-fg text-white"
+                  : "border-border bg-soft text-fg-2 hover:border-fg/20 hover:text-amber",
+              ]}
+            >
+              {item.name} <span class="text-muted">{item.count}</span>
+            </a>
+          ))}
+        </nav>
+
+        <div class="grid gap-x-7 gap-y-14 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
+          {posts.map((post, index) => (
+            <a href={`/blog/${post.data.slug}/`} data-reveal style={`--d:${index * 60}ms`} class="group block">
+              <div class="aspect-video overflow-hidden bg-soft">
+                <img src={post.data.heroImage} alt={post.data.heroAlt} width="1200" height="630" loading="lazy" class="h-full w-full object-contain transition duration-500 group-hover:scale-[1.02]" />
+              </div>
+              <article class="pt-6">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span class="flex items-center gap-2">
+                    <span class:list={["h-2 w-2 rounded-full", tones[index % tones.length]]}></span>
+                    <span class="font-mono text-[0.65rem] font-bold uppercase tracking-widest text-fg-2">{post.data.category}</span>
+                  </span>
+                  <span class="text-border">/</span>
+                  <span class="font-mono text-[0.68rem] font-semibold text-muted">{formatDate(post.data.publishedAt)} · {readingMinutes(post.body ?? "")} dk</span>
+                </div>
+                <div class="mt-5 flex items-start justify-between gap-6">
+                  <h2 class="display text-2xl leading-tight transition-colors group-hover:text-amber sm:text-3xl">{post.data.title}</h2>
+                  <span class="shrink-0 text-xl text-fg transition-transform group-hover:translate-x-1">→</span>
+                </div>
+                <p class="mt-4 max-w-xl leading-relaxed text-fg-2">{post.data.description}</p>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="tr" />
+</Base>

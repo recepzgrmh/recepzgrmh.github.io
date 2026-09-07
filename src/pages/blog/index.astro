@@ -4,12 +4,14 @@ import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import { formatDate, readingMinutes, sortPosts } from "../../lib/blog";
+import { categorySummary } from "./kategori/[category].astro";
 
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 const featured = posts.find((post) => post.data.featured) ?? posts[0];
 const rest = posts.filter((post) => post.id !== featured?.id);
 const canonical = "https://recepozgur.com/blog/";
 const tones = ["bg-amber", "bg-blue", "bg-coral", "bg-lime"];
+const categories = categorySummary(posts);
 ---
 
 <Base
@@ -59,10 +61,21 @@ const tones = ["bg-amber", "bg-blue", "bg-coral", "bg-lime"];
     {rest.length > 0 && (
       <section class="sect-sm pt-0">
         <div class="wrap">
-          <header class="mb-10">
+          <header class="mb-8">
             <p class="kicker mb-3 text-amber">Arşiv</p>
             <h2 class="h-sec">Diğer yazılar</h2>
           </header>
+
+          <nav aria-label="Kategoriler" class="mb-12 flex flex-wrap gap-2 border-b border-border pb-8">
+            {categories.map((category) => (
+              <a
+                href={category.href}
+                class="rounded-pill border border-border bg-soft px-4 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-widest text-fg-2 transition hover:border-fg/20 hover:text-amber"
+              >
+                {category.name} <span class="text-muted">{category.count}</span>
+              </a>
+            ))}
+          </nav>
           <div class="grid gap-x-7 gap-y-14 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
             {rest.map((post, index) => (
               <a href={`/blog/${post.data.slug}/`} data-reveal style={`--d:${index * 60}ms`} class="group block">
