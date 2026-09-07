@@ -3,8 +3,9 @@ title: "Anthropic kararı, yapay zekâda şirket sınırlarını yeniden çizdi"
 description: "Bir ABD yargıcı, Pentagon’un Anthropic’i tedarik zinciri riski ilan etmesini hukuka aykırı buldu. Karar, AI şirketlerinin sözleşme sınırlarını gündeme taşıdı."
 slug: "anthropic-pentagon-karari"
 publishedAt: 2026-08-30
+updatedAt: 2026-09-07
 tags: ["Anthropic", "Claude", "Pentagon", "yapay zekâ güvenliği", "ABD hukuku", "AI politikası"]
-category: "Yapay zekâ ve teknoloji politikası"
+category: "Yapay Zekâ"
 heroImage: "/blog/anthropic-pentagon-karari.webp"
 heroAlt: "Pentagon'un havadan görünümü; Anthropic kararına eşlik eden fotoğraf."
 featured: false

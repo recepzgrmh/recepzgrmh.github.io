@@ -4,7 +4,7 @@ description: "OpenAI, GPT-5.6 Luna fiyatını yüzde 80 düşürdü. Bu hamle, k
 slug: "gpt-56-luna-fiyat-indirimi"
 publishedAt: 2026-08-05
 tags: ["OpenAI", "GPT-5.6", "Codex", "AI ajanları", "API maliyeti", "yazılım geliştirme"]
-category: "Yapay Zeka"
+category: "Yapay Zekâ"
 heroImage: "/blog/gpt-56-luna-fiyat-indirimi.png"
 heroAlt: "Milyon token başına input fiyatının beşte bire inmesi."
 featured: false

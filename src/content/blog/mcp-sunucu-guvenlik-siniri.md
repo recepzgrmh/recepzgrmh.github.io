@@ -4,7 +4,7 @@ description: "MCP sunucuları AI ajanlarını araçlara bağlarken yeni bir güv
 slug: "mcp-sunucu-guvenlik-siniri"
 publishedAt: 2026-07-23
 tags: ["MCP", "Model Context Protocol", "AI güvenliği", "OAuth", "ajan güvenliği", "backend"]
-category: "Güvenilir AI Ürünleri"
+category: "Güvenlik"
 heroImage: "/blog/mcp-sunucu-guvenlik-siniri.png"
 heroAlt: "MCP sunucusunun ajan ile araçlar arasındaki güven sınırı."
 featured: false

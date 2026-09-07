@@ -4,7 +4,7 @@ description: "6 Ağustos 2026’daki GitHub Actions kesintisi, self-hosted runne
 slug: "github-actions-kesintisi-ci-bagimliligi"
 publishedAt: 2026-08-13
 tags: ["GitHub Actions", "CI/CD", "DevOps", "self-hosted runner", "outage", "yazılım altyapısı"]
-category: "DevOps"
+category: "DevOps ve Tedarik Zinciri"
 heroImage: "/blog/github-actions-kesintisi-ci-bagimliligi.png"
 heroAlt: "Self-hosted runner'ların da kesintiden etkilenmesi."
 featured: false

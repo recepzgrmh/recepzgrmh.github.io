@@ -3,8 +3,9 @@ title: "Passkey Eklemek Kimlik Doğrulama Değil, Uygulama İlişkilendirme İş
 description: "Passkey entegrasyonunda asıl zor kısım kriptografi değil; mobil uygulama, web alan adı, sunucu ve credential provider ilişkisini doğru kurmaktır."
 slug: "passkey-uygulama-iliskilendirme"
 publishedAt: 2026-07-16
+updatedAt: 2026-09-07
 tags: ["passkeys", "WebAuthn", "Credential Manager", "AuthenticationServices", "mobil güvenlik", "backend"]
-category: "Mobil ve Backend"
+category: "Güvenlik"
 heroImage: "/blog/passkey-uygulama-iliskilendirme.png"
 heroAlt: "Uygulama kimliği, alan adı sahipliği ve relying party ilişkisi."
 featured: false

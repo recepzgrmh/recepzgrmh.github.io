@@ -4,7 +4,7 @@ description: "İyi hata tasarımı yalnızca doğru HTTP kodunu seçmek değildi
 slug: "api-hatalari-kullanici-deneyiminin-parcasidir"
 publishedAt: 2026-07-15
 tags: ["api", "backend", "mobil", "ux"]
-category: "API Tasarımı"
+category: "Backend ve API"
 heroImage: "/blog/api-hata-tasarimi.png"
 heroAlt: "Dağınık hata mesajlarının düzenli ve eyleme dönük bir API hata sözleşmesine dönüştüğü diyagram"
 featured: false

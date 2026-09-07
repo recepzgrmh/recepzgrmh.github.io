@@ -3,6 +3,7 @@ title: "Mobil Çevirilerde OTA Rahatlığı, Dağıtım Disiplini İster"
 description: "Mobil çevirileri OTA ile güncellemek hız kazandırır; fakat önbellek, fallback, sürümleme ve rollback tasarlanmazsa riski büyütür."
 slug: "mobil-ota-ceviri-yonetimi"
 publishedAt: 2026-07-29
+updatedAt: 2026-09-07
 tags: ["mobil uygulama", "i18n", "lokalizasyon", "OTA", "remote config", "Flutter"]
 category: "Mobil Geliştirme"
 heroImage: "/blog/mobil-ota-ceviri-yonetimi.png"

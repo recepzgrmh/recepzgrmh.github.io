@@ -22,6 +22,7 @@ const minutes = readingMinutes(post.body ?? "");
 const titleSize = post.data.title.length > 74 ? "text-[clamp(2.35rem,5vw,4.15rem)] leading-[1.02]" : post.data.title.length > 54 ? "text-[clamp(2.45rem,5.5vw,4.65rem)] leading-[1]" : "text-[clamp(2.5rem,6vw,5.25rem)] leading-[0.98]";
 const canonical = `https://recepozgur.com/blog/${post.data.slug}/`;
 const related = sortPosts(allPosts.filter((candidate) => candidate.id !== post.id && candidate.data.tags.some((tag) => post.data.tags.includes(tag)))).slice(0, 2);
+const wordCount = (post.body ?? "").trim().split(/\s+/).filter(Boolean).length;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -30,14 +31,26 @@ const jsonLd = {
   image: new URL(post.data.heroImage, "https://recepozgur.com").toString(),
   datePublished: post.data.publishedAt.toISOString(),
   dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
-  mainEntityOfPage: canonical,
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
   inLanguage: "tr-TR",
+  articleSection: post.data.category,
+  keywords: post.data.tags,
+  wordCount,
+  isAccessibleForFree: true,
   author: {
     "@type": "Person",
+    "@id": "https://recepozgur.com/tr/profile/#person",
     name: "Recep Özgür Mıh",
     url: "https://recepozgur.com/tr/about/",
     sameAs: ["https://www.linkedin.com/in/recepozgurmih/", "https://github.com/recepzgrmh"],
   },
+  publisher: {
+    "@type": "Person",
+    "@id": "https://recepozgur.com/tr/profile/#person",
+    name: "Recep Özgür Mıh",
+    url: "https://recepozgur.com/",
+  },
+  citation: post.data.sources.map((source) => ({ "@type": "CreativeWork", name: source.label, url: source.url })),
 };
 ---
 
@@ -66,11 +79,12 @@ const jsonLd = {
               <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time><span>·</span><span>{minutes} dk okuma</span>
             </div>
             <h1 class:list={["display mt-6 text-balance tracking-[-0.045em]", titleSize]}>{post.data.title}</h1>
+            <div class="mt-5 flex flex-wrap items-center gap-2 font-mono text-[0.7rem] font-semibold uppercase tracking-widest text-muted"><span>Yazan</span><span>·</span><a href="/tr/about/" rel="author" class="text-fg transition hover:text-amber">Recep Özgür Mıh</a></div>
             <p class="mt-7 max-w-2xl text-lg leading-relaxed text-fg-2 sm:text-xl">{post.data.description}</p>
             <div class="mt-8 flex flex-wrap gap-2">{post.data.tags.map((tag) => <span class="rounded-pill bg-soft px-3 py-1.5 font-mono text-[0.68rem] font-semibold text-fg-2">#{tag}</span>)}</div>
           </div>
           <figure class="overflow-hidden rounded-show border border-border bg-night shadow-2xl shadow-fg/10">
-            <img src={post.data.heroImage} alt={post.data.heroAlt} width="1200" height="630" class="aspect-[1200/630] h-full w-full object-cover" />
+            <img src={post.data.heroImage} alt={post.data.heroAlt} width="1200" height="630" fetchpriority="high" class="aspect-[1200/630] h-full w-full object-cover" />
           </figure>
         </div>
       </header>

@@ -4,7 +4,7 @@ description: "Structured output biçimi düzeltir; gerçeği garanti etmez. AI �
 slug: "gecerli-json-guvenilir-ai-ciktisi-degildir"
 publishedAt: 2026-07-14
 tags: ["yapay-zeka", "backend", "otomasyon"]
-category: "AI Ürünleri"
+category: "Yapay Zekâ"
 heroImage: "/blog/ai-json-dogrulama.png"
 heroAlt: "JSON şemasından geçen ancak anlam kontrolü ve insan onayı bekleyen AI çıktısını gösteren katmanlı diyagram"
 featured: false

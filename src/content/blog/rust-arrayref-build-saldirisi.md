@@ -4,7 +4,7 @@ description: "arrayref 0.3.10 saldırısı, Rust projelerinde uygulama çalışm
 slug: "rust-arrayref-build-saldirisi"
 publishedAt: 2026-08-27
 tags: ["Rust", "Cargo", "yazılım güvenliği", "tedarik zinciri", "açık kaynak", "CI/CD"]
-category: "Güvenlik"
+category: "DevOps ve Tedarik Zinciri"
 heroImage: "/blog/rust-arrayref-build-saldirisi.png"
 heroAlt: "Zararlı bağımlılığın build script ile derleme anında çalışması."
 featured: false

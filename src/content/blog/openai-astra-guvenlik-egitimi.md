@@ -3,8 +3,9 @@ title: "OpenAI Astra’yı duraklattı, güvenlik çıtası eğitimin içine gir
 description: "OpenAI, Astra’nın siber yetenekleri için model eğitimini yavaşlattı. Karar, güvenliğin yayından önce değil, eğitim sırasında ölçülmesi gerektiğini gösteriyor."
 slug: "openai-astra-guvenlik-egitimi"
 publishedAt: 2026-08-23
+updatedAt: 2026-09-07
 tags: ["OpenAI", "Astra", "yapay zekâ güvenliği", "siber güvenlik", "model eğitimi", "AI ajanları"]
-category: "Yapay zekâ ve güvenlik"
+category: "Yapay Zekâ"
 heroImage: "/blog/openai-astra-guvenlik-egitimi.png"
 heroAlt: "Yetenek eşiğine yaklaşınca eğitim akışının durdurulması."
 featured: false

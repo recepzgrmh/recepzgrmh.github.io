@@ -4,7 +4,7 @@ description: "Ödeme entegrasyonlarında idempotency, webhook tekrarları ve imz
 slug: "odeme-webhook-idempotency-guvenilirlik"
 publishedAt: 2026-07-19
 tags: ["ödeme sistemleri", "webhook", "idempotency", "Stripe", "backend", "güvenilirlik"]
-category: "Ödeme Sistemleri"
+category: "Backend ve API"
 heroImage: "/blog/odeme-webhook-idempotency-guvenilirlik.png"
 heroAlt: "Aynı ödeme operasyonunun tek kez uygulanması."
 featured: false

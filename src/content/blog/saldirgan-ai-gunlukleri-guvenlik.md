@@ -3,6 +3,7 @@ title: "Saldırganların AI günlükleri güvenlik ekiplerine ne gösteriyor"
 description: "Cisco Talos’un incelediği sızmış AI kullanım izleri, saldırganların Claude Code ve benzeri araçları nasıl kullandığını gösteriyor."
 slug: "saldirgan-ai-gunlukleri-guvenlik"
 publishedAt: 2026-08-06
+updatedAt: 2026-09-07
 tags: ["siber güvenlik", "yapay zeka", "Cisco Talos", "Claude Code", "Codex", "geliştirici araçları"]
 category: "Güvenlik"
 heroImage: "/blog/saldirgan-ai-gunlukleri-guvenlik.png"

@@ -3,8 +3,9 @@ title: "OAuth Token’ı Çalındığında Tek Başına Yetmemeli"
 description: "OAuth 2.0’de DPoP, çalınan access token’ın başka bir istemcide kullanılmasını nasıl zorlaştırır? Uygulama ve sunucu tarafını inceliyoruz."
 slug: "oauth-dpop-token-guvenligi"
 publishedAt: 2026-08-02
+updatedAt: 2026-09-07
 tags: ["OAuth 2.0", "DPoP", "API güvenliği", "access token", "backend", "kimlik doğrulama"]
-category: "Backend ve Güvenlik"
+category: "Güvenlik"
 heroImage: "/blog/oauth-dpop-token-guvenligi.png"
 heroAlt: "Çalınan token'ın başka istemcide kullanılabilirliği."
 featured: false

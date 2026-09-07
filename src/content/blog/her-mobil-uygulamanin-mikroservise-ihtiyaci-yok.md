@@ -4,7 +4,7 @@ description: "Mikroservis kararını moda, ekip hayali veya CV değeriyle değil
 slug: "her-mobil-uygulamanin-mikroservise-ihtiyaci-yok"
 publishedAt: 2026-07-16
 tags: ["mimari", "backend", "mobil"]
-category: "Yazılım Mimarisi"
+category: "Backend ve API"
 heroImage: "/blog/mikroservis-karari.png"
 heroAlt: "Tek bir sağlam bloktan gereksiz yere ayrılan küçük servis parçalarını gösteren soyut diyagram"
 featured: true

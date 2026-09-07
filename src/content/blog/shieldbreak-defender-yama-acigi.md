@@ -4,7 +4,7 @@ description: "13 Ağustos’ta yayımlanan ShieldBreak, Windows Defender’daki 
 slug: "shieldbreak-defender-yama-acigi"
 publishedAt: 2026-08-18
 tags: ["Windows Defender", "ShieldBreak", "sıfırıncı gün", "Microsoft", "güvenlik yamaları"]
-category: "Siber güvenlik"
+category: "Güvenlik"
 heroImage: "/blog/shieldbreak-defender-yama-acigi.png"
 heroAlt: "RoguePlanet yamasının kapattığı yol ile ShieldBreak'in ayrımı."
 featured: false

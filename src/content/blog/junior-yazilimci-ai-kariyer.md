@@ -3,8 +3,9 @@ title: "Junior Yazılımcılık Koddan Karara Doğru Nasıl Değişecek?"
 description: "AI kod üretimini ucuzlatırken junior yazılımcıların işe giriş şartları, portföyleri ve üretim gücü nasıl değişiyor?"
 slug: "junior-yazilimci-ai-kariyer"
 publishedAt: 2026-07-16
+updatedAt: 2026-09-07
 tags: ["AI", "yazılım kariyeri", "junior yazılımcı", "işe alım", "portföy", "kodlama"]
-category: "Kariyer ve Yazılım"
+category: "Sektör ve Kariyer"
 heroImage: "/blog/junior-yazilimci-ai-kariyer.png"
 heroAlt: "Kod üretiminden doğrulama ve yönlendirmeye kayan beklenti."
 featured: false

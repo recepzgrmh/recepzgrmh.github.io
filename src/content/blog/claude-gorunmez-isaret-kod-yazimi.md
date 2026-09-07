@@ -4,7 +4,7 @@ description: "Anthropic’in 14 Ağustos tarihli açıklaması, Claude çıktıl
 slug: "claude-gorunmez-isaret-kod-yazimi"
 publishedAt: 2026-08-20
 tags: ["Anthropic", "Claude", "AI watermarking", "Claude Code", "yazılım geliştirme", "EU AI Act"]
-category: "Yapay zeka"
+category: "Yapay Zekâ"
 heroImage: "/blog/claude-gorunmez-isaret-kod-yazimi.png"
 heroAlt: "Seçimin rastgele sayı yerine anahtar hash'iyle yapılması."
 featured: false

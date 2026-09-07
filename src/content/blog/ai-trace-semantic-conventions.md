@@ -3,6 +3,7 @@ title: "Güvenilir AI Ürünü İçin Trace Yetmez, Sözleşme Gerekir"
 description: "AI özelliklerinde model çağrısını izlemek yetmez. Standart trace alanları, maliyet ve hata analizini nasıl güvenilir hale getiriyor?"
 slug: "ai-trace-semantic-conventions"
 publishedAt: 2026-07-30
+updatedAt: 2026-09-07
 tags: ["AI ürünleri", "OpenTelemetry", "observability", "GenAI", "güvenilirlik"]
 category: "Yapay Zekâ"
 heroImage: "/blog/ai-trace-semantic-conventions.png"

@@ -3,8 +3,9 @@ title: "API Sürümlemek URL’ye Bir Sayı Eklemekten Fazlası"
 description: "API’ler büyürken kırıcı değişiklikleri yönetmek için sürümleme stratejilerini, uyumluluğu ve geçiş planını birlikte ele alıyoruz."
 slug: "api-surumleme-breaking-degisiklikler"
 publishedAt: 2026-07-26
+updatedAt: 2026-09-07
 tags: ["API", "backend", "sürümleme", "uyumluluk", "OpenAPI", "Stripe"]
-category: "Backend"
+category: "Backend ve API"
 heroImage: "/blog/api-surumleme-breaking-degisiklikler.png"
 heroAlt: "Kırıcı değişikliğin sürüm ve geçiş planıyla ele alınması."
 featured: false

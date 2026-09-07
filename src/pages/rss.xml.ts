@@ -10,6 +10,8 @@ const escapeXml = (value: string) =>
     '"': "&quot;",
   })[character] ?? character);
 
+const AUTHOR = "Recep Özgür Mıh";
+
 export async function GET() {
   const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
   const items = posts.map((post) => {
@@ -19,12 +21,15 @@ export async function GET() {
       <link>${url}</link>
       <guid>${url}</guid>
       <description>${escapeXml(post.data.description)}</description>
+      <author>${escapeXml(AUTHOR)}</author>
+      <dc:creator>${escapeXml(AUTHOR)}</dc:creator>
+      <category>${escapeXml(post.data.category)}</category>
       <pubDate>${post.data.publishedAt.toUTCString()}</pubDate>
     </item>`;
   }).join("\n");
 
   return new Response(`<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>Recep Özgür Mıh — Teknik Blog</title>
     <link>https://recepozgur.com/blog/</link>

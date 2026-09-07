@@ -1,0 +1,66 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+const links = [
+  { href: "/", label: "Ana sayfa", en: "Home" },
+  { href: "/blog/", label: "Blog", en: "Blog" },
+  { href: "/tr/work/", label: "İşler", en: "Work" },
+];
+---
+
+<Base
+  lang="tr"
+  page="404"
+  title="404 — Sayfa bulunamadı · Recep Özgür Mıh"
+  description="Aradığın sayfa burada değil. Ana sayfaya, bloga veya işlere dönebilirsin."
+  alternates={[]}
+  noindex
+>
+  <Nav lang="tr" />
+
+  <main>
+    <section class="sect">
+      <div class="wrap">
+        <p data-reveal class="kicker mb-5 text-amber">404 — Not found</p>
+
+        <h1 data-reveal="title" style="--d:90ms" class="h-sec max-w-3xl text-balance">
+          Bu sayfa burada değil.
+        </h1>
+
+        <p data-reveal style="--d:180ms" class="mt-7 max-w-xl text-xl leading-relaxed text-fg-2">
+          Link eskimiş, taşınmış ya da hiç var olmamış olabilir.
+        </p>
+        <p data-reveal style="--d:230ms" class="mt-3 max-w-xl text-lg leading-relaxed text-muted">
+          This page doesn’t exist. The link may be outdated or moved.
+        </p>
+
+        <div data-reveal style="--d:300ms" class="mt-10 flex flex-wrap items-center gap-3">
+          {
+            links.map((link, index) => (
+              <a
+                href={link.href}
+                data-magnetic
+                class:list={[
+                  "inline-flex items-center gap-2 rounded-pill px-6 py-3.5 text-base font-bold transition",
+                  index === 0
+                    ? "btn-amber bg-fg text-page hover:bg-amber hover:text-fg"
+                    : "border border-border bg-surface text-fg hover:border-fg/30",
+                ]}
+              >
+                {link.label}
+                {link.en !== link.label && (
+                  <span class="font-mono text-xs font-semibold text-muted">{link.en}</span>
+                )}
+                <span class="arrow-nudge">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="tr" />
+</Base>

@@ -4,7 +4,7 @@ description: "Google Pixel 11, 12 Ağustos lansmanından sonra fiyatı, RAM terc
 slug: "pixel-11-donanim-iddiasi"
 publishedAt: 2026-08-16
 tags: ["Google Pixel 11", "Android", "Google", "akıllı telefonlar", "ürün geliştirme", "yazılım mühendisliği"]
-category: "Teknoloji"
+category: "Sektör ve Kariyer"
 heroImage: "/blog/pixel-11-donanim-iddiasi.png"
 heroAlt: "Pixel 11 ön ve arka görünümü ile baz Pro yapılandırmasındaki RAM düşüşü."
 featured: false

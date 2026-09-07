@@ -91,6 +91,43 @@ const experience = lang === "tr"
       ],
     };
 
+// Tek bir Person entity: @id her iki dilde de aynı kalır, çünkü aynı kişiyi
+// temsil eder ve blog şemaları author.@id ile buraya bağlanır.
+const PERSON_ID = "https://recepozgur.com/tr/profile/#person";
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: "Recep Özgür Mıh",
+  url: "https://recepozgur.com/",
+  jobTitle: "Mobile Application Developer",
+  worksFor: {
+    "@type": "Organization",
+    name: "MaviPiksel İnternet Çözümleri",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Dokuz Eylül Üniversitesi",
+  },
+  knowsAbout: [
+    "Flutter",
+    "Dart",
+    "TypeScript",
+    "Node.js",
+    "React",
+    "Vite",
+    "Firebase",
+    "Google Cloud Platform",
+    "Supabase",
+    "PostgreSQL",
+    "Subscriptions & entitlements",
+    "CI/CD & store release",
+    "AI integration",
+  ],
+  sameAs: [LINKS.github, LINKS.linkedin],
+};
+
 const proofAccent = ["bg-amber", "bg-blue", "bg-fg", "bg-purple"];
 
 const skillTone: Record<StatTone, string> = {
@@ -104,7 +141,7 @@ const skillTone: Record<StatTone, string> = {
 };
 ---
 
-<Base lang={lang} page="profile" title={copy.title} description={about.lead}>
+<Base lang={lang} page="profile" title={copy.title} description={about.lead} jsonLd={personJsonLd}>
   <Nav lang={lang} active="profile" />
 
   <main>

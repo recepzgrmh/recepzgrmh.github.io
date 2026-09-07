@@ -3,8 +3,9 @@ title: "Veritabanı Güncellendiğinde Olayı Nasıl Güvenle Yayınlarsın?"
 description: "Veritabanı işlemi başarılı olup olay kaybolmasın diye Transactional Outbox desenini, CDC ve tüketici idempotency’siyle birlikte inceliyoruz."
 slug: "transactional-outbox-event-yayinlama"
 publishedAt: 2026-08-04
+updatedAt: 2026-09-07
 tags: ["backend", "event-driven architecture", "transactional outbox", "CDC", "Debezium", "Kafka"]
-category: "Backend"
+category: "Backend ve API"
 heroImage: "/blog/transactional-outbox-event-yayinlama.png"
 heroAlt: "İş verisi ve olay kaydının aynı transaction'da yazılması."
 featured: false

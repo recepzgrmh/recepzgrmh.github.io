@@ -3,8 +3,9 @@ title: "Android 16 ile Edge-to-Edge Tasarım Bir Tercih Olmaktan Çıkıyor"
 description: "Android 16, edge-to-edge kullanımından çıkış seçeneğini kaldırıyor. Mobil arayüzleri güvenli biçimde taşımak için insets ve adaptif tasarım yaklaşımını inceleyelim."
 slug: "android-16-edge-to-migrasyon"
 publishedAt: 2026-07-21
+updatedAt: 2026-09-07
 tags: ["Android 16", "edge-to-edge", "Jetpack Compose", "WindowInsets", "mobil geliştirme"]
-category: "Mobil"
+category: "Mobil Geliştirme"
 heroImage: "/blog/android-16-edge-to-migrasyon.png"
 heroAlt: "Android 16'da opt-out kalkınca insets ile taşıma."
 featured: false

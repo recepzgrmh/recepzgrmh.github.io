@@ -3,8 +3,9 @@ title: "Mobil Aboneliklerde Entitlement Neden Yalnızca İstemcide Tutulmamalı?
 description: "Mobil abonelik erişimini güvenilir kılmak için backend doğrulaması, Apple bildirimleri, Google RTDN ve idempotency trade-offlarını ele alıyoruz."
 slug: "abonelik-entitlement-backend"
 publishedAt: 2026-07-16
+updatedAt: 2026-09-07
 tags: ["mobil abonelik", "entitlement", "backend doğrulaması", "App Store Server Notifications", "Google Play RTDN", "idempotency"]
-category: "Mobil ve Backend"
+category: "Backend ve API"
 heroImage: "/blog/abonelik-entitlement-backend.png"
 heroAlt: "İstemcideki erişim bayrağı ile sunucuda doğrulanan yetkinin ayrımı."
 featured: false

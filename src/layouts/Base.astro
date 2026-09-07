@@ -19,6 +19,7 @@ interface Props {
   updatedTime?: string;
   alternates?: { lang: string; href: string }[];
   jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 }
 const {
   lang,
@@ -32,6 +33,7 @@ const {
   updatedTime,
   alternates,
   jsonLd,
+  noindex = false,
 } = Astro.props;
 const t = CONTENT[lang];
 const pageTitle = title ?? t.meta.title;
@@ -78,6 +80,13 @@ const pageAlternates = alternates ?? buildAlternates();
     <meta name="description" content={pageDesc} />
     <meta name="author" content="Recep Özgür Mıh" />
     <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Recep Özgür Mıh — Teknik Blog"
+      href="/rss.xml"
+    />
 
     <meta property="og:type" content={type} />
     <meta property="og:title" content={pageTitle} />

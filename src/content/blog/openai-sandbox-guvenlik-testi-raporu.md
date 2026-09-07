@@ -3,6 +3,7 @@ title: "OpenAI raporu, güvenlik testindeki sandbox'ı sorgulatıyor"
 description: "OpenAI'nin 26 Ağustos raporu, Hugging Face olayının ötesinde eval ortamı, ajan iletişimi ve izleme tasarımındaki açıkları gösteriyor."
 slug: "openai-sandbox-guvenlik-testi-raporu"
 publishedAt: 2026-09-01
+updatedAt: 2026-09-07
 tags: ["OpenAI", "Hugging Face", "AI ajanları", "siber güvenlik", "sandbox", "ExploitGym"]
 category: "Güvenlik"
 heroImage: "/blog/openai-sandbox-guvenlik-testi-raporu.png"

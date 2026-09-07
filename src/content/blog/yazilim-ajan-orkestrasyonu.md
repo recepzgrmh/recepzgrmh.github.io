@@ -3,8 +3,9 @@ title: "Yazılım ekipleri artık kod değil, ajan orduları yönetiyor"
 description: "Kod üreten ajanlar çoğaldı. Yazılım geliştirmede yeni darboğaz, bu ajanları güvenilir biçimde koordine etmek ve sonuçlarını denetlemek oluyor."
 slug: "yazilim-ajan-orkestrasyonu"
 publishedAt: 2026-07-16
+updatedAt: 2026-09-07
 tags: ["AI ajanları","yazılım geliştirme","agentic engineering","çoklu ajan sistemleri","yazılım ekipleri"]
-category: "Yazılım Geliştirme"
+category: "Yapay Zekâ"
 heroImage: "/blog/yazilim-ajan-orkestrasyonu.webp"
 heroAlt: "Bir geliştiricinin birden fazla yazılım ajanının koordinasyonunu izlediği editoryal illüstrasyon"
 featured: false

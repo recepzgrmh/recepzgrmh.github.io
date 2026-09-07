@@ -3,8 +3,9 @@ title: "Kod Yazmayı Bırakmak Değil, Kodu Anlayabilmek"
 description: "AI kodun büyük bölümünü yazabiliyorsa geliştirici neyi kendisi yapmalı? Hız ile teknik derinlik arasındaki yeni dengeyi tartışıyorum."
 slug: "ai-kod-yazma-gelistirici-becerileri"
 publishedAt: 2026-07-16
+updatedAt: 2026-09-07
 tags: ["yapay zeka","yazılım geliştirme","developer productivity","kodlama","kariyer"]
-category: "Yazılım"
+category: "Sektör ve Kariyer"
 heroImage: "/blog/ai-kod-yazma-gelistirici-becerileri.webp"
 heroAlt: "Yapay zekânın kod üretimi ile geliştiricinin teknik sorumluluğu arasındaki dengeyi anlatan editoryal illüstrasyon"
 featured: false

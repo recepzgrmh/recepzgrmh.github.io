@@ -4,7 +4,7 @@ description: "4 Ağustos 2026'da konuşulmaya başlayan ChainDrop, npm bağıml�
 slug: "chaindrop-npm-ci-guveni"
 publishedAt: 2026-08-11
 tags: ["npm", "ChainDrop", "yazılım tedarik zinciri", "CI/CD", "açık kaynak güvenliği", "JavaScript"]
-category: "Güvenlik"
+category: "DevOps ve Tedarik Zinciri"
 heroImage: "/blog/chaindrop-npm-ci-guveni.png"
 heroAlt: "Çalınan token'ın paketleri otomatik yeniden yayınlaması."
 featured: false
