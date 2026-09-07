@@ -1,5 +1,11 @@
 ---
 // Root → language gateway. Static-friendly client redirect with language sniff.
+// Indexable: crawlers get real content + a canonical to /tr/, humans with JS
+// are redirected before any of it paints.
+import { CONTENT } from "../i18n/content";
+
+const trDesc = CONTENT.tr.meta.description;
+const enDesc = CONTENT.en.meta.description;
 ---
 
 <!doctype html>
@@ -9,7 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recep Özgür Mıh</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="robots" content="noindex" />
+    <meta name="description" content={trDesc} />
+    <link rel="canonical" href="https://recepozgur.com/tr/" />
     <link rel="alternate" hreflang="en" href="https://recepozgur.com/en/" />
     <link rel="alternate" hreflang="tr" href="https://recepozgur.com/tr/" />
     <link rel="alternate" hreflang="x-default" href="https://recepozgur.com/en/" />
@@ -57,16 +64,36 @@
           opacity: 1;
         }
       }
+      .c h1 {
+        margin: 0;
+        font-size: 1.1rem;
+        letter-spacing: 0.04em;
+        color: #1d2939;
+      }
+      .c p {
+        margin: 0;
+        max-width: 38rem;
+        padding: 0 1.5rem;
+        text-align: center;
+        line-height: 1.6;
+        letter-spacing: 0;
+      }
+      .c a {
+        color: #f59e0b;
+      }
     </style>
   </head>
   <body>
     <div class="c">
       <span class="d"></span>
+      <h1>Recep Özgür Mıh</h1>
+      <p>{trDesc}</p>
+      <p lang="en">{enDesc}</p>
+      <p>
+        <a href="/tr/">Türkçe</a> ·
+        <a href="/en/">English</a>
+      </p>
       <span>Redirecting · Yönlendiriliyor…</span>
-      <noscript>
-        <a href="/en/" style="color:#f59e0b">English</a> ·
-        <a href="/tr/" style="color:#f59e0b">Türkçe</a>
-      </noscript>
     </div>
   </body>
 </html>

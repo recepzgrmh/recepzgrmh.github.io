@@ -38,12 +38,32 @@ const pageTitle = title ?? t.meta.title;
 const pageDesc = description ?? t.meta.description;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
 const socialImage = ogImage ? new URL(ogImage, Astro.site ?? Astro.url.origin).toString() : undefined;
-const defaultAlternates = [
-  { lang: "en", href: "https://recepozgur.com/en/" },
-  { lang: "tr", href: "https://recepozgur.com/tr/" },
-  { lang: "x-default", href: "https://recepozgur.com/en/" },
-];
-const pageAlternates = alternates ?? defaultAlternates;
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin);
+// Trailing slash tutarlılığı: site trailing slash kullanıyor.
+const currentPath = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
+// /tr/... veya /en/... yolunu yakala; rest her zaman "/" ile başlar ve "/" ile biter.
+const langSegment = currentPath.match(/^\/(tr|en)(\/.*)?$/);
+const buildAlternates = () => {
+  if (!langSegment) {
+    // Dil segmenti olmayan sayfalar (/, /blog/..., /cv/): mevcut davranış.
+    return [
+      { lang: "en", href: new URL("/en/", siteOrigin).toString() },
+      { lang: "tr", href: new URL("/tr/", siteOrigin).toString() },
+      { lang: "x-default", href: new URL("/en/", siteOrigin).toString() },
+    ];
+  }
+  const rest = langSegment[2] ?? "/";
+  const enHref = new URL(`/en${rest}`, siteOrigin).toString();
+  const trHref = new URL(`/tr${rest}`, siteOrigin).toString();
+  // Self-referencing hreflang dahil (sayfa kendi dilini de bildirir).
+  return [
+    { lang: "en", href: enHref },
+    { lang: "tr", href: trHref },
+    { lang: "x-default", href: enHref },
+  ];
+};
+// Sayfa açıkça alternates geçtiyse (blog sayfaları) o öncelikli.
+const pageAlternates = alternates ?? buildAlternates();
 ---
 
 <!doctype html>
