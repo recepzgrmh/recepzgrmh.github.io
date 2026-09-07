@@ -37,7 +37,7 @@ Bu yüzden **AI izlenebilirliği, yalnızca prompt ve cevabı saklama işi deği
 
 Klasik backend gözlemlenebilirliğinde bir HTTP isteğinin hangi servislere uğradığını trace üzerinden görebiliriz. Her span, işlemin bir parçasını temsil eder. GenAI uygulamalarında da benzer bir yapı gerekiyor; ancak burada model, token, retrieval, agent ve tool çağrıları gibi yeni kavramlar var.
 
-OpenTelemetry’nin GenAI semantic conventions çalışması bu kavramları ortak alan adlarıyla tarif ediyor. Örneğin bir model çağrısında sağlayıcı, istenen model, operasyon adı, cevap modeli ve token kullanımı gibi bilgiler standartlaştırılabiliyor. Retrieval işlemleri için veri kaynağı ve sorgu gibi alanlar; agent işlemleri için de agent adı ve sürümü gibi bilgiler tanımlanıyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-metrics.md?utm_source=openai))
+OpenTelemetry’nin GenAI semantic conventions çalışması bu kavramları ortak alan adlarıyla tarif ediyor. Örneğin bir model çağrısında sağlayıcı, istenen model, operasyon adı, cevap modeli ve token kullanımı gibi bilgiler standartlaştırılabiliyor. Retrieval işlemleri için veri kaynağı ve sorgu gibi alanlar; agent işlemleri için de agent adı ve sürümü gibi bilgiler tanımlanıyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-metrics.md))
 
 Bu standardizasyon, farklı kütüphanelerden gelen veriyi aynı sorguda incelemeyi mümkün kılar. Uygulama bugün bir sağlayıcıyı, yarın başka bir sağlayıcıyı kullansa bile dashboard’un her sağlayıcı için ayrı bir alan adı ezberlemesi gerekmez.
 
@@ -60,7 +60,7 @@ Bu soruların her biri için ekip içinde farklı isimler kullanılırsa sistem 
 
 AI trace’lerinin önemli bir riski var: İçerik verisi çok hassas olabilir. Kullanıcı mesajları, sistem talimatları, arama sonuçları ve araç çıktıları kişisel veya ticari bilgi içerebilir.
 
-OpenTelemetry dokümantasyonu da giriş ve çıkış mesajı alanlarının hassas veri içerebileceğini açıkça belirtiyor. Bu nedenle içerik kaydı varsayılan bir refleks haline gelmemeli; hangi ortamda, hangi kullanıcı grubunda ve hangi maskeleme kurallarıyla veri tutulacağı tasarlanmalı. ([github.com](https://github.com/open-telemetry/opentelemetry-python/blob/main/opentelemetry-semantic-conventions/src/opentelemetry/semconv/_incubating/attributes/gen_ai_attributes.py?utm_source=openai))
+OpenTelemetry dokümantasyonu da giriş ve çıkış mesajı alanlarının hassas veri içerebileceğini açıkça belirtiyor. Bu nedenle içerik kaydı varsayılan bir refleks haline gelmemeli; hangi ortamda, hangi kullanıcı grubunda ve hangi maskeleme kurallarıyla veri tutulacağı tasarlanmalı. ([github.com](https://github.com/open-telemetry/opentelemetry-python/blob/main/opentelemetry-semantic-conventions/src/opentelemetry/semconv/_incubating/attributes/gen_ai_attributes.py))
 
 Burada iki uç yaklaşım da sorunlu:
 
@@ -79,7 +79,7 @@ Daha sağlıklı bir tasarım, metadata ile içeriği ayırır. Üretimde model,
 
 Bir trace yalnızca hata ayıklama aracı değildir. Ürün kararlarını da besler. Örneğin toplam gecikmenin yüksek olduğunu görebilirsiniz. Fakat tek bir süre metriği, problemin nerede olduğunu söylemez.
 
-OpenTelemetry GenAI metrikleri arasında token kullanımı, operasyon süresi, ilk çıktı parçasına kadar geçen süre ve çıktı parçaları arasındaki süre gibi ölçümler bulunuyor. Bu alanlar hâlâ gelişim aşamasında; dokümantasyon da mevcut instrumentasyonların semantik convention sürümlerini kontrollü biçimde değiştirmesi gerektiğini belirtiyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-metrics.md?utm_source=openai))
+OpenTelemetry GenAI metrikleri arasında token kullanımı, operasyon süresi, ilk çıktı parçasına kadar geçen süre ve çıktı parçaları arasındaki süre gibi ölçümler bulunuyor. Bu alanlar hâlâ gelişim aşamasında; dokümantasyon da mevcut instrumentasyonların semantik convention sürümlerini kontrollü biçimde değiştirmesi gerektiğini belirtiyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-metrics.md))
 
 Örneğin bir sohbet ekranında kullanıcı ilk token’ı hızlı görüyorsa toplam cevap süresi biraz daha uzun olsa bile deneyim kabul edilebilir olabilir. Buna karşılık ilk token’a kadar bekleme uzunsa, modelin toplam üretim süresi aynı kalsa bile kullanıcı ürünü yavaş hissedebilir.
 
@@ -105,7 +105,7 @@ Araç çağrılarında yalnızca “tool başladı” ve “tool bitti” bilgis
 
 ## Sürüm değişince trace de değişir
 
-GenAI semantic conventions henüz tamamen sabitlenmiş bir alan değil. Sürümler arasında alan adları değişebiliyor; örneğin sağlayıcı bilgisinin adlandırılması ve mesaj geçmişinin temsil biçimi yeniden düzenlenmiş durumda. Bu, standardın işe yaramadığı anlamına gelmiyor. Tam tersine, gelişen bir alanı kullanırken şema sürümünü görünür tutmanın önemini gösteriyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/releases?utm_source=openai))
+GenAI semantic conventions henüz tamamen sabitlenmiş bir alan değil. Sürümler arasında alan adları değişebiliyor; örneğin sağlayıcı bilgisinin adlandırılması ve mesaj geçmişinin temsil biçimi yeniden düzenlenmiş durumda. Bu, standardın işe yaramadığı anlamına gelmiyor. Tam tersine, gelişen bir alanı kullanırken şema sürümünü görünür tutmanın önemini gösteriyor. ([github.com](https://github.com/open-telemetry/semantic-conventions/releases))
 
 Uygulama şu üç bilgiyi birlikte yönetmeli:
 

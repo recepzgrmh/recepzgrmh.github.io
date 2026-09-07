@@ -29,7 +29,7 @@ sources:
 
 AI kodun büyük bölümünü yazabilir hale geldiyse, yazılıma yeni başlayan birinin şirkete hangi değerle girmesi beklenir?
 
-Bu soru artık teorik değil. Kod tamamlama araçları birkaç satırlık önerilerden uzun görevleri planlayan, dosya değiştiren, test çalıştıran ve hataları düzeltmeye çalışan ajanlara doğru ilerledi. 2026’da yayımlanan uzun dönemli bir araştırmada katılımcıların yüzde 82’si kod yazmaya daha az zaman ayırdığını söyledi. Araştırma, işin üretimden doğrulama, yönlendirme ve düzeltmeye doğru kaydığını belirtiyor. ([arxiv.org](https://arxiv.org/abs/2605.23135?utm_source=openai))
+Bu soru artık teorik değil. Kod tamamlama araçları birkaç satırlık önerilerden uzun görevleri planlayan, dosya değiştiren, test çalıştıran ve hataları düzeltmeye çalışan ajanlara doğru ilerledi. 2026’da yayımlanan uzun dönemli bir araştırmada katılımcıların yüzde 82’si kod yazmaya daha az zaman ayırdığını söyledi. Araştırma, işin üretimden doğrulama, yönlendirme ve düzeltmeye doğru kaydığını belirtiyor. ([arxiv.org](https://arxiv.org/abs/2605.23135))
 
 Buradan iki kolay ama hatalı sonuç çıkabilir. İlki, “Artık yazılımcıya gerek yok.” İkincisi, “Hiçbir şey değişmedi; sadece yeni bir araç geldi.” Gerçek ikisinin arasında değil. Daha rahatsız edici bir yerde duruyor: Yazılım üretmek ucuzlarken, işe yeni başlayan birinin değerini gösterme biçimi değişiyor.
 
@@ -37,7 +37,7 @@ Buradan iki kolay ama hatalı sonuç çıkabilir. İlki, “Artık yazılımcıy
 
 Bir junior yazılımcı uzun süre boyunca şirkete küçük ve sınırları belli görevlerle girerdi. Basit bir ekran hazırlamak, bir endpoint eklemek, form doğrulaması yazmak, testleri tamamlamak veya dokümantasyondaki örneği çalışan koda çevirmek bu görevlerin arasındaydı.
 
-Bu işlerin tamamı ortadan kalkmayacak. Fakat önemli bir bölümü artık AI araçlarıyla daha kısa sürede yapılabiliyor. Bir geliştirici görevi tarif ediyor, araç ilgili dosyaları buluyor, kodu yazıyor, test öneriyor ve ilk hataları düzeltiyor. Kontrollü çalışmalar, daha otonom kodlama ajanlarının bazı görevlerde insanın tek başına tamamlayamayacağı işleri tamamlayabildiğini ve işi bitirmek için gereken çabayı azaltabildiğini gösteriyor. Aynı çalışmalar, geliştiricinin ajanın ne yaptığını yeterince anlamamasının benimseme önündeki önemli sorunlardan biri olduğunu da vurguluyor. ([arxiv.org](https://arxiv.org/abs/2507.08149?utm_source=openai))
+Bu işlerin tamamı ortadan kalkmayacak. Fakat önemli bir bölümü artık AI araçlarıyla daha kısa sürede yapılabiliyor. Bir geliştirici görevi tarif ediyor, araç ilgili dosyaları buluyor, kodu yazıyor, test öneriyor ve ilk hataları düzeltiyor. Kontrollü çalışmalar, daha otonom kodlama ajanlarının bazı görevlerde insanın tek başına tamamlayamayacağı işleri tamamlayabildiğini ve işi bitirmek için gereken çabayı azaltabildiğini gösteriyor. Aynı çalışmalar, geliştiricinin ajanın ne yaptığını yeterince anlamamasının benimseme önündeki önemli sorunlardan biri olduğunu da vurguluyor. ([arxiv.org](https://arxiv.org/abs/2507.08149))
 
 Bu yüzden şirketlerin junior’dan beklediği ilk katkı “bana verilen küçük işi kodlayayım” seviyesinde kalmayacak. Junior adayın problemi doğru anlaması, belirsizlikleri fark etmesi, AI çıktısını değerlendirmesi ve ortaya çıkan ürünü açıklayabilmesi daha erken önem kazanacak.
 
@@ -57,7 +57,7 @@ Bunlar yeni sorular değil. İyi mühendislik zaten bunları gerektiriyordu. Yen
 
 Junior adayın birkaç yıl boyunca yalnızca mekanik işleri yaparak öğrenmesi zorlaşabilir. Bu tehlikeli bir durum. Çünkü insanlar genellikle basit görevlerin tekrarından sistemleri, hata türlerini ve iş akışlarını öğrenirdi. Eğer bu görevler doğrudan AI’a devredilirse, yeni başlayan kişi öğrenme basamaklarının bir kısmını atlayabilir.
 
-Junior geliştiriciler üzerine yapılan sistematik bir literatür taraması da benzer bir gerilime işaret ediyor. İncelenen çalışmaların çoğu AI kullanımında hem olumlu hem olumsuz deneyimler bildiriyor. Yeni başlayanlar araçları öğrenme ve becerilerini geliştirme amacıyla kullanıyor; aynı zamanda yanlış öneriler, veri sızıntısı ve halüsinasyon gibi sınırlamaların farkında olduklarını söylüyor. ([arxiv.org](https://arxiv.org/abs/2503.07556?utm_source=openai))
+Junior geliştiriciler üzerine yapılan sistematik bir literatür taraması da benzer bir gerilime işaret ediyor. İncelenen çalışmaların çoğu AI kullanımında hem olumlu hem olumsuz deneyimler bildiriyor. Yeni başlayanlar araçları öğrenme ve becerilerini geliştirme amacıyla kullanıyor; aynı zamanda yanlış öneriler, veri sızıntısı ve halüsinasyon gibi sınırlamaların farkında olduklarını söylüyor. ([arxiv.org](https://arxiv.org/abs/2503.07556))
 
 Bu, işe alım tarafında daha dikkatli bir denge gerektiriyor. Şirketler “AI kullanıyor musun?” diye sormakla yetinirse yanlış şeyi ölçer. Asıl soru, adayın AI ile birlikte çalışırken muhakemesini koruyup korumadığı.
 

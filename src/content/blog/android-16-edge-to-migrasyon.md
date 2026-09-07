@@ -27,13 +27,13 @@ sources:
     note: "Android 15 ile başlayan edge-to-edge zorunluluğunun arka planı ve window inset etkileri."
 ---
 
-Android 15 ile başlayan edge-to-edge zorunluluğu, Android 16’da yeni bir aşamaya geçiyor. Android 16’yı hedefleyen uygulamalar artık `windowOptOutEdgeToEdgeEnforcement` ile bu davranıştan çıkamayacak. Uygulama, sistem çubuklarının arkasına çizim yapmaya hazır olmak zorunda. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16?utm_source=openai))
+Android 15 ile başlayan edge-to-edge zorunluluğu, Android 16’da yeni bir aşamaya geçiyor. Android 16’yı hedefleyen uygulamalar artık `windowOptOutEdgeToEdgeEnforcement` ile bu davranıştan çıkamayacak. Uygulama, sistem çubuklarının arkasına çizim yapmaya hazır olmak zorunda. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16))
 
 Bu değişiklik ilk bakışta bir UI ayrıntısı gibi görünebilir. Oysa etkisi daha geniş. Daha önce ekranın üstünde ve altında güvenli boşluk varmış gibi tasarlanan arayüzler; durum çubuğunun, gesture alanının veya ekran çentiğinin altında kalabilir. **Android 16’ya geçiş, aslında uygulamanın ekran geometrisiyle ilgili varsayımlarını test ediyor.**
 
 ## Ekranın sınırları artık uygulamanın sınırı değil
 
-Edge-to-edge yaklaşımında uygulama, ekranın tamamını kullanır. Arka plan ve kaydırılabilir içerik sistem çubuklarının arkasına kadar uzanabilir. Ancak etkileşimli bileşenlerin bu alanlara gelişigüzel yerleştirilmesi beklenmez. Android’in tasarım rehberi, dokunma ve sürükleme hedeflerinin sistem inset’leriyle çakışmaması gerektiğini özellikle vurguluyor. ([developer.android.com](https://developer.android.com/design/ui/mobile/guides/layout-and-content/edge-to-edge?hl=en&utm_source=openai))
+Edge-to-edge yaklaşımında uygulama, ekranın tamamını kullanır. Arka plan ve kaydırılabilir içerik sistem çubuklarının arkasına kadar uzanabilir. Ancak etkileşimli bileşenlerin bu alanlara gelişigüzel yerleştirilmesi beklenmez. Android’in tasarım rehberi, dokunma ve sürükleme hedeflerinin sistem inset’leriyle çakışmaması gerektiğini özellikle vurguluyor. ([developer.android.com](https://developer.android.com/design/ui/mobile/guides/layout-and-content/edge-to-edge?hl=en))
 
 Buradaki ayrım önemli:
 
@@ -51,7 +51,7 @@ Bu yüzden edge-to-edge desteğini tek bir global padding olarak ele almak hatal
 
 ## Compose tarafında temel yaklaşım
 
-Jetpack Compose kullanan uygulamalarda Material bileşenleri bazı inset senaryolarını zaten yönetebilir. Fakat bu, bütün ekranın otomatik olarak güvenli olduğu anlamına gelmez. Özellikle özel üst barlar, özel bottom sheet’ler, sabit aksiyon alanları ve tam ekran görseller için açık bir inset politikası gerekir. Android’in resmi rehberi, içeriğin sistem çubuklarının arkasına çizilmesini ve gerekli yerlerde inset’lere tepki verilmesini öneriyor. ([developer.android.com](https://developer.android.com/design/ui/mobile/guides/layout-and-content/edge-to-edge?hl=en&utm_source=openai))
+Jetpack Compose kullanan uygulamalarda Material bileşenleri bazı inset senaryolarını zaten yönetebilir. Fakat bu, bütün ekranın otomatik olarak güvenli olduğu anlamına gelmez. Özellikle özel üst barlar, özel bottom sheet’ler, sabit aksiyon alanları ve tam ekran görseller için açık bir inset politikası gerekir. Android’in resmi rehberi, içeriğin sistem çubuklarının arkasına çizilmesini ve gerekli yerlerde inset’lere tepki verilmesini öneriyor. ([developer.android.com](https://developer.android.com/design/ui/mobile/guides/layout-and-content/edge-to-edge?hl=en))
 
 Basit bir ekran şu fikri taşıyabilir:
 
@@ -89,7 +89,7 @@ Bu örnek her tasarım için doğrudan kopyalanacak bir reçete değil. Önemli 
 
 ## Android 16 yalnızca telefon ekranını düşünmüyor
 
-Android 16’yı hedefleyen uygulamalarda büyük ekran cihazlarda yön, yeniden boyutlandırma ve en-boy oranı kısıtları varsayılan olarak göz ardı edilebiliyor. Bu davranış; tablet, katlanabilir cihaz, masaüstü pencere modu, otomobil ekranı veya benzer geniş yüzeylerde küçük ekran için tasarlanmış düzenlerin bozulmasına yol açabilir. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16?utm_source=openai))
+Android 16’yı hedefleyen uygulamalarda büyük ekran cihazlarda yön, yeniden boyutlandırma ve en-boy oranı kısıtları varsayılan olarak göz ardı edilebiliyor. Bu davranış; tablet, katlanabilir cihaz, masaüstü pencere modu, otomobil ekranı veya benzer geniş yüzeylerde küçük ekran için tasarlanmış düzenlerin bozulmasına yol açabilir. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16))
 
 Örneğin yalnızca portre modunda test edilen bir uygulamada şu sorunlar görülebilir:
 
@@ -120,7 +120,7 @@ Kontrol listesine şunları eklemek mantıklı:
 7. Ekran döndürme sonrası form ve scroll durumu
 8. Erişilebilirlik hizmetleri açıkken odak sırası
 
-Android 16’da predictive back davranışı da hedef API 36 uygulamalarında varsayılan hale geliyor. `onBackPressed` çağrılarının ve `KEYCODE_BACK` akışının eski biçimde çalışmaması, özel geri navigasyonu olan ekranların ayrıca incelenmesini gerektiriyor. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16?utm_source=openai))
+Android 16’da predictive back davranışı da hedef API 36 uygulamalarında varsayılan hale geliyor. `onBackPressed` çağrılarının ve `KEYCODE_BACK` akışının eski biçimde çalışmaması, özel geri navigasyonu olan ekranların ayrıca incelenmesini gerektiriyor. ([developer.android.com](https://developer.android.com/about/versions/16/behavior-changes-16))
 
 Bu iki değişiklik aynı problemi farklı yerlerden gösteriyor: Uygulama, işletim sisteminin çizim ve navigasyon modeline kendi varsayımlarını dayatamaz. Sistem davranışını kabul edip arayüzü buna göre kurmak gerekiyor.
 

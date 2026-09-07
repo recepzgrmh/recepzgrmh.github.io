@@ -35,9 +35,9 @@ Bir geliştirici bütün kodu yapay zekâya yazdırıp yalnızca sistem mimarisi
 
 ## Kod üretimi artık işin tamamı değil
 
-Yapay zekânın yazılım geliştirmedeki rolü konusunda elimizde artık yalnızca iyimser ürün tanıtımları yok. Anthropic’in 2025 tarihli Economic Index çalışması, Claude Code etkileşimlerinin yüzde 79’unu “otomasyon”, yüzde 21’ini ise “destekleme” olarak sınıflandırıyor. Claude.ai tarafında otomasyon oranı yüzde 49’da kalıyor. Bu fark, kodlama ajanlarının sohbet tabanlı yardımcı araçlardan daha fazla işi doğrudan üstlendiğini gösteriyor. ([anthropic.com](https://www.anthropic.com/research/impact-software-development?s=03&utm_source=openai))
+Yapay zekânın yazılım geliştirmedeki rolü konusunda elimizde artık yalnızca iyimser ürün tanıtımları yok. Anthropic’in 2025 tarihli Economic Index çalışması, Claude Code etkileşimlerinin yüzde 79’unu “otomasyon”, yüzde 21’ini ise “destekleme” olarak sınıflandırıyor. Claude.ai tarafında otomasyon oranı yüzde 49’da kalıyor. Bu fark, kodlama ajanlarının sohbet tabanlı yardımcı araçlardan daha fazla işi doğrudan üstlendiğini gösteriyor. ([anthropic.com](https://www.anthropic.com/research/impact-software-development?s=03))
 
-Aynı çalışma, kullanıcı arayüzü ve basit web uygulaması geliştirme gibi işlerin yapay zekâ tarafından daha erken dönüştürülebileceğini öne sürüyor. Bu, yapay zekânın yalnızca birkaç satırlık otomatik tamamlama yaptığını değil, daha geniş görev zincirlerini üstlendiğini gösteren önemli bir işaret. ([anthropic.com](https://www.anthropic.com/research/impact-software-development?s=03&utm_source=openai))
+Aynı çalışma, kullanıcı arayüzü ve basit web uygulaması geliştirme gibi işlerin yapay zekâ tarafından daha erken dönüştürülebileceğini öne sürüyor. Bu, yapay zekânın yalnızca birkaç satırlık otomatik tamamlama yaptığını değil, daha geniş görev zincirlerini üstlendiğini gösteren önemli bir işaret. ([anthropic.com](https://www.anthropic.com/research/impact-software-development?s=03))
 
 Dolayısıyla “AI sadece yardımcıdır” cümlesi bugünün araçlarını tam olarak anlatmıyor. AI, kodun önemli bir kısmını yazabilir. Testleri oluşturabilir. Bir projeyi inceleyip değişiklik önerebilir. Hatta insanın yalnızca hedefi tarif ettiği ve sonucu denetlediği bir çalışma biçimi bazı görevlerde yeterli olabilir.
 
@@ -47,7 +47,7 @@ Ama bundan “kod bilgisi artık gereksiz” sonucu çıkmıyor. Çünkü üreti
 
 Yapay zekâ ile daha hızlı kod yazmak mümkündür. Fakat hızın kendisi, geliştiricinin daha iyi öğrendiğini veya daha iyi yazılım ürettiğini kanıtlamaz.
 
-2026’da yayımlanan bir meta-analiz, 23 çalışmadaki 27 etki büyüklüğünü inceleyerek yapay zekâ destekli programlamanın üretkenlikte orta düzeyde ve istatistiksel olarak anlamlı bir artış sağladığını bildiriyor. Ancak öğrenme çıktılarında istatistiksel olarak anlamlı bir etki bulunmuyor. Başka bir deyişle, insanlar bazı görevleri daha hızlı tamamlayabiliyor; bu, aynı insanların programlamayı daha iyi öğrendiği anlamına gelmiyor. ([arxiv.org](https://arxiv.org/abs/2605.04779?utm_source=openai))
+2026’da yayımlanan bir meta-analiz, 23 çalışmadaki 27 etki büyüklüğünü inceleyerek yapay zekâ destekli programlamanın üretkenlikte orta düzeyde ve istatistiksel olarak anlamlı bir artış sağladığını bildiriyor. Ancak öğrenme çıktılarında istatistiksel olarak anlamlı bir etki bulunmuyor. Başka bir deyişle, insanlar bazı görevleri daha hızlı tamamlayabiliyor; bu, aynı insanların programlamayı daha iyi öğrendiği anlamına gelmiyor. ([arxiv.org](https://arxiv.org/abs/2605.04779))
 
 Bu ayrım özellikle kariyerinin başındaki geliştiriciler için önemli. Bir problemi çözmeye çalışırken kodun neden öyle yazıldığını anlamak, yalnızca doğru çıktıyı almaktan farklı bir deneyimdir. İnsan her zorlandığında görevi AI’a devrederse, zorlanmanın öğrettiği zihinsel modelleri daha az kurar.
 
@@ -83,9 +83,9 @@ Bu durum, geliştiricinin değerini başka alanlara kaydırıyor: doğru problem
 
 Bununla birlikte, bu yeni alanlar kod bilgisinden bağımsız değil. AI’ın ürettiği onlarca dosyayı incelemek, yanlış bir soyutlamayı fark etmek veya bir önerinin neden riskli olduğunu anlatmak için teknik temel gerekiyor.
 
-Microsoft Research ve GitHub tarafından yapılan erken dönem çalışmalarda geliştiricilerin Copilot ile daha üretken hissettiği görülmüştü. Ancak bu tür sonuçlar çoğunlukla belirli araçlara, görev tiplerine ve ölçüm yöntemlerine bağlı. ([github.blog](https://github.blog/news-insights/research/research-how-github-copilot-helps-improve-developer-productivity/?utm_source=openai)) Daha gerçekçi koşullarda yapılan METR çalışmasında ise, 2025’in erken dönem araçlarını kullanan deneyimli açık kaynak geliştiricileri görevleri AI açıkken ortalama yüzde 19 daha uzun sürede tamamladı. Çalışmanın kapsamı sınırlıydı ve sonuçlar bugünkü araçlara doğrudan genellenemez; yine de “AI kullanmak her zaman hızlandırır” varsayımının güvenilir olmadığını gösteriyor. ([metr.org](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/?utm_source=openai))
+Microsoft Research ve GitHub tarafından yapılan erken dönem çalışmalarda geliştiricilerin Copilot ile daha üretken hissettiği görülmüştü. Ancak bu tür sonuçlar çoğunlukla belirli araçlara, görev tiplerine ve ölçüm yöntemlerine bağlı. ([github.blog](https://github.blog/news-insights/research/research-how-github-copilot-helps-improve-developer-productivity/)) Daha gerçekçi koşullarda yapılan METR çalışmasında ise, 2025’in erken dönem araçlarını kullanan deneyimli açık kaynak geliştiricileri görevleri AI açıkken ortalama yüzde 19 daha uzun sürede tamamladı. Çalışmanın kapsamı sınırlıydı ve sonuçlar bugünkü araçlara doğrudan genellenemez; yine de “AI kullanmak her zaman hızlandırır” varsayımının güvenilir olmadığını gösteriyor. ([metr.org](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/))
 
-2026 başında METR, daha yeni araçlarla geliştiricilerin daha fazla hızlanıyor olabileceğini ve AI kullanımının yaygınlaşmasının ölçüm yapmayı zorlaştırdığını belirtti. Bu da sonuçların zamana, araca ve görev bağlamına çok duyarlı olduğunu gösteriyor. ([metr.org](https://metr.org/blog/2026-02-24-uplift-update/?utm_source=openai))
+2026 başında METR, daha yeni araçlarla geliştiricilerin daha fazla hızlanıyor olabileceğini ve AI kullanımının yaygınlaşmasının ölçüm yapmayı zorlaştırdığını belirtti. Bu da sonuçların zamana, araca ve görev bağlamına çok duyarlı olduğunu gösteriyor. ([metr.org](https://metr.org/blog/2026-02-24-uplift-update/))
 
 ## Körelme riski nerede başlıyor?
 

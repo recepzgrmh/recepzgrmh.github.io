@@ -43,9 +43,9 @@ sources:
 
 Mobil aboneliklerde entitlement, kullanıcının ücretli bir özelliğe erişip erişemeyeceğini ifade eder. İstemci uygulama bu bilgiyi gösterebilir; ancak tek başına bu bilginin kaynağı olmamalıdır.
 
-Bunun temel nedeni güven sınırıdır. Uygulama cihazda çalışır, kullanıcı tarafından kontrol edilebilir ve ağ yanıtları değiştirilebilir. Apple da makbuz doğrulamasının güvenli bir sunucuda yapılmasını, `verifyReceipt` çağrısının doğrudan uygulamadan yapılmamasını söyler. Apple’ın gerekçesi, uygulama ile App Store arasında güvenilir bir bağlantının cihaz üzerinden kurulamayacağı ve bunun araya girme saldırılarına açık olduğudur. ([developer.apple.com](https://developer.apple.com/documentation/storekit/validating-receipts-with-the-app-store?changes=__3&utm_source=openai))
+Bunun temel nedeni güven sınırıdır. Uygulama cihazda çalışır, kullanıcı tarafından kontrol edilebilir ve ağ yanıtları değiştirilebilir. Apple da makbuz doğrulamasının güvenli bir sunucuda yapılmasını, `verifyReceipt` çağrısının doğrudan uygulamadan yapılmamasını söyler. Apple’ın gerekçesi, uygulama ile App Store arasında güvenilir bir bağlantının cihaz üzerinden kurulamayacağı ve bunun araya girme saldırılarına açık olduğudur. ([developer.apple.com](https://developer.apple.com/documentation/storekit/validating-receipts-with-the-app-store?changes=__3))
 
-Google Play dokümantasyonu da satın alma jetonunun yerelde tutulabileceğini, ancak güvenli backend’e gönderilip orada doğrulanmasının ve dolandırıcılığa karşı korunmanın güçlü biçimde önerildiğini belirtir. Ayrıca satın alma doğrulanmadan entitlement verilmemesi ve bu işlemin backend’de yapılması önerilir. ([developer.android.com](https://developer.android.com/google/play/billing/integrate.html?utm_source=openai))
+Google Play dokümantasyonu da satın alma jetonunun yerelde tutulabileceğini, ancak güvenli backend’e gönderilip orada doğrulanmasının ve dolandırıcılığa karşı korunmanın güçlü biçimde önerildiğini belirtir. Ayrıca satın alma doğrulanmadan entitlement verilmemesi ve bu işlemin backend’de yapılması önerilir. ([developer.android.com](https://developer.android.com/google/play/billing/integrate.html))
 
 Bu nedenle istemci şu işleri yapabilir:
 
@@ -67,27 +67,27 @@ Basit bir akış şöyle kurulabilir:
 5. Backend kendi entitlement kaydını günceller.
 6. Uygulama, API üzerinden bu entitlement durumunu okur.
 
-Apple tarafında güncel yaklaşım, App Store Server API’den Apple imzalı transaction ve abonelik bilgilerini almak veya uygulamanın elde ettiği imzalı verileri backend’de doğrulamaktır. App Store Server API, uygulamanın cihazda kurulu olup olmamasından bağımsız olarak satın alma geçmişi ve abonelik durumu hakkında bilgi sağlayabilir. ([developer.apple.com](https://developer.apple.com/documentation/appstoreserverapi?utm_source=openai))
+Apple tarafında güncel yaklaşım, App Store Server API’den Apple imzalı transaction ve abonelik bilgilerini almak veya uygulamanın elde ettiği imzalı verileri backend’de doğrulamaktır. App Store Server API, uygulamanın cihazda kurulu olup olmamasından bağımsız olarak satın alma geçmişi ve abonelik durumu hakkında bilgi sağlayabilir. ([developer.apple.com](https://developer.apple.com/documentation/appstoreserverapi))
 
-Google Play tarafında backend, purchase token ile Google Play Developer API’a başvurur. RTDN mesajı tek başına tam satın alma durumu taşımaz; Google’ın dokümantasyonuna göre bildirim alındığında purchase token kullanılarak Developer API’dan güncel durum alınmalıdır. ([developer.android.com](https://developer.android.com/google/play/billing/rtdn-reference?hl=en&utm_source=openai))
+Google Play tarafında backend, purchase token ile Google Play Developer API’a başvurur. RTDN mesajı tek başına tam satın alma durumu taşımaz; Google’ın dokümantasyonuna göre bildirim alındığında purchase token kullanılarak Developer API’dan güncel durum alınmalıdır. ([developer.android.com](https://developer.android.com/google/play/billing/rtdn-reference?hl=en))
 
 Buradaki önemli ayrım şudur: **mağaza olayı, backend’in nihai entitlement kaydı değildir.** Mağaza, bir durum değişikliği sinyali verir; backend bu sinyali doğrular, yorumlar ve kendi erişim modeline dönüştürür.
 
 ## App Store Server Notifications ne sağlar?
 
-Apple’ın App Store Server Notifications V2 sistemi, satın alma yaşam döngüsündeki olayları sunucuya iletir. Satın alma, yenileme, teklif kullanımı, iade, abonelik sona ermesi ve Family Sharing erişiminin kaybedilmesi gibi olaylar bu yaşam döngüsünün parçasıdır. Apple, bu bildirimleri kullanıcı hesabı veritabanını güncellemek ve hizmet durumuna tepki vermek için kullanmayı önerir. V1 bildirimleri deprecated durumdadır; yeni entegrasyonlarda V2 kullanılmalıdır. ([developer.apple.com](https://developer.apple.com/documentation/appstoreservernotifications?utm_source=openai))
+Apple’ın App Store Server Notifications V2 sistemi, satın alma yaşam döngüsündeki olayları sunucuya iletir. Satın alma, yenileme, teklif kullanımı, iade, abonelik sona ermesi ve Family Sharing erişiminin kaybedilmesi gibi olaylar bu yaşam döngüsünün parçasıdır. Apple, bu bildirimleri kullanıcı hesabı veritabanını güncellemek ve hizmet durumuna tepki vermek için kullanmayı önerir. V1 bildirimleri deprecated durumdadır; yeni entegrasyonlarda V2 kullanılmalıdır. ([developer.apple.com](https://developer.apple.com/documentation/appstoreservernotifications))
 
 Örneğin kullanıcı App Store ayarlarından aboneliği iptal ederse uygulama açık olmayabilir. Yalnızca istemcinin `restore` veya `query` akışına güvenen bir sistem bu değişikliği geç öğrenebilir. Server Notification ise backend’e olayın gerçekleştiğini bildirir. Ancak bildirim geldi diye doğrudan “erişimi kapat” demek de doğru olmayabilir; olayın türü, subtype’ı ve imzalı transaction/subscription verisi birlikte değerlendirilmelidir.
 
-Bildirim endpoint’i de güvenilir bir iş kuyruğu gibi ele alınmalıdır. Apple, başarılı işleme için 200–206 arası HTTP yanıtlarını; başarısızlıkta yeniden deneme amacıyla 40x veya 50x yanıtlarını kullanır. V2 bildirimleri üretim ortamında ilk denemeden sonra 1, 12, 24, 48 ve 72 saatlik aralıklarla yeniden gönderilebilir. Ayrıca kaçırılan bildirimler için Notification History ve güncel abonelik durumu için App Store Server API kullanılabilir. ([developer.apple.com](https://developer.apple.com/documentation/AppStoreServerNotifications/responding-to-app-store-server-notifications?utm_source=openai))
+Bildirim endpoint’i de güvenilir bir iş kuyruğu gibi ele alınmalıdır. Apple, başarılı işleme için 200–206 arası HTTP yanıtlarını; başarısızlıkta yeniden deneme amacıyla 40x veya 50x yanıtlarını kullanır. V2 bildirimleri üretim ortamında ilk denemeden sonra 1, 12, 24, 48 ve 72 saatlik aralıklarla yeniden gönderilebilir. Ayrıca kaçırılan bildirimler için Notification History ve güncel abonelik durumu için App Store Server API kullanılabilir. ([developer.apple.com](https://developer.apple.com/documentation/AppStoreServerNotifications/responding-to-app-store-server-notifications))
 
 Bu, backend’in yalnızca webhook alıcısı değil, aynı zamanda yeniden senkronizasyon yapabilen bir sistem olması gerektiğini gösterir.
 
 ## Google Play RTDN ne sağlar?
 
-Google Play Real-time Developer Notifications, Cloud Pub/Sub üzerinden satın alma veya abonelik durumunda değişiklik olduğunu bildirir. Abonelik için yenileme, iptal, account hold, grace period ve yeniden etkinleşme gibi olay türleri bulunur. Ancak RTDN mesajı çoğunlukla “bir şey değişti” sinyalidir; tam güncel durum değildir. Google’ın açık önerisi, RTDN alındıktan sonra Google Play Developer API’ın çağrılmasıdır. ([developer.android.com](https://developer.android.com/google/play/billing/rtdn-reference?hl=en&utm_source=openai))
+Google Play Real-time Developer Notifications, Cloud Pub/Sub üzerinden satın alma veya abonelik durumunda değişiklik olduğunu bildirir. Abonelik için yenileme, iptal, account hold, grace period ve yeniden etkinleşme gibi olay türleri bulunur. Ancak RTDN mesajı çoğunlukla “bir şey değişti” sinyalidir; tam güncel durum değildir. Google’ın açık önerisi, RTDN alındıktan sonra Google Play Developer API’ın çağrılmasıdır. ([developer.android.com](https://developer.android.com/google/play/billing/rtdn-reference?hl=en))
 
-Bu ayrım özellikle abonelik yükseltme, düşürme ve yeniden abonelik akışlarında önemlidir. Google, yeni purchase token geldiğinde normal doğrulama sürecinin uygulanmasını; eski token’ın artık erişim sağlamak için kullanılmaması gerektiğini belirtir. ([developer.android.com](https://developer.android.com/google/play/billing/subscriptions?hl=en&utm_source=openai))
+Bu ayrım özellikle abonelik yükseltme, düşürme ve yeniden abonelik akışlarında önemlidir. Google, yeni purchase token geldiğinde normal doğrulama sürecinin uygulanmasını; eski token’ın artık erişim sağlamak için kullanılmaması gerektiğini belirtir. ([developer.android.com](https://developer.android.com/google/play/billing/subscriptions?hl=en))
 
 Pratik bir RTDN tüketicisi şu adımları izleyebilir:
 
@@ -99,7 +99,7 @@ Pratik bir RTDN tüketicisi şu adımları izleyebilir:
 - Entitlement kaydını yeni duruma taşır.
 - İşlem başarılıysa mesajı acknowledge eder.
 
-Google Cloud Pub/Sub varsayılan olarak at-least-once teslimat sağlar; mesajlar birden fazla kez veya sırasız gelebilir. Bu nedenle subscriber’ın duplicate teslimatlara toleranslı olması gerekir. ([docs.cloud.google.com](https://docs.cloud.google.com/pubsub/docs/subscription-overview?utm_source=openai))
+Google Cloud Pub/Sub varsayılan olarak at-least-once teslimat sağlar; mesajlar birden fazla kez veya sırasız gelebilir. Bu nedenle subscriber’ın duplicate teslimatlara toleranslı olması gerekir. ([docs.cloud.google.com](https://docs.cloud.google.com/pubsub/docs/subscription-overview))
 
 ## Idempotency trade-off’u nerede başlar?
 
@@ -121,7 +121,7 @@ Ancak tek bir kimlik her zaman yeterli olmayabilir. Apple bildirimlerinde imzal�
 
 Genellikle makul çözüm, doğrulanmış provider olaylarını değişmez kayıt olarak saklamak ve kullanıcıya hızlı cevap vermek için ayrıca güncel entitlement tablosu tutmaktır. Böylece “ne oldu?” ile “şu anda erişim var mı?” soruları ayrılır.
 
-Tam olarak-once işleme hedefi de dikkatle ele alınmalıdır. Pub/Sub, bazı pull subscription senaryolarında exactly-once delivery sunar; fakat bu özellik push subscription’larda geçerli değildir ve daha yüksek gecikme ile ek operasyonel koşullar getirebilir. Ayrıca uygulama tarafındaki dış sistem çağrıları için yine idempotent tasarım gerekir. ([docs.cloud.google.com](https://docs.cloud.google.com/pubsub/docs/exactly-once-delivery?hl=en&utm_source=openai))
+Tam olarak-once işleme hedefi de dikkatle ele alınmalıdır. Pub/Sub, bazı pull subscription senaryolarında exactly-once delivery sunar; fakat bu özellik push subscription’larda geçerli değildir ve daha yüksek gecikme ile ek operasyonel koşullar getirebilir. Ayrıca uygulama tarafındaki dış sistem çağrıları için yine idempotent tasarım gerekir. ([docs.cloud.google.com](https://docs.cloud.google.com/pubsub/docs/exactly-once-delivery?hl=en))
 
 Bu yüzden çoğu abonelik backend’i için daha gerçekçi hedef şudur: **at-least-once teslimat + idempotent işleme + gerektiğinde provider’dan yeniden doğrulama.**
 

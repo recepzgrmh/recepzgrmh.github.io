@@ -43,7 +43,7 @@ Bir API ilk yayımlandığında sürümleme uzak bir konu gibi görünür. İste
 
 Bu yüzden API sürümleme, URL’ye bir sayı ekleme kararı değildir. **Bir API’nin değişme biçimi için verdiğiniz işletim kararıdır.**
 
-Google’ın güncel API Design Guide’ı sürümlemeyi geriye dönük uyumlulukla birlikte ele alıyor. Rehber, API sürümlerinin kanal tabanlı veya sürüm/release tabanlı biçimde yönetilebileceğini belirtiyor. ([docs.cloud.google.com](https://docs.cloud.google.com/apis/design?utm_source=openai)) Stripe ise yeni API sürümlerini tarih ve release adıyla yönetiyor; aylık sürümlerde geriye dönük uyumlu değişiklikleri, daha seyrek büyük sürümlerde ise kırıcı değişiklikleri ayırıyor. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl&utm_source=openai))
+Google’ın güncel API Design Guide’ı sürümlemeyi geriye dönük uyumlulukla birlikte ele alıyor. Rehber, API sürümlerinin kanal tabanlı veya sürüm/release tabanlı biçimde yönetilebileceğini belirtiyor. ([docs.cloud.google.com](https://docs.cloud.google.com/apis/design)) Stripe ise yeni API sürümlerini tarih ve release adıyla yönetiyor; aylık sürümlerde geriye dönük uyumlu değişiklikleri, daha seyrek büyük sürümlerde ise kırıcı değişiklikleri ayırıyor. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl))
 
 ## Her değişiklik yeni sürüm gerektirmez
 
@@ -58,7 +58,7 @@ Pratik bir sınıflandırma şöyle düşünülebilir:
 
 Son madde özellikle önemlidir. Bir alan dokümantasyonda “sıra garanti edilmez” diye yazsa bile istemciler fiilen sıralamaya güvenebilir. Sözleşme yalnızca OpenAPI dosyası değildir; gerçek istemcilerin yaptığı varsayımlar da sistemin parçasıdır.
 
-OpenAPI spesifikasyonu, kendi sürümünü `major.minor.patch` biçiminde tanımlar ve patch sürümlerinin özellik setini değiştirmemesi gerektiğini söyler. Bu, API’nizin de aynı şekilde sürümlenmesi gerektiği anlamına gelmez. OpenAPI belgesinin sürümü ile sunduğunuz ürün API’sinin sürümü farklı şeylerdir. ([spec.openapis.org](https://spec.openapis.org/oas/?utm_source=openai))
+OpenAPI spesifikasyonu, kendi sürümünü `major.minor.patch` biçiminde tanımlar ve patch sürümlerinin özellik setini değiştirmemesi gerektiğini söyler. Bu, API’nizin de aynı şekilde sürümlenmesi gerektiği anlamına gelmez. OpenAPI belgesinin sürümü ile sunduğunuz ürün API’sinin sürümü farklı şeylerdir. ([spec.openapis.org](https://spec.openapis.org/oas/))
 
 ![Sürümün URL, header ve tarih parametresiyle taşınmasının karşılaştırılması.](/blog/api-surumleme-breaking-degisiklikler-inline-1.svg)
 
@@ -83,9 +83,9 @@ Accept: application/json
 API-Version: 2026-02-01
 ```
 
-Bu yaklaşım URL’leri sade tutar ancak gözlemleme, cache ve hata ayıklama katmanlarında sürüm bilgisini ayrıca taşımanız gerekir. Google’ın API tasarım yaklaşımı, format sürümü ile kaynak/varlık sürümünü birbirinden ayırmanın önemli olduğunu vurgular. ([cloud.google.com](https://cloud.google.com/blog/products/api-management/api-design-which-version-of-versioning-is-right-for-you?utm_source=openai))
+Bu yaklaşım URL’leri sade tutar ancak gözlemleme, cache ve hata ayıklama katmanlarında sürüm bilgisini ayrıca taşımanız gerekir. Google’ın API tasarım yaklaşımı, format sürümü ile kaynak/varlık sürümünü birbirinden ayırmanın önemli olduğunu vurgular. ([cloud.google.com](https://cloud.google.com/blog/products/api-management/api-design-which-version-of-versioning-is-right-for-you))
 
-Tarih tabanlı sürümleme de başka bir seçenektir. Azure REST API’lerinde istemciler `api-version` parametresiyle belirli bir sürümü açıkça seçer. ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/developer/intro/azure-service-sdk-tool-versioning?utm_source=openai)) Stripe’ın API’sinde ise sürüm, istek header’ı üzerinden de sabitlenebilir ve webhook davranışı için de API sürümü dikkate alınır. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl&utm_source=openai))
+Tarih tabanlı sürümleme de başka bir seçenektir. Azure REST API’lerinde istemciler `api-version` parametresiyle belirli bir sürümü açıkça seçer. ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/developer/intro/azure-service-sdk-tool-versioning)) Stripe’ın API’sinde ise sürüm, istek header’ı üzerinden de sabitlenebilir ve webhook davranışı için de API sürümü dikkate alınır. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl))
 
 Tek bir evrensel doğru yok. Karar verirken şu sorular daha kullanışlıdır:
 
@@ -94,7 +94,7 @@ Tek bir evrensel doğru yok. Karar verirken şu sorular daha kullanışlıdır:
 3. Cache ve gateway katmanları sürüm bilgisini doğal biçimde taşıyabiliyor mu?
 4. Mobil istemcilerinizin güncellenmesi haftalar mı, aylar mı sürüyor?
 
-*İç ekiplerin kullandığı bir API ile bağımsız müşterilerin bağlandığı bir API aynı geçiş planını gerektirmez.* Yine de “istemciler bizim ekipte, haber veririz” varsayımı uzun vadede pahalı olabilir. Google’ın API sürümleme değerlendirmesi, bağımsız tüketiciler arttıkça uyumluluk yükünün de arttığını belirtiyor. ([cloud.google.com](https://cloud.google.com/blog/products/api-management/api-design-which-version-of-versioning-is-right-for-you?utm_source=openai))
+*İç ekiplerin kullandığı bir API ile bağımsız müşterilerin bağlandığı bir API aynı geçiş planını gerektirmez.* Yine de “istemciler bizim ekipte, haber veririz” varsayımı uzun vadede pahalı olabilir. Google’ın API sürümleme değerlendirmesi, bağımsız tüketiciler arttıkça uyumluluk yükünün de arttığını belirtiyor. ([cloud.google.com](https://cloud.google.com/blog/products/api-management/api-design-which-version-of-versioning-is-right-for-you))
 
 ## Eski sürümü yaşatmak yetmez
 
@@ -181,6 +181,6 @@ Küçük ekipler için sade bir politika genellikle yeterlidir:
 - Eski istemcileri ölçmeden sürüm kapatmayın.
 - Dokümantasyon, SDK ve örnek kodu aynı geçiş planına bağlayın.
 
-Stripe’ın sürüm yaklaşımı gibi daha katı bir takvim, çok sayıda bağımsız istemcisi olan ürünlerde öngörülebilirlik sağlar. Google’ın API rehberindeki kanal veya release tabanlı seçenekler ise farklı olgunluk seviyelerine sahip API’lerin aynı çatı altında yönetilmesine izin verir. Bunlar doğrudan kopyalanacak reçeteler değil; kendi API’nizin değişim maliyetini düşünmek için referanslardır. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl&utm_source=openai))
+Stripe’ın sürüm yaklaşımı gibi daha katı bir takvim, çok sayıda bağımsız istemcisi olan ürünlerde öngörülebilirlik sağlar. Google’ın API rehberindeki kanal veya release tabanlı seçenekler ise farklı olgunluk seviyelerine sahip API’lerin aynı çatı altında yönetilmesine izin verir. Bunlar doğrudan kopyalanacak reçeteler değil; kendi API’nizin değişim maliyetini düşünmek için referanslardır. ([docs.stripe.com](https://docs.stripe.com/api/versioning?lang=curl))
 
 İyi sürümleme, hiç kırıcı değişiklik yapmamak değildir. Kırıcı değişikliğin nerede başladığını bilmek, onu görünür biçimde taşımak ve eski istemciyi hazırlıksız bırakmamaktır.

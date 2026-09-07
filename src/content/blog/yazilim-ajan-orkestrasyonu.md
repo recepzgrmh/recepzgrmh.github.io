@@ -47,7 +47,7 @@ Bu yüzden yeni araçlar, işleri farklı ajanlara paylaştıran yapılar sunuyo
 
 GitHub da Build 2026’da Copilot uygulamasının bir fikirden, issue’dan veya pull request’ten yola çıkarak birden fazla ajan oturumunu paralel çalıştırabileceğini açıkladı. Her oturumun ayrı Git worktree kullanması, ajanların aynı çalışma alanını birbirinin üzerine yazmadan ilerlemesini sağlıyor. [2]
 
-![Bir yazılım projesinde paralel çalışan ajanların ve insan kontrol noktalarının soyut gösterimi](/blog/yazilim-ajan-orkestrasyonu-inline-1.png)
+![Bir yazılım projesinde paralel çalışan ajanların ve insan kontrol noktalarının soyut gösterimi](/blog/yazilim-ajan-orkestrasyonu-inline-1.webp)
 
 *Çoklu ajan yaklaşımında değer, ajan sayısından çok görevlerin nasıl ayrıldığı ve sonuçların nasıl birleştirildiğiyle belirleniyor.*
 
@@ -79,7 +79,7 @@ Bu soruların cevabı yalnızca sistem prompt’unda bulunmuyor. Kod tabanının
 
 Bu nedenle ekiplerin “kaç ajan kullanıyoruz?” sorusundan önce “bu görevi neden bölüyoruz?” sorusunu sorması gerekiyor. Ajan sayısı bir başarı ölçütü değil. Daha az koordinasyonla daha güvenilir sonuç üretmek çoğu zaman daha iyi mimaridir.
 
-![Bir yapay zekâ ajanının prototipten üretim ortamına geçerken geçtiği kontrol noktalarının soyut anlatımı](/blog/yazilim-ajan-orkestrasyonu-inline-2.png)
+![Bir yapay zekâ ajanının prototipten üretim ortamına geçerken geçtiği kontrol noktalarının soyut anlatımı](/blog/yazilim-ajan-orkestrasyonu-inline-2.webp)
 
 *Ajanı üretime taşımak, yalnızca görev çalıştırmak değil; erişim, gözlemlenebilirlik ve değerlendirme katmanlarını kurmak anlamına geliyor.*
 

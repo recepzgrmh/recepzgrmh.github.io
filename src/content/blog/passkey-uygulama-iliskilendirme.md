@@ -32,13 +32,13 @@ sources:
 
 # Passkey eklemek kimlik doğrulama değil, uygulama ilişkilendirme işidir
 
-Passkey kullanıcının şifre yazmadan giriş yapmasını sağlar. Telefonda ekran kilidi, parmak izi veya yüz doğrulama kullanılır; sunucu ise kullanıcının özel anahtarını görmez, yalnızca açık anahtarı saklar. Bu yapı, şifre sızıntılarının etkisini ve kimlik avı riskini azaltır. WebAuthn standardı da zaten kimlik doğrulamayı belirli bir alan adına bağlı açık anahtarlı kimlik bilgileri üzerinden kurar. ([developer.apple.com](https://developer.apple.com/passkeys/?utm_source=openai))
+Passkey kullanıcının şifre yazmadan giriş yapmasını sağlar. Telefonda ekran kilidi, parmak izi veya yüz doğrulama kullanılır; sunucu ise kullanıcının özel anahtarını görmez, yalnızca açık anahtarı saklar. Bu yapı, şifre sızıntılarının etkisini ve kimlik avı riskini azaltır. WebAuthn standardı da zaten kimlik doğrulamayı belirli bir alan adına bağlı açık anahtarlı kimlik bilgileri üzerinden kurar. ([developer.apple.com](https://developer.apple.com/passkeys/))
 
 Bu açıklama entegrasyonun yalnızca bir bölümünü anlatıyor. Gerçek ürünlerde passkey, mobil istemci, web alan adı, backend ve credential provider arasında kurulan bir sözleşmedir. Bu sözleşmenin herhangi bir parçası eksik kalırsa kullanıcı, “passkey desteklenmiyor” gibi görünen ama aslında ilişkilendirme hatasından kaynaklanan sorunlarla karşılaşır.
 
 ## Kriptografi sunucuda değil, ilişkinin içinde yaşar
 
-Passkey oluşturulurken uygulama sunucudan bir challenge ve credential oluşturma seçenekleri ister. İstemci bu seçenekleri işletim sisteminin kimlik bilgisi API’sine gönderir. Cihaz veya credential provider bir anahtar çifti üretir. Özel anahtar credential provider’da kalır; açık anahtar uygulama sunucusuna gönderilir ve sunucuda kullanıcı hesabıyla ilişkilendirilir. Android’in güncel dokümantasyonu bu akışı açıkça istemci, uygulama sunucusu ve credential provider olarak üç parçaya ayırıyor. ([developer.android.com](https://developer.android.com/identity/passkeys/create-passkeys?hl=en&utm_source=openai))
+Passkey oluşturulurken uygulama sunucudan bir challenge ve credential oluşturma seçenekleri ister. İstemci bu seçenekleri işletim sisteminin kimlik bilgisi API’sine gönderir. Cihaz veya credential provider bir anahtar çifti üretir. Özel anahtar credential provider’da kalır; açık anahtar uygulama sunucusuna gönderilir ve sunucuda kullanıcı hesabıyla ilişkilendirilir. Android’in güncel dokümantasyonu bu akışı açıkça istemci, uygulama sunucusu ve credential provider olarak üç parçaya ayırıyor. ([developer.android.com](https://developer.android.com/identity/passkeys/create-passkeys?hl=en))
 
 Girişte de benzer bir akış vardır. Sunucu yeni bir challenge üretir, istemci Credential Manager veya Apple’ın Authentication Services API’si üzerinden kimlik bilgisini ister, ardından imzalı yanıtı backend’e yollar. Backend imzayı, challenge’ı, origin’i ve credential’ın ilgili hesapla bağını doğrular.
 
@@ -50,9 +50,9 @@ Bu yüzden istemcide yalnızca “başarılı giriş” sonucunu saklamak yeterl
 
 Birçok ürünün hem web sitesi hem de mobil uygulaması vardır. Kullanıcı web’de hesabını açar, daha sonra mobil uygulamayı yükler ve aynı passkey ile giriş yapmak ister. Bu deneyimin çalışması için işletim sistemi, uygulamanın gerçekten ilgili web servisine ait olduğunu doğrulayabilmelidir.
 
-Android tarafında bunun temel araçlarından biri Digital Asset Links’tir. Uygulama ile web sitesi arasındaki güven ilişkisi, alan adında yayınlanan ilişkilendirme dosyası ve uygulamanın imza bilgileriyle kurulur. Google dokümantasyonu passkey’ler için bu ilişkilendirmenin gerekli olduğunu belirtiyor. ([developer.android.com](https://developer.android.com/identity/credential-manager/prerequisites?utm_source=openai))
+Android tarafında bunun temel araçlarından biri Digital Asset Links’tir. Uygulama ile web sitesi arasındaki güven ilişkisi, alan adında yayınlanan ilişkilendirme dosyası ve uygulamanın imza bilgileriyle kurulur. Google dokümantasyonu passkey’ler için bu ilişkilendirmenin gerekli olduğunu belirtiyor. ([developer.android.com](https://developer.android.com/identity/credential-manager/prerequisites))
 
-iOS tarafında benzer ilişki associated domains üzerinden kurulur. Apple, passkey kayıt veya assertion isteklerinde ilgili alan adının uygulamayla associated domain olarak yapılandırılmasını istiyor. `WKWebView` kullanan uygulamalarda da webcredentials ilişkisinin kurulması gerekiyor. Aksi halde istek, uygulamada passkey desteği varmış gibi görünse bile hata verebilir. ([developer.apple.com](https://developer.apple.com/documentation/AuthenticationServices/supporting-passkeys?changes=_7&utm_source=openai))
+iOS tarafında benzer ilişki associated domains üzerinden kurulur. Apple, passkey kayıt veya assertion isteklerinde ilgili alan adının uygulamayla associated domain olarak yapılandırılmasını istiyor. `WKWebView` kullanan uygulamalarda da webcredentials ilişkisinin kurulması gerekiyor. Aksi halde istek, uygulamada passkey desteği varmış gibi görünse bile hata verebilir. ([developer.apple.com](https://developer.apple.com/documentation/AuthenticationServices/supporting-passkeys?changes=_7))
 
 Bu ayrıntı ürün tasarımını doğrudan etkiler. Örneğin şu alan adları birbirinden farklıysa:
 
@@ -65,11 +65,11 @@ Sistemin hangi alan adını relying party olarak kabul edeceği açıkça belirl
 
 ## Android’de API seçimi kadar geçiş planı da önemli
 
-Android’de Credential Manager; passkey, parola ve federated sign-in yöntemlerini ortak bir kullanıcı deneyiminde birleştiren önerilen Jetpack API’sidir. Passkey desteği Android 9 ve üzerindeki cihazlarda çalışır; Credential Manager’ın amacı ise farklı kimlik bilgisi türlerini tek bir akışta yönetmektir. ([developer.android.com](https://developer.android.com/identity/passkeys?hl=en&utm_source=openai))
+Android’de Credential Manager; passkey, parola ve federated sign-in yöntemlerini ortak bir kullanıcı deneyiminde birleştiren önerilen Jetpack API’sidir. Passkey desteği Android 9 ve üzerindeki cihazlarda çalışır; Credential Manager’ın amacı ise farklı kimlik bilgisi türlerini tek bir akışta yönetmektir. ([developer.android.com](https://developer.android.com/identity/passkeys?hl=en))
 
 Bu, eski giriş yöntemlerini tek gecede kaldırmak gerektiği anlamına gelmez. Ürünlerin önemli bir bölümü hâlâ parola, Google ile giriş veya e-posta doğrulaması kullanır. Daha sağlıklı yaklaşım, Credential Manager’ı bu yöntemlerle birlikte ele almak ve kullanıcının hesabına birden fazla doğrulama yolu bağlamaktır.
 
-Örneğin mevcut kullanıcı parola ile giriş yaptıktan sonra passkey oluşturabilir. Android dokümantasyonu, uygun koşullarda başarılı bir parola girişinin ardından passkey oluşturma akışının otomatik başlatılabildiğini belirtiyor. Ancak kullanıcıya ne zaman ve hangi bildirimle bilgi verileceği credential provider’a göre değişebilir. Bu nedenle ürün ekibi, “passkey oluşturuldu” bilgisinin gerçekten kullanıcıya ulaştığını varsaymamalıdır. ([developer.android.com](https://developer.android.com/identity/passkeys/create-passkeys?hl=en&utm_source=openai))
+Örneğin mevcut kullanıcı parola ile giriş yaptıktan sonra passkey oluşturabilir. Android dokümantasyonu, uygun koşullarda başarılı bir parola girişinin ardından passkey oluşturma akışının otomatik başlatılabildiğini belirtiyor. Ancak kullanıcıya ne zaman ve hangi bildirimle bilgi verileceği credential provider’a göre değişebilir. Bu nedenle ürün ekibi, “passkey oluşturuldu” bilgisinin gerçekten kullanıcıya ulaştığını varsaymamalıdır. ([developer.android.com](https://developer.android.com/identity/passkeys/create-passkeys?hl=en))
 
 Yeni cihaz senaryosu da aynı derecede önemlidir. Passkey’in credential provider tarafından senkronize edilmesi kullanıcı için kolaylık sağlar; fakat backend’in hesabı yalnızca tek bir cihaz kimliğine bağlaması doğru değildir. Hesabın temel kimliği kullanıcı hesabıdır. Cihazlar ve credential’lar bu hesabın altında yönetilmelidir.
 
@@ -77,7 +77,7 @@ Yeni cihaz senaryosu da aynı derecede önemlidir. Passkey’in credential provi
 
 iOS uygulamalarında giriş ekranı çoğu zaman tamamen native değildir. Bazı ürünler web tabanlı üyelik veya ödeme akışlarını `WKWebView` içinde gösterir. Bu durumda passkey davranışı, web sayfası ile native uygulamanın rastgele bir birleşimi gibi ele alınamaz.
 
-Apple’ın dokümantasyonuna göre `WKWebView` içinde passkey kullanabilmek için uygulamanın ilgili servisi associated domain olarak tanımlaması gerekir. iOS 16.4 ve macOS 13.3 ve sonrasında JavaScript API’leriyle passkey desteğinin ve koşullu arabuluculuğun kullanılabilirliği de test edilebilir. ([developer.apple.com](https://developer.apple.com/documentation/AuthenticationServices/supporting-passkeys?changes=_7&utm_source=openai))
+Apple’ın dokümantasyonuna göre `WKWebView` içinde passkey kullanabilmek için uygulamanın ilgili servisi associated domain olarak tanımlaması gerekir. iOS 16.4 ve macOS 13.3 ve sonrasında JavaScript API’leriyle passkey desteğinin ve koşullu arabuluculuğun kullanılabilirliği de test edilebilir. ([developer.apple.com](https://developer.apple.com/documentation/AuthenticationServices/supporting-passkeys?changes=_7))
 
 Buradan çıkan pratik sonuç basit: Web akışınız hangi alan adında çalışıyor, native uygulamanız hangi alan adıyla ilişkilendiriliyor ve backend hangi relying party değerini doğruluyor? Bu üç sorunun cevabı aynı mimari kararı göstermeli.
 

@@ -37,7 +37,7 @@ Mobil uygulamalarda çeviriler çoğu zaman uygulama paketine gömülü JSON, st
 
 Bu model yavaş olabilir ama davranışı öngörülebilirdir. Uygulama mağazasında incelenen paket ile kullanıcının çalıştırdığı paket aynıdır. İnternet bağlantısı olmasa da temel metinler hazırdır. Çeviri dosyasının uygulama sürümüyle uyumsuz olması gibi bir problem yaşanmaz.
 
-OTA yaklaşımı ise çeviri paketini uzaktaki bir servisten alır. Uygulama açıldığında veya belirli aralıklarla yeni dil verisini kontrol eder. Böylece bir yazım hatası düzeltilebilir, yeni bir dil daha hızlı açılabilir, bölgeye göre içerik gösterilebilir ya da farklı metin varyasyonları denenebilir. Firebase Remote Config gibi sistemler, uygulama güncellemesi yayınlamadan davranış ve görünüm parametrelerini değiştirmeyi; ayrıca dil, uygulama sürümü ve kullanıcı segmentine göre farklı değerler sunmayı destekler. ([firebase.google.com](https://firebase.google.com/docs/remote-config?utm_source=openai))
+OTA yaklaşımı ise çeviri paketini uzaktaki bir servisten alır. Uygulama açıldığında veya belirli aralıklarla yeni dil verisini kontrol eder. Böylece bir yazım hatası düzeltilebilir, yeni bir dil daha hızlı açılabilir, bölgeye göre içerik gösterilebilir ya da farklı metin varyasyonları denenebilir. Firebase Remote Config gibi sistemler, uygulama güncellemesi yayınlamadan davranış ve görünüm parametrelerini değiştirmeyi; ayrıca dil, uygulama sürümü ve kullanıcı segmentine göre farklı değerler sunmayı destekler. ([firebase.google.com](https://firebase.google.com/docs/remote-config))
 
 Fakat OTA, “JSON’u CDN’e koyup uygulamada çekmek” kadar basit bir özellik değildir. Uygulamanın her zaman erişilebilir bir çeviri servisine bağlı olamayacağını kabul ederek tasarlanmalıdır.
 
@@ -86,7 +86,7 @@ Uzak paketin yalnızca dil koduyla tanımlanması da yeterli değildir. En azın
 - Aynı sürüm tekrar tekrar indirilmeyecek mi?
 - Paket bozuk çıkarsa son geçerli sürüme nasıl dönülecek?
 
-Firebase Remote Config dokümantasyonu da varsayılan değerlerin uygulamada tutulmasını, değerlerin indirilip daha sonra etkinleştirilmesini ve istemcinin güncellemenin ne zaman uygulanacağını kontrol etmesini önerir. Bu yaklaşım, uzaktan gelen içeriğin doğrudan ilk okuma anında kullanıcı arayüzüne yazılmasından daha güvenlidir. ([firebase.google.com](https://firebase.google.com/docs/remote-config?utm_source=openai))
+Firebase Remote Config dokümantasyonu da varsayılan değerlerin uygulamada tutulmasını, değerlerin indirilip daha sonra etkinleştirilmesini ve istemcinin güncellemenin ne zaman uygulanacağını kontrol etmesini önerir. Bu yaklaşım, uzaktan gelen içeriğin doğrudan ilk okuma anında kullanıcı arayüzüne yazılmasından daha güvenlidir. ([firebase.google.com](https://firebase.google.com/docs/remote-config))
 
 ![Çeviri paketinin indirme, doğrulama ve etkinleştirme süreci.](/blog/mobil-ota-ceviri-yonetimi-inline-1.svg)
 
@@ -124,7 +124,7 @@ Uzaktan çeviri dağıtımında “son dosyayı yayınladık” yaklaşımı kı
 
 Bu nedenle çeviri paketleri değiştirilemez sürümler olarak yayımlanabilir. Örneğin `tr-TR@17` paketi daha sonra yerinde düzenlenmez; hata varsa `tr-TR@18` oluşturulur. Sunucu, istemciye hangi paketi önerdiğini ayrıca bildirebilir. Böylece hata araştırılırken kullanıcıların hangi içeriği gördüğü anlaşılır.
 
-Dağıtım da kademeli yapılabilir. Önce küçük bir kullanıcı grubuna, ardından belirli uygulama sürümlerine veya bölgelere açılır. Firebase Remote Config rollouts dokümantasyonu, değişikliklerin aşamalı dağıtılmasını, Crashlytics ve Analytics gibi sinyallerle izlenmesini ve sorun görülürse önceki değere dönülmesini destekleyen bir model tanımlar. ([firebase.google.com](https://firebase.google.com/docs/remote-config/rollouts?utm_source=openai))
+Dağıtım da kademeli yapılabilir. Önce küçük bir kullanıcı grubuna, ardından belirli uygulama sürümlerine veya bölgelere açılır. Firebase Remote Config rollouts dokümantasyonu, değişikliklerin aşamalı dağıtılmasını, Crashlytics ve Analytics gibi sinyallerle izlenmesini ve sorun görülürse önceki değere dönülmesini destekleyen bir model tanımlar. ([firebase.google.com](https://firebase.google.com/docs/remote-config/rollouts))
 
 Rollback yalnızca sunucuda “eski dosyayı seçmek” değildir. İstemci tarafında da şu davranışlar bulunmalıdır:
 
@@ -138,9 +138,9 @@ Rollback yalnızca sunucuda “eski dosyayı seçmek” değildir. İstemci tara
 
 *Kademeli yayın ve rollback*
 
-Çeviri metni uygulamanın işleyişini değiştirmiyor gibi görünse de uzaktan dağıtım, ürünün kullanıcıya görünen davranışını değiştirir. Bu yüzden güvenlik sınırları da gözden geçirilmelidir. Uzak çeviri servisine gizli bilgi koyulmamalı; paketler HTTPS üzerinden alınmalı ve mümkünse bütünlük doğrulaması yapılmalıdır. Firebase, Remote Config değerlerinin istemci tarafından erişilebilir olduğunu ve gizli verilerin burada tutulmaması gerektiğini açıkça belirtiyor. ([firebase.google.com](https://firebase.google.com/docs/remote-config?utm_source=openai))
+Çeviri metni uygulamanın işleyişini değiştirmiyor gibi görünse de uzaktan dağıtım, ürünün kullanıcıya görünen davranışını değiştirir. Bu yüzden güvenlik sınırları da gözden geçirilmelidir. Uzak çeviri servisine gizli bilgi koyulmamalı; paketler HTTPS üzerinden alınmalı ve mümkünse bütünlük doğrulaması yapılmalıdır. Firebase, Remote Config değerlerinin istemci tarafından erişilebilir olduğunu ve gizli verilerin burada tutulmaması gerektiğini açıkça belirtiyor. ([firebase.google.com](https://firebase.google.com/docs/remote-config))
 
-Ayrıca OTA mekanizması, uygulamaya yeni kod veya incelenmemiş özellikler indiren bir sisteme dönüştürülmemelidir. Apple’ın App Review Guidelines belgesindeki 2.5.2 maddesi, uygulamanın işlevini veya özelliklerini değiştiren kodun indirilip çalıştırılmasına ilişkin sınırlar koyuyor. Salt metin ve içerik güncellemesi ile çalıştırılabilir kod indirmek aynı şey değildir; yine de uzaktan yapılandırmanın mağaza kurallarını dolanmak için kullanılmaması gerekir. ([developer.apple.com](https://developer.apple.com/app-store/review/guidelines/?utm_source=openai))
+Ayrıca OTA mekanizması, uygulamaya yeni kod veya incelenmemiş özellikler indiren bir sisteme dönüştürülmemelidir. Apple’ın App Review Guidelines belgesindeki 2.5.2 maddesi, uygulamanın işlevini veya özelliklerini değiştiren kodun indirilip çalıştırılmasına ilişkin sınırlar koyuyor. Salt metin ve içerik güncellemesi ile çalıştırılabilir kod indirmek aynı şey değildir; yine de uzaktan yapılandırmanın mağaza kurallarını dolanmak için kullanılmaması gerekir. ([developer.apple.com](https://developer.apple.com/app-store/review/guidelines/))
 
 > OTA, mağaza yayınını ortadan kaldırmaz; yalnızca hangi değişikliklerin güvenle mağaza dışında yönetilebileceğini yeniden tanımlar.
 

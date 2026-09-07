@@ -26,7 +26,7 @@ sources:
 
 OAuth 2.0 access token’ları çoğu sistemde **bearer token** olarak kullanılır. Token’ı taşıyan kişi, token geçerliyse API’ye erişebilir. Sunucu token’ın gerçekten uygulama tarafından mı üretildiğini, yoksa loglardan, tarayıcı depolamasından veya başka bir sızıntıdan mı geldiğini ayırt edemez.
 
-Bu model pratik ve yaygındır. Fakat token sızdığında saldırganın önünde çoğu zaman tek engel token’ın süresidir. OAuth 2.0 Security Best Current Practice belgesi, erişim token’larının yeniden kullanılmasını zorlaştırmak için **sender-constrained access token** mekanizmalarını öneriyor. DPoP de bu amaçla tasarlanmış standartlardan biri. ([rfc-editor.org](https://www.rfc-editor.org/rfc/rfc9700.html?utm_source=openai))
+Bu model pratik ve yaygındır. Fakat token sızdığında saldırganın önünde çoğu zaman tek engel token’ın süresidir. OAuth 2.0 Security Best Current Practice belgesi, erişim token’larının yeniden kullanılmasını zorlaştırmak için **sender-constrained access token** mekanizmalarını öneriyor. DPoP de bu amaçla tasarlanmış standartlardan biri. ([rfc-editor.org](https://www.rfc-editor.org/rfc/rfc9700.html))
 
 ## Bearer token’ın varsayımı
 
@@ -71,7 +71,7 @@ Proof içinde en azından şu bilgiler bulunur:
 - Üretim zamanı olan `iat`
 - İmzayı doğrulamak için açık anahtar
 
-Sunucu imzayı doğrular. Proof içindeki HTTP metodu ve URI’nin gerçek istekle eşleştiğini kontrol eder. Ardından token’ın bağlı olduğu açık anahtar ile proof içindeki açık anahtarın aynı olduğuna bakar. RFC 9449, bu kontrollerin yanında proof’un biçimi, algoritması ve tekrar kullanımına ilişkin kuralları da tanımlar. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/?utm_source=openai))
+Sunucu imzayı doğrular. Proof içindeki HTTP metodu ve URI’nin gerçek istekle eşleştiğini kontrol eder. Ardından token’ın bağlı olduğu açık anahtar ile proof içindeki açık anahtarın aynı olduğuna bakar. RFC 9449, bu kontrollerin yanında proof’un biçimi, algoritması ve tekrar kullanımına ilişkin kuralları da tanımlar. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/))
 
 Böylece saldırgan yalnızca access token’ı ele geçirdiyse, geçerli bir proof üretemez. Çünkü proof imzalamak için token’ın bağlandığı özel anahtara da sahip olması gerekir.
 
@@ -93,7 +93,7 @@ DPoP ise alınmış token’ın hangi anahtar sahibi tarafından kullanılabilec
 | DPoP | Token kullanımı | Token’ı ele geçiren taraf özel anahtar olmadan API’ye erişemez |
 | mTLS | Token ve bağlantı kullanımı | İstemci, sertifikasıyla kendini kanıtlar |
 
-RFC 9700, yetkilendirme kodu akışını tercih etmeyi ve istemci türüne göre uygun güvenlik önlemlerini uygulamayı öneriyor. Aynı belge, erişim token’larını mTLS veya DPoP gibi yöntemlerle sender-constrain etmeyi de tavsiye ediyor. ([rfc-editor.org](https://www.rfc-editor.org/rfc/rfc9700.html?utm_source=openai))
+RFC 9700, yetkilendirme kodu akışını tercih etmeyi ve istemci türüne göre uygun güvenlik önlemlerini uygulamayı öneriyor. Aynı belge, erişim token’larını mTLS veya DPoP gibi yöntemlerle sender-constrain etmeyi de tavsiye ediyor. ([rfc-editor.org](https://www.rfc-editor.org/rfc/rfc9700.html))
 
 *DPoP, PKCE’nin daha güçlü bir versiyonu değildir; farklı bir problemi hedefler.*
 
@@ -112,9 +112,9 @@ DPoP eklemek, `DPoP` başlığının varlığını kontrol etmekten ibaret deği
 9. Token’ın bağlı olduğu anahtarla proof’taki anahtarın eşleştiğini doğrulamak.
 10. Access token’ın kapsam, süre, issuer ve audience kontrollerini ayrıca yapmak.
 
-RFC 9449’un önemli uyarılarından biri şu: **Geçerli bir DPoP proof tek başına erişim kararı vermek için yeterli değildir.** Proof, istemcinin belirli bir özel anahtara sahip olduğunu gösterir; kullanıcının veya istemcinin o kaynağa erişme yetkisini göstermez. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/?utm_source=openai))
+RFC 9449’un önemli uyarılarından biri şu: **Geçerli bir DPoP proof tek başına erişim kararı vermek için yeterli değildir.** Proof, istemcinin belirli bir özel anahtara sahip olduğunu gösterir; kullanıcının veya istemcinin o kaynağa erişme yetkisini göstermez. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/))
 
-Sunucu nonce kullanmayı da tercih edebilir. Bu durumda sunucu `DPoP-Nonce` başlığıyla istemciden yeni proof üretmesini ister. İstemci, nonce değerini sonraki proof içine ekler. Bu yöntem, önceden üretilmiş proof’ların kullanılabildiği bazı saldırı senaryolarının etkisini azaltır. RFC 9449, nonce değerlerinin tahmin edilemez olmasını ve istemcinin sunucudan gelen nonce’u kullanmasını tarif eder. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/?utm_source=openai))
+Sunucu nonce kullanmayı da tercih edebilir. Bu durumda sunucu `DPoP-Nonce` başlığıyla istemciden yeni proof üretmesini ister. İstemci, nonce değerini sonraki proof içine ekler. Bu yöntem, önceden üretilmiş proof’ların kullanılabildiği bazı saldırı senaryolarının etkisini azaltır. RFC 9449, nonce değerlerinin tahmin edilemez olmasını ve istemcinin sunucudan gelen nonce’u kullanmasını tarif eder. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9449/))
 
 ![API gateway üzerinde DPoP proof doğrulama adımları.](/blog/oauth-dpop-token-guvenligi-inline-2.svg)
 
@@ -132,6 +132,6 @@ Ayrıca her API’nin DPoP kullanması gerekmeyebilir. Düşük riskli ve kısa 
 
 Bu ayrım tasarım kararını netleştirir. Token’ı güvenli saklama, TLS, kısa süreli access token, refresh token rotasyonu, dar scope’lar ve doğru yetkilendirme kontrolleri yine gerekir. DPoP, bunların yerine konan tek bir güvenlik katmanı değildir.
 
-OAuth 2.0’nin güncel güvenlik yaklaşımı da bu yönde ilerliyor: daha güvenli akışlar, açık redirect URI eşleşmesi, mümkün olduğunda istemci kimlik doğrulaması ve token replay riskini azaltan mekanizmalar birlikte ele alınıyor. RFC 9700, 2025 yılında yayımlanan güncel bir Best Current Practice belgesi olarak önceki OAuth güvenlik tavsiyelerini genişletiyor ve daha zayıf bazı kullanım biçimlerini kullanımdan kaldırıyor. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9700/?utm_source=openai))
+OAuth 2.0’nin güncel güvenlik yaklaşımı da bu yönde ilerliyor: daha güvenli akışlar, açık redirect URI eşleşmesi, mümkün olduğunda istemci kimlik doğrulaması ve token replay riskini azaltan mekanizmalar birlikte ele alınıyor. RFC 9700, 2025 yılında yayımlanan güncel bir Best Current Practice belgesi olarak önceki OAuth güvenlik tavsiyelerini genişletiyor ve daha zayıf bazı kullanım biçimlerini kullanımdan kaldırıyor. ([rfc-editor.org](https://www.rfc-editor.org/info/rfc9700/))
 
 Bir API’ye DPoP eklemeyi düşünüyorsanız ilk sorunuz “proof JWT’sini nasıl üretirim?” olmamalı. Daha önce şu soruyu yanıtlayın: **Token sızarsa saldırgan hangi kaynaklara erişebilir ve bu erişimi anahtar sahipliğine bağlamak riski gerçekten azaltır mı?** Cevap evetse, DPoP’yi PKCE ve mevcut OAuth kontrollerinin yanına yerleştirmek anlamlı bir sonraki adım olabilir.

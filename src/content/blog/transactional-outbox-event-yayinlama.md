@@ -31,7 +31,7 @@ Bir backend işlemi çoğu zaman iki ayrı sistemi aynı anda etkiler: kendi ver
 
 Servis, veritabanı işlemi tamamlandıktan hemen sonra çökerse olay hiç yayınlanmayabilir. Mesaj önce yayınlanır ve veritabanı işlemi daha sonra geri alınırsa bu kez tüketiciler gerçekte oluşmamış bir durumu görür. Distributed transaction ya da 2PC her ortamda uygun olmadığı için daha sade bir yaklaşım öne çıkar: **olayı da iş verisiyle aynı veritabanı işleminde saklamak**.
 
-Bu yaklaşım Transactional Outbox olarak bilinir. İşlem tamamlandıktan sonra başka bir süreç, outbox kayıtlarını mesaj aracısına taşır. Desen, veritabanı ile broker arasında sihirli bir atomiklik sağlamaz; atomik olan bölüm, iş verisiyle outbox kaydının birlikte yazılmasıdır. ([microservices.io](https://microservices.io/patterns/data/transactional-outbox.html?source=post_page-----fa3de00ceba5---------------------------------------&utm_source=openai))
+Bu yaklaşım Transactional Outbox olarak bilinir. İşlem tamamlandıktan sonra başka bir süreç, outbox kayıtlarını mesaj aracısına taşır. Desen, veritabanı ile broker arasında sihirli bir atomiklik sağlamaz; atomik olan bölüm, iş verisiyle outbox kaydının birlikte yazılmasıdır. ([microservices.io](https://microservices.io/patterns/data/transactional-outbox.html?source=post_page-----fa3de00ceba5---------------------------------------))
 
 ## Olayı önce veritabanına yazmak
 
@@ -82,7 +82,7 @@ VALUES (
 COMMIT;
 ```
 
-`COMMIT` başarılı olursa iki kayıt da kalır. Geri alınırsa ikisi de kalmaz. PostgreSQL’in varsayılan `READ COMMITTED` davranışı, her sorgunun başladığı anda commit edilmiş veriyi görmesi üzerine kuruludur; bu desenin doğruluğu ise esas olarak sipariş ve outbox yazımının aynı transaction içinde yapılmasına dayanır. ([postgresql.org](https://www.postgresql.org/docs/16/transaction-iso.html?utm_source=openai))
+`COMMIT` başarılı olursa iki kayıt da kalır. Geri alınırsa ikisi de kalmaz. PostgreSQL’in varsayılan `READ COMMITTED` davranışı, her sorgunun başladığı anda commit edilmiş veriyi görmesi üzerine kuruludur; bu desenin doğruluğu ise esas olarak sipariş ve outbox yazımının aynı transaction içinde yapılmasına dayanır. ([postgresql.org](https://www.postgresql.org/docs/16/transaction-iso.html))
 
 Burada önemli bir uygulama ayrıntısı var: olay payload’ı sonradan mevcut siparişten tekrar üretilmemeli. Çünkü siparişin sonraki hali, ilk olayın temsil ettiği durumu değiştirebilir. Olayın gerekli verisi transaction sırasında oluşturulup outbox kaydına yazılmalıdır.
 
@@ -94,11 +94,11 @@ Outbox tablosuna kayıt eklemek tek başına yeterli değildir. Bu kayıtların 
 
 Bir worker, outbox tablosunu belirli aralıklarla tarar. İşlenmemiş kayıtları seçer, broker’a gönderir ve ardından durumu günceller. Bu yöntem SQL veritabanlarıyla çalışması bakımından pratiktir. Ancak çok sayıda worker aynı kayıtları seçebilir. Bu yüzden satır kilitleme, claim süresi ve yeniden deneme davranışı dikkatle tasarlanmalıdır.
 
-Ayrıca relay, mesajı broker’a gönderdikten sonra `published_at` alanını güncellemeden çökerse aynı olay yeniden gönderilebilir. Bu bir istisna değil, desenin beklenen sonucudur. Transactional Outbox, çoğu pratik uygulamada **en az bir kez teslim** davranışına yakındır; tek seferlik teslim garantisi vermez. ([microservices.io](https://microservices.io/patterns/data/polling-publisher.html?utm_source=openai))
+Ayrıca relay, mesajı broker’a gönderdikten sonra `published_at` alanını güncellemeden çökerse aynı olay yeniden gönderilebilir. Bu bir istisna değil, desenin beklenen sonucudur. Transactional Outbox, çoğu pratik uygulamada **en az bir kez teslim** davranışına yakındır; tek seferlik teslim garantisi vermez. ([microservices.io](https://microservices.io/patterns/data/polling-publisher.html))
 
 ### Transaction log tailing ve CDC
 
-İkinci yaklaşım, veritabanının değişiklik günlüğünü izlemektir. Debezium’un Outbox Event Router dönüşümü, outbox tablosundaki değişiklikleri yakalayıp olayları uygun topic ve key bilgileriyle yönlendirebilir. Belgelerdeki varsayılan yapı `id`, `aggregatetype`, `aggregateid`, `type` ve `payload` gibi alanları kullanır. `aggregateid`, Kafka mesaj anahtarı olarak kullanıldığında aynı aggregate için bölüm sıralamasına yardımcı olur. ([debezium.io](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html?utm_source=openai))
+İkinci yaklaşım, veritabanının değişiklik günlüğünü izlemektir. Debezium’un Outbox Event Router dönüşümü, outbox tablosundaki değişiklikleri yakalayıp olayları uygun topic ve key bilgileriyle yönlendirebilir. Belgelerdeki varsayılan yapı `id`, `aggregatetype`, `aggregateid`, `type` ve `payload` gibi alanları kullanır. `aggregateid`, Kafka mesaj anahtarı olarak kullanıldığında aynı aggregate için bölüm sıralamasına yardımcı olur. ([debezium.io](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html))
 
 CDC, uygulamanın her mesajı kendisinin yayınlaması gereğini azaltır. Fakat bu, operasyonel sorumluluğu ortadan kaldırmaz. Connector durumu, replication slot’ları, gecikme, schema değişiklikleri ve outbox tablosunun büyümesi izlenmelidir.
 
@@ -136,7 +136,7 @@ Olayları yalnızca “gönderildi” bilgisiyle modellemek çoğu sistem için 
 - Payload şeması nasıl geriye dönük uyumlu kalacak?
 - Tüketici eski bir olayla karşılaştığında ne yapacak?
 
-Debezium, olay kimliği, aggregate türü, aggregate kimliği ve payload gibi alanları yönlendirme için kullanabilir. Ancak topic tasarımı, partition key seçimi ve şema evrimi uygulamanın alanına bağlıdır; belgelerdeki varsayılan tablo yapısını her sisteme doğrudan kopyalamak doğru olmaz. ([debezium.io](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html?utm_source=openai))
+Debezium, olay kimliği, aggregate türü, aggregate kimliği ve payload gibi alanları yönlendirme için kullanabilir. Ancak topic tasarımı, partition key seçimi ve şema evrimi uygulamanın alanına bağlıdır; belgelerdeki varsayılan tablo yapısını her sisteme doğrudan kopyalamak doğru olmaz. ([debezium.io](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html))
 
 Outbox tablosu ayrıca bir arşiv değildir. Relay’in güvenle işlediği kayıtların ne zaman silineceği ya da ayrı bir arşive taşınacağı belirlenmelidir. Silme işlemi, gecikmiş consumer’ların ihtiyaçları ve yeniden oynatma beklentisiyle çelişmemelidir.
 
