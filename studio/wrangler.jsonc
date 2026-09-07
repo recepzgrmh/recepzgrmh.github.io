@@ -21,7 +21,9 @@
     "MAX_UPLOAD_BYTES": "10485760",
     "OPENAI_MODEL": "gpt-5.6-luna",
     "GITHUB_REPOSITORY": "recepzgrmh/recepzgrmh.github.io",
-    "GITHUB_BRANCH": "main"
+    "GITHUB_BRANCH": "main",
+    "INDEXNOW_KEY": "1d7f8fea147c4357a23d879e0dc0eda0",
+    "INDEXNOW_KEY_LOCATION": "https://recepozgur.com/1d7f8fea147c4357a23d879e0dc0eda0.txt"
   },
   "d1_databases": [
     {

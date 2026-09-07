@@ -8,6 +8,8 @@ interface Env {
   GITHUB_TOKEN?: string;
   GITHUB_REPOSITORY?: string;
   GITHUB_BRANCH?: string;
+  INDEXNOW_KEY?: string;
+  INDEXNOW_KEY_LOCATION?: string;
 }
 
 type Status = "draft" | "review" | "approved" | "scheduled" | "published";
@@ -261,6 +263,17 @@ async function githubPut(env: Env, path: string, content: Uint8Array, message: s
   return result;
 }
 
+async function pingIndexNow(env: Env, bundleId: string, actor: string, targetUrl: string) {
+  if (!env.INDEXNOW_KEY) return;
+  let action = "indexnow_ping_error";
+  try {
+    const keyLocation = env.INDEXNOW_KEY_LOCATION || `https://recepozgur.com/${env.INDEXNOW_KEY}.txt`;
+    const response = await fetch("https://api.indexnow.org/IndexNow", { method: "POST", headers: { "Content-Type": "application/json; charset=utf-8", "User-Agent": "RecepOzgur-Studio-IndexNow" }, body: JSON.stringify({ host: "recepozgur.com", key: env.INDEXNOW_KEY, keyLocation, urlList: [targetUrl] }), signal: AbortSignal.timeout(5000) });
+    action = response.status === 200 || response.status === 202 ? `indexnow_ping_ok_${response.status}` : `indexnow_ping_failed_${response.status}`;
+  } catch (error) { console.error("IndexNow bildirimi başarısız:", error); }
+  try { await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(bundleId,action,actor,now()).run(); } catch (error) { console.error("IndexNow denetim kaydı yazılamadı:", error); }
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url); const actor = request.headers.get("Cf-Access-Authenticated-User-Email") || "local";
@@ -329,7 +342,9 @@ export default {
         }
         await githubPut(env,`src/content/blog/${bundle.slug}.md`,new TextEncoder().encode(markdownFile(bundle,heroImage,inlineImages)),`content: publish ${bundle.slug}`);
         const publishedUrl = `https://recepozgur.com/blog/${bundle.slug}/`; await env.DB.prepare("UPDATE content_bundles SET status='scheduled',published_url=?,updated_at=? WHERE id=?").bind(publishedUrl,now(),match[1]).run();
-        await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"blog_commit",actor,now()).run(); return json({ok:true,url:publishedUrl,status:"scheduled"});
+        await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"blog_commit",actor,now()).run();
+        try { await pingIndexNow(env,match[1],actor,publishedUrl); } catch (error) { console.error("IndexNow adımı atlandı:", error); }
+        return json({ok:true,url:publishedUrl,status:"scheduled"});
       }
       if (match && request.method === "POST" && match[2] === "verify") {
         const row = await env.DB.prepare("SELECT published_url AS publishedUrl FROM content_bundles WHERE id=?").bind(match[1]).first<{publishedUrl:string}>(); if (!row?.publishedUrl) return json({error:"Yayın isteği bulunamadı."},409);
