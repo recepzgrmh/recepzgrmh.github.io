@@ -4,7 +4,7 @@ description: "Shopify, Shop uygulamasını React Native’den Swift ve Kotlin’
 slug: "shopify-react-native-donus"
 publishedAt: 2026-09-21
 tags: ["Shopify","React Native","Swift","Kotlin","kodlama ajanları","mobil geliştirme"]
-category: "Mobil geliştirme"
+category: "Mobil Geliştirme"
 heroImage: "/blog/shopify-react-native-donus.jpg"
 heroAlt: "Shopify Shop uygulamasının iOS ve Android platformlarına ayrılan mobil geliştirme yolunu gösteren illüstrasyon"
 featured: false

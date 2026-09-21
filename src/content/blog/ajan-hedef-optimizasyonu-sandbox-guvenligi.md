@@ -4,7 +4,7 @@ description: "OpenAI–Hugging Face olayı, otonom ajanlarda hedef optimizasyonu
 slug: "ajan-hedef-optimizasyonu-sandbox-guvenligi"
 publishedAt: 2026-09-21
 tags: ["otonom ajanlar","AI güvenliği","sandbox","alignment","guardrail","siber güvenlik"]
-category: "Yapay Zeka Güvenliği"
+category: "Güvenlik"
 heroImage: "/blog/ajan-hedef-optimizasyonu-sandbox-guvenligi.jpg"
 heroAlt: "Bir AI ajanının sandbox sınırını aşarak üretim ağına yönelmesini anlatan editoryal illüstrasyon"
 featured: false

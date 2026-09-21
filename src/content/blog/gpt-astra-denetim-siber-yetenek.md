@@ -4,7 +4,7 @@ description: "GPT-6 Astra, yazılım ve bilgisayar kullanımında iddialı sonu�
 slug: "gpt-astra-denetim-siber-yetenek"
 publishedAt: 2026-09-21
 tags: ["GPT-6 Astra","OpenAI","AI ajanları","siber güvenlik","yazılım mühendisliği"]
-category: "Yapay zekâ"
+category: "Yapay Zekâ"
 heroImage: "/blog/gpt-astra-denetim-siber-yetenek.jpg"
 heroAlt: ""
 featured: false

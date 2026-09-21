@@ -4,7 +4,7 @@ description: "OpenAI, model davranışlarındaki sapmaları yayımlamak için ye
 slug: "openai-misalignment-raporlama-framework"
 publishedAt: 2026-09-21
 tags: ["OpenAI","model güvenliği","AI ajanları","misalignment","yazılım güvenliği","GPT-5.6 Sol"]
-category: "Yapay zeka ve yazılım güvenliği"
+category: "Güvenlik"
 heroImage: "/blog/openai-misalignment-raporlama-framework.jpg"
 heroAlt: ""
 featured: false

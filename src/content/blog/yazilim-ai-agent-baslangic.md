@@ -4,7 +4,7 @@ description: "Yapay zekâ yazılım üretimini hızlandırırken yeni başlayanl
 slug: "yazilim-ai-agent-baslangic"
 publishedAt: 2026-09-21
 tags: ["yapay zeka","yazılım geliştirme","AI coding agents","product engineer","kariyer"]
-category: "Yazılım"
+category: "Sektör ve Kariyer"
 heroImage: "/blog/yazilim-ai-agent-baslangic.jpg"
 heroAlt: "Yapay zekâ çağında junior yazılımcılığın değişimini anlatan editoryal illüstrasyon"
 featured: false

@@ -4,7 +4,7 @@ description: "iOS 27 ile Siri AI beta olarak kullanıma açıldı. Benim için a
 slug: "ios-27-siri-urun"
 publishedAt: 2026-09-21
 tags: ["iOS 27","Siri AI","Apple Intelligence","mobil geliştirme","ürün geliştirme"]
-category: "Mobil"
+category: "Mobil Geliştirme"
 heroImage: "/blog/ios-27-siri-urun.jpg"
 heroAlt: "MacBook, iPhone, iPad, Apple Watch ve Apple Vision Pro üzerinde iOS 27 ve Apple platform güncellemelerini gösteren görsel"
 featured: false

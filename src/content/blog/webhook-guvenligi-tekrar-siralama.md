@@ -4,7 +4,7 @@ description: "İmza doğrulama webhook güvenliğinin yalnızca ilk adımıdır.
 slug: "webhook-guvenligi-tekrar-siralama"
 publishedAt: 2026-09-21
 tags: ["webhook","backend","güvenlik","ödeme sistemleri","idempotency","event-driven"]
-category: "Backend"
+category: "Backend ve API"
 heroImage: "/blog/webhook-guvenligi-tekrar-siralama.jpg"
 heroAlt: "İmza doğrulamasından idempotency ve kuyruk işlemine ilerleyen webhook güvenliği akışı"
 featured: false

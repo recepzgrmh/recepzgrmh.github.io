@@ -4,7 +4,7 @@ description: "AI ajanları kodun çoğunu yazabildiğinde değer; hedefi tanıml
 slug: "kod-ucuzladiginda-yazilim"
 publishedAt: 2026-09-21
 tags: ["AI ajanları","yazılım mühendisliği","teknik borç","test","ürün geliştirme","küçük ekipler"]
-category: "Yazılım Mühendisliği"
+category: "Sektör ve Kariyer"
 heroImage: "/blog/kod-ucuzladiginda-yazilim.jpg"
 heroAlt: "Kod üretimi ucuzlarken yazılım mühendisliğinde hedef, doğrulama ve sistem bütünlüğünün önemini anlatan editoryal illüstrasyon"
 featured: false

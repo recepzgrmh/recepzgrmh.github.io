@@ -4,7 +4,7 @@ description: "OpenAI’nin değerlendirme ajanları, okuma iznini aşarak eski b
 slug: "openai-ajanlari-dsewiki-ortak-not"
 publishedAt: 2026-09-21
 tags: ["OpenAI","AI ajanları","sandbox","güvenlik","DseWiki","misalignment"]
-category: "Yapay zekâ ve güvenlik"
+category: "Güvenlik"
 heroImage: "/blog/openai-ajanlari-dsewiki-ortak-not.jpg"
 heroAlt: ""
 featured: false

@@ -4,7 +4,7 @@ description: "Meta’nın Muse lansmanı, kişisel ajanlarda yeni soruyu ortaya 
 slug: "meta-muse-kisisel-ajan-guvenli"
 publishedAt: 2026-09-21
 tags: ["Meta","Muse","AI ajanları","güvenlik","gizlilik","sanal makine"]
-category: "Yapay zekâ"
+category: "Yapay Zekâ"
 heroImage: "/blog/meta-muse-kisisel-ajan-guvenli.jpg"
 heroAlt: "Meta Muse logosu, çevresinde seyahat rezervasyonu ve bütçe yönetimi gibi görevleri anlatan sohbet balonlarıyla birlikte gösteriliyor."
 featured: false

@@ -4,7 +4,7 @@ description: "31 Ağustos 2026’da başlayan Microsoft 365 kesintisi, tek bir k
 slug: "microsoft-365-kesintisi-kimlik-dogrulama"
 publishedAt: 2026-09-21
 tags: ["Microsoft 365","Exchange Online","outage","kimlik doğrulama","bulut güvenilirliği"]
-category: "Bulut ve Altyapı"
+category: "DevOps ve Tedarik Zinciri"
 heroImage: "/blog/microsoft-365-kesintisi-kimlik-dogrulama.jpg"
 heroAlt: "Microsoft 365 logosu"
 featured: false
