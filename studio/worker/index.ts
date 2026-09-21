@@ -138,17 +138,40 @@ async function logAction(env: Env, bundleId: string, action: string, actor: stri
 
 const HERO_IMAGE_MODEL = "@cf/black-forest-labs/flux-1-schnell";
 
-// Üretici bazen hazır bir görsel brief'i, bazen bir web bağlantısı, bazen de hiçbir şey döndürüyor.
-// Brief varsa onu kullan; yoksa yazının kendisinden bir tane kur. Bağlantıları burada kullanmıyoruz:
-// başkasının basın görselini kendi alan adımızda yeniden yayımlamak telif riski taşıyor.
-function heroImageBrief(bundle: any) {
+const BRIEF_MODEL = "@cf/meta/llama-3.2-3b-instruct";
+
+// Sabit sanat yönü. Prompt'un sonuna her zaman bu ekleniyor ki görseller tek bir dile benzesin.
+const HERO_STYLE = "Restrained ink-and-risograph editorial illustration, limited palette of deep navy, warm gray and a single amber accent, visible paper texture, flat layered paper-cut shapes, generous negative space, abstract and conceptual. No text, no letters, no numbers, no labels, no logos, no watermark, no user interface, no charts, no human faces.";
+
+// Başlığı ve açıklamayı ham haliyle prompt'a gömmek difüzyon modeline "bunları yaz" demek oluyor:
+// marka adları ve sürüm numaraları görselin içine bozuk yazı olarak basılıyor. Onun yerine küçük bir
+// metin modeli önce marka/yazı içermeyen bir sahne tarifi kuruyor, FLUX yalnız onu çiziyor.
+async function composeHeroScene(env: Env, bundle: any) {
+  const response = await env.AI.run(BRIEF_MODEL as any, {
+    messages: [
+      { role: "system", content: "You write briefs for editorial illustrations. Reply with ONE English sentence, at most 40 words, describing a concrete symbolic scene of objects and their spatial relationship. Never name a company, product, brand or version number. Never describe text, letters, numbers, labels, logos, screens, charts or human faces. Objects and composition only. No preamble." },
+      { role: "user", content: `Article title: ${bundle.title}\nSummary: ${bundle.description}\n\nDescribe the scene.` },
+    ],
+    max_tokens: 120,
+  } as any) as any;
+  const raw = String(response?.response || "").replace(/\s+/g, " ").trim();
+  // Model yine de marka adı sızdırabiliyor; rakam ve tırnak içeren parçaları temizle.
+  const cleaned = raw.replace(/["'`]/g, "").replace(/\b\d+(?:[.,]\d+)*\b/g, "").replace(/\s+/g, " ").trim();
+  return cleaned.slice(0, 420);
+}
+
+async function heroImageBrief(env: Env, bundle: any) {
   const brief = String(bundle.heroImageUrl || "").trim();
+  // Elle yazılmış brief varsa ona dokunma; bağlantı ise kullanma (telif riski).
   if (brief && !/^https?:\/\//i.test(brief)) return brief.slice(0, 1400);
-  return `Editorial 16:9 illustration for a technology article titled "${bundle.title}". ${bundle.description} Restrained ink-and-risograph editorial style, limited palette of deep blue, warm gray and a single amber accent, visible paper texture, abstract and conceptual composition. No text, no letters, no logos, no watermark, no interface panels, no human faces.`.slice(0, 1400);
+  let scene = "";
+  try { scene = await composeHeroScene(env, bundle); } catch (error) { console.error("Sahne tarifi kurulamadı:", error); }
+  if (!scene) scene = "A single guarded gateway on a wide plane, with layered paths branching away from it into open space.";
+  return `${scene} ${HERO_STYLE}`.slice(0, 1400);
 }
 
 async function generateHeroImage(env: Env, bundle: any) {
-  const response = await env.AI.run(HERO_IMAGE_MODEL as any, { prompt: heroImageBrief(bundle), steps: 6 } as any) as any;
+  const response = await env.AI.run(HERO_IMAGE_MODEL as any, { prompt: await heroImageBrief(env, bundle), steps: 6 } as any) as any;
   const base64 = typeof response === "string" ? response : response?.image;
   if (typeof base64 !== "string" || !base64) throw new Error("Görsel modeli boş yanıt döndürdü.");
   const binary = atob(base64); const bytes = new Uint8Array(binary.length);
@@ -448,7 +471,7 @@ export default {
         const generated = await generateBundle(env, topic.trim(), await recentTitles(env));
         return json({ bundle: await storeGeneratedBundle(env, generated, actor) }, 201);
       }
-      const match = url.pathname.match(/^\/api\/bundles\/([a-zA-Z0-9_-]+)(?:\/(publish|verify))?$/);
+      const match = url.pathname.match(/^\/api\/bundles\/([a-zA-Z0-9_-]+)(?:\/(publish|verify|hero-image))?$/);
       if (match && request.method === "PATCH" && !match[2]) {
         const body = await request.json<Record<string, unknown>>(); const fields: string[]=[]; const values: unknown[]=[];
         const existing = await env.DB.prepare("SELECT slug,status,linkedin_post AS linkedinPost FROM content_bundles WHERE id=?").bind(match[1]).first<{slug:string;status:Status;linkedinPost:string}>();
@@ -477,6 +500,17 @@ export default {
         await env.DB.prepare(`UPDATE content_bundles SET ${fields.join(",")} WHERE id=?`).bind(...values).run();
         await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"updated",actor,now()).run();
         const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(match[1]).first<Record<string, unknown>>(); return json({bundle:bundleFromRow(row||{})});
+      }
+      if (match && request.method === "POST" && match[2] === "hero-image") {
+        const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(match[1]).first<Record<string, unknown>>();
+        if (!row) return json({error:"Paket bulunamadı."},404);
+        const bundle = bundleFromRow(row) as any;
+        try {
+          const bytes = await generateHeroImage(env, bundle);
+          const saved = await saveAsset(env, bundle.id, "hero", `${bundle.slug}.jpg`, "image/jpeg", bytes, bytes.byteLength, bundle.heroAlt || bundle.title, "");
+          await logAction(env, match[1], "hero_image_regenerated", actor);
+          return json({ok:true,url:saved.assetUrl});
+        } catch (error) { return json({error: error instanceof Error ? error.message : "Görsel üretilemedi."},502); }
       }
       if (match && request.method === "POST" && match[2] === "publish") {
         const result = await publishBundle(env, match[1], actor);
