@@ -1,6 +1,7 @@
 interface Env {
   DB: D1Database;
   UPLOADS: R2Bucket;
+  AI: Ai;
   ALLOWED_EMAILS: string;
   MAX_UPLOAD_BYTES: string;
   OPENAI_API_KEY?: string;
@@ -76,13 +77,36 @@ linkedin_post AS linkedinPost, visual_prompt AS heroImageUrl, hero_alt AS heroAl
 tags_json AS tagsJson, sources_json AS sourcesJson, generation_note AS generationNote,
 article_type AS articleType, inline_visuals_json AS inlineVisualsJson,
 updated_at AS updatedAt, created_at AS createdAt, source_count AS sourceCount,
-checks_passed AS checksPassed, checks_total AS checksTotal, visual_url AS visualUrl, published_url AS publishedUrl`;
+checks_passed AS checksPassed, checks_total AS checksTotal, visual_url AS visualUrl, published_url AS publishedUrl,
+published_at AS publishedAt`;
 
 function extractJson(text: string) {
   const cleaned = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   const start = cleaned.indexOf("{"); const end = cleaned.lastIndexOf("}");
   if (start < 0 || end < start) throw new Error("Model geçerli JSON döndürmedi.");
   return JSON.parse(cleaned.slice(start, end + 1));
+}
+
+// Astro içerik şeması (src/content.config.ts) yalnız bu altı kategoriyi kabul ediyor.
+// Serbest metin bir kategori md dosyasına yazılırsa site build'i komple patlıyor.
+const BLOG_CATEGORIES = ["Yapay Zekâ", "Güvenlik", "Backend ve API", "Mobil Geliştirme", "DevOps ve Tedarik Zinciri", "Sektör ve Kariyer"] as const;
+
+function foldTr(value: string) {
+  return value.toLowerCase().replace(/[çğıîöşüâ]/g, (letter) => ({ "ç":"c","ğ":"g","ı":"i","î":"i","ö":"o","ş":"s","ü":"u","â":"a" } as Record<string,string>)[letter] || letter);
+}
+
+function canonicalCategory(value: unknown) {
+  const raw = String(value || "").trim();
+  if ((BLOG_CATEGORIES as readonly string[]).includes(raw)) return raw;
+  const folded = foldTr(raw);
+  const exact = BLOG_CATEGORIES.find((category) => foldTr(category) === folded);
+  if (exact) return exact;
+  if (/guvenli|saldir|zafiyet|acik|kimlik|sizdir|pentest|siber/.test(folded)) return "Güvenlik";
+  if (/mobil|ios|android|react native|flutter|swift|kotlin/.test(folded)) return "Mobil Geliştirme";
+  if (/devops|ci\/?cd|altyapi|bulut|tedarik|kesinti|deploy|pipeline/.test(folded)) return "DevOps ve Tedarik Zinciri";
+  if (/backend|\bapi\b|odeme|webhook|veritabani|sunucu|mimari/.test(folded)) return "Backend ve API";
+  if (/yapay zeka|\bai\b|model|ajan|llm|agent/.test(folded)) return "Yapay Zekâ";
+  return "Sektör ve Kariyer";
 }
 
 const assetRoles = new Set(["hero", "inline-1", "inline-2"]);
@@ -108,12 +132,45 @@ async function saveAsset(env: Env, bundleId: string, role: string, filename: str
   return { key, assetUrl };
 }
 
+async function logAction(env: Env, bundleId: string, action: string, actor: string) {
+  await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(bundleId, action, actor, now()).run();
+}
+
+const HERO_IMAGE_MODEL = "@cf/black-forest-labs/flux-1-schnell";
+
+// Üretici bazen hazır bir görsel brief'i, bazen bir web bağlantısı, bazen de hiçbir şey döndürüyor.
+// Brief varsa onu kullan; yoksa yazının kendisinden bir tane kur. Bağlantıları burada kullanmıyoruz:
+// başkasının basın görselini kendi alan adımızda yeniden yayımlamak telif riski taşıyor.
+function heroImageBrief(bundle: any) {
+  const brief = String(bundle.heroImageUrl || "").trim();
+  if (brief && !/^https?:\/\//i.test(brief)) return brief.slice(0, 1400);
+  return `Editorial 16:9 illustration for a technology article titled "${bundle.title}". ${bundle.description} Restrained ink-and-risograph editorial style, limited palette of deep blue, warm gray and a single amber accent, visible paper texture, abstract and conceptual composition. No text, no letters, no logos, no watermark, no interface panels, no human faces.`.slice(0, 1400);
+}
+
+async function generateHeroImage(env: Env, bundle: any) {
+  const response = await env.AI.run(HERO_IMAGE_MODEL as any, { prompt: heroImageBrief(bundle), steps: 6 } as any) as any;
+  const base64 = typeof response === "string" ? response : response?.image;
+  if (typeof base64 !== "string" || !base64) throw new Error("Görsel modeli boş yanıt döndürdü.");
+  const binary = atob(base64); const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  if (!bytes.byteLength) throw new Error("Üretilen görsel boş.");
+  return bytes;
+}
+
+async function ensureHeroImage(env: Env, bundle: any, actor: string) {
+  if (bundle.visualUrl) return String(bundle.visualUrl);
+  const bytes = await generateHeroImage(env, bundle);
+  const saved = await saveAsset(env, bundle.id, "hero", `${bundle.slug}.jpg`, "image/jpeg", bytes, bytes.byteLength, bundle.heroAlt || bundle.title, "");
+  await logAction(env, bundle.id, "hero_image_generated", actor);
+  return saved.assetUrl;
+}
+
 async function generateBundle(env: Env, topic: string, recentTitles: string[] = []): Promise<GeneratedBundle> {
   if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY secret'ı henüz tanımlı değil.");
   const schema = {
     type: "object", additionalProperties: false, required: ["title","slug","description","category","tags","hook","blogMarkdown","linkedinPost","heroImageUrl","heroAlt","articleType","inlineVisuals","sources","generationNote"],
     properties: {
-      title:{type:"string"}, slug:{type:"string"}, description:{type:"string"}, category:{type:"string"}, tags:{type:"array",items:{type:"string"},maxItems:6}, hook:{type:"string"},
+      title:{type:"string"}, slug:{type:"string"}, description:{type:"string"}, category:{type:"string",enum:["Yapay Zekâ","Güvenlik","Backend ve API","Mobil Geliştirme","DevOps ve Tedarik Zinciri","Sektör ve Kariyer"]}, tags:{type:"array",items:{type:"string"},maxItems:6}, hook:{type:"string"},
       blogMarkdown:{type:"string"}, linkedinPost:{type:"string"}, heroImageUrl:{type:"string"}, heroAlt:{type:"string"}, articleType:{type:"string",enum:["opinion","technical","tutorial","comparison","data","case-study"]},
       inlineVisuals:{type:"array",minItems:2,maxItems:2,items:{type:"object",additionalProperties:false,required:["needed","slot","imageUrl","alt","caption"],properties:{needed:{type:"boolean"},slot:{type:"integer",minimum:1,maximum:2},imageUrl:{type:"string"},alt:{type:"string"},caption:{type:"string"}}}},
       sources:{type:"array",minItems:2,maxItems:12,items:{type:"object",additionalProperties:false,required:["label","url","note"],properties:{label:{type:"string"},url:{type:"string"},note:{type:"string"}}}}, generationNote:{type:"string"}
@@ -232,7 +289,7 @@ async function automaticGeneration(env: Env) {
 }
 
 function yaml(value: string) { return JSON.stringify(value.replace(/\r/g, "")); }
-function markdownFile(bundle: any, heroImage: string, inlineImages: Record<number, string> = {}) {
+function markdownFile(bundle: any, heroImage: string, inlineImages: Record<number, string> = {}, publishedAt = new Date().toISOString().slice(0, 10)) {
   const sources = (bundle.sources as Source[]).map((s) => `  - label: ${yaml(s.label)}\n    url: ${yaml(s.url)}\n    note: ${yaml(s.note)}`).join("\n");
   let body = String(bundle.blogMarkdown || "").trim();
   for (const visual of (bundle.inlineVisuals || []) as InlineVisual[]) {
@@ -242,7 +299,7 @@ function markdownFile(bundle: any, heroImage: string, inlineImages: Record<numbe
     body = body.split(marker).join(replacement);
   }
   body = body.replace(/\{\{INLINE_IMAGE_[12]\}\}/g, "");
-  return `---\ntitle: ${yaml(bundle.title)}\ndescription: ${yaml(bundle.description)}\nslug: ${yaml(bundle.slug)}\npublishedAt: ${new Date().toISOString().slice(0,10)}\ntags: ${JSON.stringify(bundle.tags)}\ncategory: ${yaml(bundle.category)}\nheroImage: ${yaml(heroImage)}\nheroAlt: ${yaml(bundle.heroAlt)}\nfeatured: false\ndraft: false\nsources:\n${sources}\n---\n\n${body}\n`;
+  return `---\ntitle: ${yaml(bundle.title)}\ndescription: ${yaml(bundle.description)}\nslug: ${yaml(bundle.slug)}\npublishedAt: ${publishedAt}\ntags: ${JSON.stringify(bundle.tags)}\ncategory: ${yaml(canonicalCategory(bundle.category))}\nheroImage: ${yaml(heroImage)}\nheroAlt: ${yaml(bundle.heroAlt)}\nfeatured: false\ndraft: false\nsources:\n${sources}\n---\n\n${body}\n`;
 }
 
 function bytesToBase64(bytes: Uint8Array) {
@@ -272,6 +329,102 @@ async function pingIndexNow(env: Env, bundleId: string, actor: string, targetUrl
     action = response.status === 200 || response.status === 202 ? `indexnow_ping_ok_${response.status}` : `indexnow_ping_failed_${response.status}`;
   } catch (error) { console.error("IndexNow bildirimi başarısız:", error); }
   try { await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(bundleId,action,actor,now()).run(); } catch (error) { console.error("IndexNow denetim kaydı yazılamadı:", error); }
+}
+
+type PublishOutcome = { ok: true; url: string; status: Status; republished: boolean } | { ok: false; error: string; code: number };
+
+// Hem /api/bundles/:id/publish hem de cron bu yolu kullanıyor; yayın kuralları tek yerde kalsın diye.
+async function publishBundle(env: Env, bundleId: string, actor: string): Promise<PublishOutcome> {
+  const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(bundleId).first<Record<string, unknown>>();
+  if (!row) return { ok: false, error: "Paket bulunamadı.", code: 404 };
+  const bundle = bundleFromRow(row) as any;
+  const republished = bundle.status === "scheduled" || bundle.status === "published";
+  if (bundle.status !== "approved" && !republished) return { ok: false, error: "Önce paketi onaylamalısın.", code: 409 };
+  if (!bundle.blogMarkdown || !bundle.linkedinPost || bundle.sources.length < 2) return { ok: false, error: "Yayın için blog, LinkedIn metni ve en az 2 kaynak zorunlu.", code: 409 };
+
+  let visualUrl = bundle.visualUrl as string | undefined;
+  if (!visualUrl) {
+    try { visualUrl = await ensureHeroImage(env, bundle, actor); }
+    catch (error) { return { ok: false, error: error instanceof Error ? error.message : "Hero görsel üretilemedi.", code: 502 }; }
+  }
+
+  const key = decodeURIComponent(String(visualUrl).replace(/^\/api\/assets\//, ""));
+  const object = await env.UPLOADS.get(key);
+  if (!object) return { ok: false, error: "Görsel R2'de bulunamadı.", code: 404 };
+  const ext = safeName(key.split(".").pop() || "webp");
+  await githubPut(env, `public/blog/${bundle.slug}.${ext}`, new Uint8Array(await object.arrayBuffer()), `content: add visual for ${bundle.slug}`);
+  const heroImage = `/blog/${bundle.slug}.${ext}`;
+
+  const inlineRows = await env.DB.prepare("SELECT object_key AS objectKey, role FROM assets WHERE bundle_id=? AND role IN ('inline-1','inline-2') ORDER BY created_at DESC").bind(bundleId).all<{objectKey:string;role:string}>();
+  const inlineImages: Record<number, string> = {};
+  for (const asset of inlineRows.results) {
+    const slot = Number(asset.role.slice(-1)); if (inlineImages[slot]) continue;
+    const inlineObject = await env.UPLOADS.get(asset.objectKey); if (!inlineObject) continue;
+    const inlineExt = safeName(asset.objectKey.split(".").pop() || "webp");
+    await githubPut(env, `public/blog/${bundle.slug}-inline-${slot}.${inlineExt}`, new Uint8Array(await inlineObject.arrayBuffer()), `content: add inline visual ${slot} for ${bundle.slug}`);
+    inlineImages[slot] = `/blog/${bundle.slug}-inline-${slot}.${inlineExt}`;
+  }
+
+  // İlk yayında bugünün tarihi çakılır ve bir daha değişmez; sonradan görsel değiştirmek
+  // yazının publishedAt'ini ileri taşımasın diye tarih veritabanında saklanıyor.
+  const publishedAt = (bundle.publishedAt as string) || new Date().toISOString().slice(0, 10);
+  await githubPut(env, `src/content/blog/${bundle.slug}.md`, new TextEncoder().encode(markdownFile(bundle, heroImage, inlineImages, publishedAt)), `content: ${republished ? "update" : "publish"} ${bundle.slug}`);
+
+  const publishedUrl = `https://recepozgur.com/blog/${bundle.slug}/`;
+  await env.DB.prepare("UPDATE content_bundles SET status='scheduled',published_url=?,published_at=?,updated_at=? WHERE id=?").bind(publishedUrl, publishedAt, now(), bundleId).run();
+  await logAction(env, bundleId, republished ? "blog_recommit" : "blog_commit", actor);
+  try { await pingIndexNow(env, bundleId, actor, publishedUrl); } catch (error) { console.error("IndexNow adımı atlandı:", error); }
+  return { ok: true, url: publishedUrl, status: "scheduled", republished };
+}
+
+async function verifyBundle(env: Env, bundleId: string, actor: string) {
+  const row = await env.DB.prepare("SELECT published_url AS publishedUrl FROM content_bundles WHERE id=?").bind(bundleId).first<{publishedUrl:string}>();
+  if (!row?.publishedUrl) return { ok: false as const, code: 409, error: "Yayın isteği bulunamadı." };
+  let live: Response;
+  try { live = await fetch(row.publishedUrl, { redirect: "follow", headers: { "User-Agent": "RecepOzgur-Studio-Verifier" }, signal: AbortSignal.timeout(10000) }); }
+  catch { return { ok: false as const, code: 202, pending: true, status: 0, url: row.publishedUrl }; }
+  if (!live.ok) return { ok: false as const, code: 202, pending: true, status: live.status, url: row.publishedUrl };
+  await env.DB.prepare("UPDATE content_bundles SET status='published',updated_at=? WHERE id=?").bind(now(), bundleId).run();
+  await logAction(env, bundleId, "verified", actor);
+  return { ok: true as const, url: row.publishedUrl };
+}
+
+// GitHub Pages deploy'u asenkron; bu yüzden doğrulama bir sonraki cron turunda yapılıyor.
+async function verifyScheduled(env: Env) {
+  const rows = await env.DB.prepare("SELECT id FROM content_bundles WHERE status='scheduled' AND published_url IS NOT NULL").all<{id:string}>();
+  for (const row of rows.results) {
+    try { await verifyBundle(env, row.id, "cloudflare-cron"); }
+    catch (error) { console.error("Otomatik doğrulama hatası:", row.id, error); }
+  }
+}
+
+// Hazır olan paketleri sırayla onaylayıp yayınlar. Cron turu başına varsayılan olarak bir yazı:
+// amaç yazının üretildiği gün yayına girmesi, toplu bir yığın atılması değil.
+async function automaticPublishing(env: Env, limit = 1) {
+  const pending = await env.DB.prepare("SELECT id FROM content_bundles WHERE status IN ('review','approved') ORDER BY created_at ASC").all<{id:string}>();
+  const published: string[] = []; const failed: { id: string; error: string }[] = [];
+  for (const row of pending.results) {
+    if (published.length >= limit) break;
+    try {
+      const current = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(row.id).first<Record<string, unknown>>();
+      const bundle = bundleFromRow(current || {}) as any;
+      if (!bundle.blogMarkdown || !bundle.linkedinPost || bundle.sources.length < 2) { failed.push({ id: row.id, error: "eksik içerik" }); continue; }
+      if (!bundle.visualUrl) await ensureHeroImage(env, bundle, "cloudflare-cron");
+      if (bundle.status === "review") {
+        await env.DB.prepare("UPDATE content_bundles SET status='approved',updated_at=? WHERE id=?").bind(now(), row.id).run();
+        await logAction(env, row.id, "auto_approved", "cloudflare-cron");
+      }
+      const result = await publishBundle(env, row.id, "cloudflare-cron");
+      if (result.ok) { published.push(row.id); await logAction(env, row.id, "auto_published", "cloudflare-cron"); }
+      else { failed.push({ id: row.id, error: result.error }); await logAction(env, row.id, `auto_publish_failed_${result.code}`, "cloudflare-cron"); }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "bilinmeyen hata";
+      console.error("Otomatik yayın hatası:", row.id, message);
+      failed.push({ id: row.id, error: message });
+      try { await logAction(env, row.id, "auto_publish_error", "cloudflare-cron"); } catch { /* denetim kaydı yayını engellemesin */ }
+    }
+  }
+  return { published, failed };
 }
 
 export default {
@@ -316,7 +469,7 @@ export default {
           if (body.status === "approved") {
             const candidate = await env.DB.prepare("SELECT blog_markdown AS blogMarkdown,linkedin_post AS linkedinPost,sources_json AS sourcesJson,visual_url AS visualUrl FROM content_bundles WHERE id=?").bind(match[1]).first<Record<string,unknown>>();
             const sourceCount = parseJson(candidate?.sourcesJson, [] as Source[]).length;
-            if (!candidate?.blogMarkdown || !candidate?.linkedinPost || !candidate?.visualUrl || sourceCount < 2) return json({error:"Onay için blog, LinkedIn metni, en az 2 kaynak ve görsel zorunlu."},409);
+            if (!candidate?.blogMarkdown || !candidate?.linkedinPost || sourceCount < 2) return json({error:"Onay için blog, LinkedIn metni ve en az 2 kaynak zorunlu."},409);
           }
           fields.push("status=?"); values.push(body.status);
         }
@@ -326,30 +479,21 @@ export default {
         const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(match[1]).first<Record<string, unknown>>(); return json({bundle:bundleFromRow(row||{})});
       }
       if (match && request.method === "POST" && match[2] === "publish") {
-        const row = await env.DB.prepare(`SELECT ${selectColumns} FROM content_bundles WHERE id=?`).bind(match[1]).first<Record<string, unknown>>(); if (!row) return json({error:"Paket bulunamadı."},404);
-        const bundle = bundleFromRow(row) as any; if (bundle.status !== "approved") return json({error:"Önce paketi onaylamalısın."},409); if (!bundle.visualUrl || !bundle.blogMarkdown || !bundle.linkedinPost || bundle.sources.length < 2) return json({error:"Yayın için blog, LinkedIn metni, en az 2 kaynak ve görsel zorunlu."},409);
-        const key = decodeURIComponent(String(bundle.visualUrl).replace(/^\/api\/assets\//,"")); const object = await env.UPLOADS.get(key); if (!object) return json({error:"Görsel R2'de bulunamadı."},404);
-        const ext = safeName(key.split(".").pop() || "webp"); const assetPath = `public/blog/${bundle.slug}.${ext}`; const heroImage = `/blog/${bundle.slug}.${ext}`;
-        await githubPut(env,assetPath,new Uint8Array(await object.arrayBuffer()),`content: add visual for ${bundle.slug}`);
-        const inlineRows = await env.DB.prepare("SELECT object_key AS objectKey, role FROM assets WHERE bundle_id=? AND role IN ('inline-1','inline-2') ORDER BY created_at DESC").bind(match[1]).all<{objectKey:string;role:string}>();
-        const inlineImages: Record<number,string> = {};
-        for (const row of inlineRows.results) {
-          const slot = Number(row.role.slice(-1)); if (inlineImages[slot]) continue;
-          const inlineObject = await env.UPLOADS.get(row.objectKey); if (!inlineObject) continue;
-          const inlineExt = safeName(row.objectKey.split(".").pop() || "webp"); const inlinePath = `public/blog/${bundle.slug}-inline-${slot}.${inlineExt}`;
-          await githubPut(env,inlinePath,new Uint8Array(await inlineObject.arrayBuffer()),`content: add inline visual ${slot} for ${bundle.slug}`);
-          inlineImages[slot] = `/blog/${bundle.slug}-inline-${slot}.${inlineExt}`;
-        }
-        await githubPut(env,`src/content/blog/${bundle.slug}.md`,new TextEncoder().encode(markdownFile(bundle,heroImage,inlineImages)),`content: publish ${bundle.slug}`);
-        const publishedUrl = `https://recepozgur.com/blog/${bundle.slug}/`; await env.DB.prepare("UPDATE content_bundles SET status='scheduled',published_url=?,updated_at=? WHERE id=?").bind(publishedUrl,now(),match[1]).run();
-        await env.DB.prepare("INSERT INTO audit_log (bundle_id,action,actor_email,created_at) VALUES (?,?,?,?)").bind(match[1],"blog_commit",actor,now()).run();
-        try { await pingIndexNow(env,match[1],actor,publishedUrl); } catch (error) { console.error("IndexNow adımı atlandı:", error); }
-        return json({ok:true,url:publishedUrl,status:"scheduled"});
+        const result = await publishBundle(env, match[1], actor);
+        if (!result.ok) return json({error:result.error}, result.code);
+        return json({ok:true,url:result.url,status:result.status,republished:result.republished});
       }
       if (match && request.method === "POST" && match[2] === "verify") {
-        const row = await env.DB.prepare("SELECT published_url AS publishedUrl FROM content_bundles WHERE id=?").bind(match[1]).first<{publishedUrl:string}>(); if (!row?.publishedUrl) return json({error:"Yayın isteği bulunamadı."},409);
-        const live = await fetch(row.publishedUrl,{redirect:"follow",headers:{"User-Agent":"RecepOzgur-Studio-Verifier"}}); if (!live.ok) return json({ok:false,pending:true,status:live.status},202);
-        await env.DB.prepare("UPDATE content_bundles SET status='published',updated_at=? WHERE id=?").bind(now(),match[1]).run(); return json({ok:true,status:"published",url:row.publishedUrl});
+        const result = await verifyBundle(env, match[1], actor);
+        if (result.ok) return json({ok:true,status:"published",url:result.url});
+        if (result.code === 202) return json({ok:false,pending:true,status:result.status},202);
+        return json({error:result.error},result.code);
+      }
+      if (request.method === "POST" && url.pathname === "/api/publish-queue") {
+        const body = await request.json<{limit?:number}>().catch(() => ({} as {limit?:number}));
+        const limit = Math.min(Math.max(Number(body.limit) || 1, 1), 25);
+        const result = await automaticPublishing(env, limit);
+        return json({ok:true,...result});
       }
       if (request.method === "POST" && url.pathname === "/api/assets") {
         const form=await request.formData(); const file=form.get("file"); const bundleId=String(form.get("bundleId")||"unassigned"); const role=String(form.get("role")||"hero"); const alt=String(form.get("alt")||"").slice(0,300); const caption=String(form.get("caption")||"").slice(0,500); if (!(file instanceof File)) return json({error:"Bir görsel seçmelisin."},400);
@@ -383,6 +527,11 @@ export default {
     } catch (error) { console.error(error); return json({error:error instanceof Error?error.message:"Beklenmeyen sunucu hatası."},500); }
   },
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext) {
-    ctx.waitUntil(automaticGeneration(env));
+    ctx.waitUntil((async () => {
+      // Sıra önemli: önce geçen turun yazısı canlıda mı diye bakılır, sonra yenisi üretilip yayınlanır.
+      try { await verifyScheduled(env); } catch (error) { console.error("Otomatik doğrulama turu başarısız:", error); }
+      try { await automaticGeneration(env); } catch (error) { console.error("Otomatik üretim turu başarısız:", error); }
+      try { await automaticPublishing(env, 1); } catch (error) { console.error("Otomatik yayın turu başarısız:", error); }
+    })());
   },
 } satisfies ExportedHandler<Env>;

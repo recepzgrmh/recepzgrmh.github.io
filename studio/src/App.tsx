@@ -167,7 +167,8 @@ export default function App() {
     const allowed = view === "history" ? bundles.filter((bundle) => bundle.status === "published" || bundle.status === "scheduled") : view === "queue" ? bundles.filter((bundle) => bundle.status !== "published") : bundles;
     if (!allowed.some((bundle) => bundle.id === selectedId)) setSelectedId(allowed[0]?.id || "");
   }, [view, bundles, selectedId]);
-  const canApprove = Boolean(selected?.visualUrl && editor?.blogMarkdown?.trim() && editor?.linkedinPost?.trim() && (editor?.sources?.length || 0) >= 2 && selected.checksPassed >= selected.checksTotal);
+  // Hero görsel artık yayın anında otomatik üretiliyor; onayın önünü tıkamasın.
+  const canApprove = Boolean(selected && editor?.blogMarkdown?.trim() && editor?.linkedinPost?.trim() && (editor?.sources?.length || 0) >= 2);
   const inlineImageSlots = Object.fromEntries([1, 2].map((slot) => [slot, bundleAssets.find((asset) => asset.role === `inline-${slot}`)?.url]).filter((entry) => entry[1])) as Record<number,string>;
   const viewCopy: Record<View, { eyebrow: string; title: string; description: string }> = {
     today: { eyebrow: "BUGÜNÜN ÇALIŞMA ALANI", title: "Günaydın Recep.", description: "Otomasyon konuları araştırır; yayın kararı sende kalır." },
@@ -214,12 +215,13 @@ export default function App() {
   async function publishOrVerify() {
     if (!selected) return; setBusy(true); setNotice("");
     const action = selected.status === "scheduled" ? "verify" : "publish";
+    const republishing = selected.status === "published";
     try {
       const response = await fetch(`/api/bundles/${selected.id}/${action}`, { method: "POST" }); const result = await response.json() as { status?: Status; url?: string; pending?: boolean; error?: string };
       if (!response.ok && response.status !== 202) throw new Error(result.error || "Yayın işlemi başarısız");
       if (result.pending) { setNotice("GitHub Pages henüz deploy ediyor. Biraz sonra tekrar doğrula."); return; }
       const status = result.status || "scheduled"; setBundles((items) => items.map((item) => item.id === selected.id ? { ...item, status, publishedUrl: result.url || item.publishedUrl } : item));
-      setNotice(status === "published" ? "Blog canlı. LinkedIn metni aşağıdan kopyalanabilir." : "Blog GitHub'a gönderildi. Deploy tamamlanınca canlılığı doğrula.");
+      setNotice(status === "published" ? "Blog canlı. LinkedIn metni aşağıdan kopyalanabilir." : republishing ? "Yeni görsel GitHub'a gönderildi. Yayın tarihi değişmedi; deploy bitince canlılığı doğrula." : "Blog GitHub'a gönderildi. Deploy tamamlanınca canlılığı doğrula.");
     } catch (error) { setNotice(error instanceof Error ? error.message : "Beklenmeyen hata"); } finally { setBusy(false); }
   }
 
@@ -359,9 +361,9 @@ export default function App() {
                 </div>;
               })}
               <div className="actions">{previewMode === "edit" && <button className="secondary" disabled={busy} onClick={() => void saveDraft()}>Düzenlemeyi kaydet</button>}{selected.status !== "published" && selected.status !== "scheduled" && <button className="primary" disabled={busy || !canApprove} onClick={() => void updateStatus("approved")}><Icon name="check"/>{busy ? "İşleniyor…" : "Paketi onayla"}</button>}</div>
-              {(selected.status === "approved" || selected.status === "scheduled") && <button className="publish-button" disabled={busy || !readiness.publishing || (!selected.visualUrl && !upload?.url)} onClick={() => void publishOrVerify()}>{selected.status === "scheduled" ? "Canlılığı doğrula" : "Blogu GitHub'a gönder"}</button>}
+              {(selected.status === "approved" || selected.status === "scheduled" || selected.status === "published") && <button className="publish-button" disabled={busy || !readiness.publishing} onClick={() => void publishOrVerify()}>{selected.status === "scheduled" ? "Canlılığı doğrula" : selected.status === "published" ? "Görseli güncelle ve yeniden gönder" : "Blogu GitHub'a gönder"}</button>}
               {selected.status === "published" && <a className="preview-link" href={selected.publishedUrl || `https://recepozgur.com${selected.blogPath}`} target="_blank" rel="noreferrer">Canlı blogu aç <Icon name="external"/></a>}
-              <p className="safety-note">Sistem taslak üretir; kamuya açık yayın yalnız sen onaylayıp yayın butonuna bastığında başlar. LinkedIn paylaşımı şimdilik kopyala-yapıştır ile sende kalır.</p>
+              <p className="safety-note">Cron Pazartesi/Çarşamba/Cuma 07:00 UTC'de yazıyı üretir, hero görseli yoksa üretir ve aynı turda yayınlar. Yayınlanmış bir yazıya sonradan görsel yükleyip yeniden gönderebilirsin; yayın tarihi ilk yayındaki gibi kalır.</p>
             </> : <div className="empty">İncelemek için bir paket seç.</div>}
           </aside>
         </div>}

@@ -25,6 +25,13 @@
     "INDEXNOW_KEY": "1d7f8fea147c4357a23d879e0dc0eda0",
     "INDEXNOW_KEY_LOCATION": "https://recepozgur.com/1d7f8fea147c4357a23d879e0dc0eda0.txt"
   },
+  "ai": {
+    "binding": "AI"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "d1_databases": [
     {
       "binding": "DB",
